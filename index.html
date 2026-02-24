@@ -7,10 +7,10 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
-<body style="text-align:center; font-family:sans-serif; background:#f4f4f4;">
-
-    <h1 style="color:#0a5cff; margin-top:50px;">BEK BOLA SOS</h1>
-    <button id="sosBtn" style="background:#ff3b3b; color:white; border:none; width:200px; height:200px; border-radius:50%; font-size:30px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(0,0,0,0.2);">SOS 🆘</button>
+<body style="text-align:center; font-family:sans-serif; background:#f4f4f4; padding-top:50px;">
+    <h1 style="color:#0a5cff;">BEK BOLA SOS</h1>
+    <button id="sosBtn" style="background:#ff3b3b; color:white; border:none; width:220px; height:220px; border-radius:50%; font-size:35px; font-weight:bold; cursor:pointer; box-shadow:0 10px 25px rgba(255,59,59,0.4);">SOS 🆘</button>
+    <p id="status" style="margin-top:20px; color:#666;"></p>
 
     <script>
         const firebaseConfig = {
@@ -23,19 +23,19 @@
             appId: "1:617804928629:web:4402d65810cf3d30810a3c"
         };
 
-        // Firebaseni boshlash
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
+        firebase.initializeApp(firebaseConfig);
+        
+        // MUHIM: Bazani aniq URL bilan bog'laymiz
         const database = firebase.database();
 
         document.getElementById('sosBtn').onclick = function() {
+            const status = document.getElementById('status');
+            status.innerText = "Joylashuv aniqlanmoqda...";
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
                     const id = Date.now();
                     
-                    // Ma'lumotni yuborish
                     database.ref('chaqiruvlar/' + id).set({
                         id: id,
                         turi: "SOS 🆘",
@@ -44,16 +44,17 @@
                         vaqt: new Date().toLocaleTimeString()
                     })
                     .then(() => {
-                        alert("BAZAGA YOZILDI! Endi admin panelni tekshiring.");
+                        status.style.color = "green";
+                        status.innerText = "MUVAFFAQIYATLI YOZILDI! (ID: " + id + ")";
+                        alert("Xabar Firebase serveriga yetib bordi!");
                     })
                     .catch(error => {
-                        alert("XATO BO'LDI: " + error.message);
+                        status.style.color = "red";
+                        status.innerText = "Xato: " + error.message;
                     });
                 }, (err) => {
-                    alert("GPS xatosi: " + err.message + ". Iltimos, joylashuvga ruxsat bering!");
+                    status.innerText = "GPS xatosi: " + err.message;
                 });
-            } else {
-                alert("Brauzeringiz GPSni qo'llab-quvvatlamaydi.");
             }
         };
     </script>
