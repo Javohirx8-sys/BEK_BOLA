@@ -1,128 +1,192 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BEK_BOLA | Parkent Turizm Yordamchisi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEK_BOLA | Parkent Turizm Yordamchisi</title>
 
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-}
-header {
-    background: #0a5cff;
-    color: white;
-    padding: 15px;
-    text-align: center;
-}
-.container {
-    padding: 15px;
-}
-select, button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    font-size: 16px;
-}
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-}
-.card {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    cursor: pointer;
-}
-.card:hover {
-    background: #eef3ff;
-}
-.sos {
-    background: #ff3b3b;
-    color: white;
-}
-.footer {
-    text-align: center;
-    font-size: 12px;
-    color: gray;
-    margin-top: 30px;
-}
-</style>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(135deg, #0a5cff, #0041c2);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .container {
+            padding: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            outline: none;
+            transition: 0.3s;
+        }
+        button {
+            background: #0a5cff;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(10, 92, 255, 0.2);
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .card i {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .card:hover {
+            background: #fdfdfd;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        .card:active {
+            transform: scale(0.92);
+        }
+        /* SOS tugmasi uchun animatsiya */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
+        }
+        .sos {
+            background: #ff3b3b;
+            color: white;
+            animation: pulse-red 2s infinite;
+        }
+        .sos b { font-size: 18px; }
+
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-    <h2>BEK_BOLA</h2>
-    <p>Parkent tumani turistik yordam tizimi</p>
+    <h2 style="margin:0;">BEK_BOLA</h2>
+    <p style="margin:5px 0 0 0; opacity: 0.9;">Parkent tumani aqlli yordamchisi</p>
 </header>
 
 <div class="container">
 
-    <label>Interfeys tilini tanlang:</label>
-    <select>
-        <option>O‘zbek</option>
-        <option>Русский</option>
-        <option>English</option>
+    <label>Til / Язык / Language:</label>
+    <select id="langSelect">
+        <option value="uz">O‘zbekcha</option>
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
     </select>
 
-    <button onclick="getLocation()">📍 Joylashuvni aniqlash</button>
+    <button onclick="getLocation()">📍 Mening joylashuvimni aniqlash</button>
 
     <div class="grid">
 
-        <div class="card sos" onclick="alert('SOS signali yuborildi!')">
-            🆘<br><b>SOS</b>
+        <div class="card sos" onclick="alert('SOS signali favqulodda xizmatlarga yuborildi!')">
+            <span style="font-size: 30px;">🆘</span><br><b>SOS</b>
         </div>
 
-        <div class="card" onclick="alert('Tez tibbiy yordam chaqirildi')">
-            🚑<br>Tez yordam
+        <div class="card" onclick="window.open('tel:103')">
+            <span style="font-size: 30px;">🚑</span><br>Tez yordam
         </div>
 
-        <div class="card">
-            ⛽️<br>Yoqilg‘i
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span style="font-size: 30px;">⛽️</span><br>Yoqilg‘i
         </div>
 
-        <div class="card">
-            🚻<br>Hojatxona
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span style="font-size: 30px;">🚻</span><br>Hojatxona
         </div>
 
-        <div class="card">
-            🍽<br>Ovqatlanish
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span style="font-size: 30px;">🍽</span><br>Ovqatlanish
         </div>
 
-        <div class="card">
-            🎙<br>Ovozli yordam
+        <div class="card" onclick="speakHelp()">
+            <span style="font-size: 30px;">🎙</span><br>Ovozli yordam
         </div>
 
     </div>
 
     <div class="footer">
-        © 2026 BEK_BOLA | Parkent tumani
+        © 2026 BEK_BOLA | Parkent innovatsion turizm <br>
+        Barcha huquqlar himoyalangan
     </div>
 
 </div>
 
 <script>
+// Joylashuvni aniqlash funksiyasi
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                alert("Joylashuv aniqlandi:\nLat: " + position.coords.latitude +
-                "\nLon: " + position.coords.longitude);
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                alert("Sizning koordinatalaringiz:\nShimoliy kenglik: " + lat + "\nSharqiy uzunlik: " + lon);
+                // Xaritada ko'rsatish
+                window.open(`https://www.google.com{lat},${lon}`);
             },
             function() {
-                alert("Joylashuvga ruxsat berilmadi");
+                alert("Joylashuvni aniqlashga ruxsat berilmadi. Sozlamalarni tekshiring.");
             }
         );
     } else {
-        alert("Brauzer joylashuvni qo‘llab-quvvatlamaydi");
+        alert("Brauzeringiz joylashuvni aniqlashni qo‘llab-quvvatlamaydi.");
     }
+}
+
+// Ovozli yordam funksiyasi (Text-to-Speech)
+function speakHelp() {
+    const text = "Xush kelibsiz! Men BEK BOLA yordamchisiman. Sizga qanday yordam bera olaman?";
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    msg.lang = 'ru-RU'; // O'zbek tili uchun ba'zan RU ovozi ishlatiladi yoki EN
+    window.speechSynthesis.speak(msg);
+    alert("Ovozli yordamchi: " + text);
 }
 </script>
 
