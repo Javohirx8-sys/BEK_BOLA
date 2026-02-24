@@ -4,191 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BEK_BOLA | Parkent Turizm Yordamchisi</title>
-
     <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-        }
-        header {
-            background: linear-gradient(135deg, #0a5cff, #0041c2);
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .container {
-            padding: 20px;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        select, button {
-            width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            font-size: 16px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            outline: none;
-            transition: 0.3s;
-        }
-        button {
-            background: #0a5cff;
-            color: white;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(10, 92, 255, 0.2);
-        }
-        button:active {
-            transform: scale(0.98);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 25px;
-        }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px 15px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-        .card i {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        .card:hover {
-            background: #fdfdfd;
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-        }
-        .card:active {
-            transform: scale(0.92);
-        }
-        /* SOS tugmasi uchun animatsiya */
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); }
-        }
-        .sos {
-            background: #ff3b3b;
-            color: white;
-            animation: pulse-red 2s infinite;
-        }
-        .sos b { font-size: 18px; }
-
-        .footer {
-            text-align: center;
-            font-size: 13px;
-            color: #888;
-            margin-top: 40px;
-            padding-bottom: 20px;
-        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        header { background: linear-gradient(135deg, #0a5cff, #0041c2); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .container { padding: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        select, button { width: 100%; padding: 14px; margin-top: 10px; font-size: 16px; border-radius: 12px; border: 1px solid #ddd; outline: none; transition: 0.3s; }
+        button { background: #0a5cff; color: white; border: none; font-weight: bold; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card:active { transform: scale(0.92); }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
+        .sos { background: #ff3b3b; color: white; animation: pulse-red 2s infinite; }
+        .footer { text-align: center; font-size: 13px; color: #888; margin-top: 40px; padding-bottom: 20px; }
     </style>
 </head>
-
 <body>
 
 <header>
-    <h2 style="margin:0;">BEK_BOLA</h2>
-    <p style="margin:5px 0 0 0; opacity: 0.9;">Parkent tumani aqlli yordamchisi</p>
+    <h2 id="app-title">BEK_BOLA</h2>
+    <p id="app-subtitle">Parkent tumani aqlli yordamchisi</p>
 </header>
 
 <div class="container">
-
-    <label>Til / Язык / Language:</label>
-    <select id="langSelect">
+    <label id="label-lang">Tilni tanlang:</label>
+    <select id="langSelect" onchange="changeLanguage()">
         <option value="uz">O‘zbekcha</option>
         <option value="ru">Русский</option>
         <option value="en">English</option>
     </select>
 
-    <button onclick="getLocation()">📍 Mening joylashuvimni aniqlash</button>
+    <button id="btn-location" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
 
     <div class="grid">
-
-        <div class="card sos" onclick="alert('SOS signali favqulodda xizmatlarga yuborildi!')">
-            <span style="font-size: 30px;">🆘</span><br><b>SOS</b>
+        <div class="card sos" onclick="alert('SOS!')">
+            <span style="font-size: 30px;">🆘</span><br><b id="txt-sos">SOS</b>
         </div>
-
         <div class="card" onclick="window.open('tel:103')">
-            <span style="font-size: 30px;">🚑</span><br>Tez yordam
+            <span style="font-size: 30px;">🚑</span><br><span id="txt-ambulance">Tez yordam</span>
         </div>
-
         <div class="card" onclick="window.open('https://www.google.com')">
-            <span style="font-size: 30px;">⛽️</span><br>Yoqilg‘i
+            <span style="font-size: 30px;">⛽️</span><br><span id="txt-fuel">Yoqilg‘i</span>
         </div>
-
         <div class="card" onclick="window.open('https://www.google.com')">
-            <span style="font-size: 30px;">🚻</span><br>Hojatxona
+            <span style="font-size: 30px;">🚻</span><br><span id="txt-toilet">Hojatxona</span>
         </div>
-
         <div class="card" onclick="window.open('https://www.google.com')">
-            <span style="font-size: 30px;">🍽</span><br>Ovqatlanish
+            <span style="font-size: 30px;">🍽</span><br><span id="txt-food">Ovqatlanish</span>
         </div>
-
         <div class="card" onclick="speakHelp()">
-            <span style="font-size: 30px;">🎙</span><br>Ovozli yordam
+            <span style="font-size: 30px;">🎙</span><br><span id="txt-voice">Ovozli yordam</span>
         </div>
-
     </div>
 
-    <div class="footer">
-        © 2026 BEK_BOLA | Parkent innovatsion turizm <br>
-        Barcha huquqlar himoyalangan
+    <div class="footer" id="txt-footer">
+        © 2026 BEK_BOLA | Parkent innovatsion turizm
     </div>
-
 </div>
 
 <script>
-// Joylashuvni aniqlash funksiyasi
+// Tarjimalar bazasi
+const translations = {
+    uz: {
+        title: "BEK_BOLA",
+        subtitle: "Parkent tumani aqlli yordamchisi",
+        labelLang: "Tilni tanlang:",
+        btnLocation: "📍 Joylashuvni aniqlash",
+        sos: "SOS",
+        ambulance: "Tez yordam",
+        fuel: "Yoqilg‘i",
+        toilet: "Hojatxona",
+        food: "Ovqatlanish",
+        voice: "Ovozli yordam",
+        footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm"
+    },
+    ru: {
+        title: "БЕК_БОЛА",
+        subtitle: "Умный помощник Паркентского района",
+        labelLang: "Выберите язык:",
+        btnLocation: "📍 Определить местоположение",
+        sos: "SOS",
+        ambulance: "Скорая помощь",
+        fuel: "Заправка",
+        toilet: "Туалет",
+        food: "Питание",
+        voice: "Голосовой помощник",
+        footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм"
+    },
+    en: {
+        title: "BEK_BOLA",
+        subtitle: "Smart assistant of Parkent district",
+        labelLang: "Select language:",
+        btnLocation: "📍 Get Location",
+        sos: "SOS",
+        ambulance: "Ambulance",
+        fuel: "Fuel",
+        toilet: "Toilet",
+        food: "Food & Drink",
+        voice: "Voice Help",
+        footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism"
+    }
+};
+
+function changeLanguage() {
+    const lang = document.getElementById("langSelect").value;
+    const t = translations[lang];
+
+    document.getElementById("app-title").innerText = t.title;
+    document.getElementById("app-subtitle").innerText = t.subtitle;
+    document.getElementById("label-lang").innerText = t.labelLang;
+    document.getElementById("btn-location").innerText = t.btnLocation;
+    document.getElementById("txt-sos").innerText = t.sos;
+    document.getElementById("txt-ambulance").innerText = t.ambulance;
+    document.getElementById("txt-fuel").innerText = t.fuel;
+    document.getElementById("txt-toilet").innerText = t.toilet;
+    document.getElementById("txt-food").innerText = t.food;
+    document.getElementById("txt-voice").innerText = t.voice;
+    document.getElementById("txt-footer").innerText = t.footer;
+}
+
 function getLocation() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                alert("Sizning koordinatalaringiz:\nShimoliy kenglik: " + lat + "\nSharqiy uzunlik: " + lon);
-                // Xaritada ko'rsatish
-                window.open(`https://www.google.com{lat},${lon}`);
-            },
-            function() {
-                alert("Joylashuvni aniqlashga ruxsat berilmadi. Sozlamalarni tekshiring.");
-            }
-        );
-    } else {
-        alert("Brauzeringiz joylashuvni aniqlashni qo‘llab-quvvatlamaydi.");
+        navigator.geolocation.getCurrentPosition(pos => {
+            window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
+        });
     }
 }
 
-// Ovozli yordam funksiyasi (Text-to-Speech)
 function speakHelp() {
-    const text = "Xush kelibsiz! Men BEK BOLA yordamchisiman. Sizga qanday yordam bera olaman?";
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = text;
-    msg.lang = 'ru-RU'; // O'zbek tili uchun ba'zan RU ovozi ishlatiladi yoki EN
+    const lang = document.getElementById("langSelect").value;
+    let text = (lang === 'ru') ? "Чем я могу вам помочь?" : (lang === 'en') ? "How can I help you?" : "Sizga qanday yordam bera olaman?";
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = (lang === 'ru') ? 'ru-RU' : (lang === 'en') ? 'en-US' : 'uz-UZ';
     window.speechSynthesis.speak(msg);
-    alert("Ovozli yordamchi: " + text);
+    alert(text);
 }
 </script>
-
 </body>
 </html>
