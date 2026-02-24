@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BEK_BOLA | Parkent Turizm Yordamchisi</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
         header { background: linear-gradient(135deg, #0a5cff, #0041c2); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
@@ -37,19 +39,19 @@
     <button id="btn-location" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
 
     <div class="grid">
-        <div class="card sos" onclick="alert('SOS!')">
+        <div class="card sos" onclick="sendToAdmin('SOS 🆘')">
             <span style="font-size: 30px;">🆘</span><br><b id="txt-sos">SOS</b>
         </div>
-        <div class="card" onclick="window.open('tel:103')">
+        <div class="card" onclick="sendToAdmin('Tez yordam 🚑')">
             <span style="font-size: 30px;">🚑</span><br><span id="txt-ambulance">Tez yordam</span>
         </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
+        <div class="card" onclick="window.open('https://www.google.com/maps/search/gas+station')">
             <span style="font-size: 30px;">⛽️</span><br><span id="txt-fuel">Yoqilg‘i</span>
         </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
+        <div class="card" onclick="window.open('https://www.google.com/maps/search/toilet')">
             <span style="font-size: 30px;">🚻</span><br><span id="txt-toilet">Hojatxona</span>
         </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
+        <div class="card" onclick="window.open('https://www.google.com/maps/search/restaurant')">
             <span style="font-size: 30px;">🍽</span><br><span id="txt-food">Ovqatlanish</span>
         </div>
         <div class="card" onclick="speakHelp()">
@@ -63,53 +65,50 @@
 </div>
 
 <script>
-// Tarjimalar bazasi
-const translations = {
-    uz: {
-        title: "BEK_BOLA",
-        subtitle: "Parkent tumani aqlli yordamchisi",
-        labelLang: "Tilni tanlang:",
-        btnLocation: "📍 Joylashuvni aniqlash",
-        sos: "SOS",
-        ambulance: "Tez yordam",
-        fuel: "Yoqilg‘i",
-        toilet: "Hojatxona",
-        food: "Ovqatlanish",
-        voice: "Ovozli yordam",
-        footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm"
-    },
-    ru: {
-        title: "БЕК_БОЛА",
-        subtitle: "Умный помощник Паркентского района",
-        labelLang: "Выберите язык:",
-        btnLocation: "📍 Определить местоположение",
-        sos: "SOS",
-        ambulance: "Скорая помощь",
-        fuel: "Заправка",
-        toilet: "Туалет",
-        food: "Питание",
-        voice: "Голосовой помощник",
-        footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм"
-    },
-    en: {
-        title: "BEK_BOLA",
-        subtitle: "Smart assistant of Parkent district",
-        labelLang: "Select language:",
-        btnLocation: "📍 Get Location",
-        sos: "SOS",
-        ambulance: "Ambulance",
-        fuel: "Fuel",
-        toilet: "Toilet",
-        food: "Food & Drink",
-        voice: "Voice Help",
-        footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism"
+// 1. FIREBASE SOZLAMALARI (SHU YERGA O'ZINGIZNIKINI QO'YING)
+const firebaseConfig = {
+    apiKey: "AIza...",
+    authDomain: "loyiha-nomi.firebaseapp.com",
+    databaseURL: "https://loyiha-nomi-default-rtdb.firebaseio.com",
+    projectId: "loyiha-nomi",
+    storageBucket: "loyiha-nomi.appspot.com",
+    messagingSenderId: "...",
+    appId: "..."
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// 2. ADMIN PANELGA YUBORISH FUNKSIYASI
+function sendToAdmin(type) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const userId = "USER_" + Math.floor(Math.random() * 9000 + 1000);
+            database.ref('chaqiruvlar/' + userId).set({
+                id: userId,
+                turi: type,
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                vaqt: new Date().toLocaleString(),
+                holat: "yangi"
+            }).then(() => {
+                alert("Xabar yuborildi! Tez orada yordam ko'rsatiladi.");
+            });
+        }, () => {
+            alert("Joylashuvni aniqlashga ruxsat bering!");
+        });
     }
+}
+
+// 3. QOLGAN FUNKSIYALAR (Tarjima va h.k)
+const translations = {
+    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm" },
+    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить местоположение", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм" },
+    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism" }
 };
 
 function changeLanguage() {
     const lang = document.getElementById("langSelect").value;
     const t = translations[lang];
-
     document.getElementById("app-title").innerText = t.title;
     document.getElementById("app-subtitle").innerText = t.subtitle;
     document.getElementById("label-lang").innerText = t.labelLang;
@@ -126,7 +125,7 @@ function changeLanguage() {
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
-            window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
+            alert("Sizning joylashuvingiz: " + pos.coords.latitude + ", " + pos.coords.longitude);
         });
     }
 }
@@ -137,7 +136,6 @@ function speakHelp() {
     const msg = new SpeechSynthesisUtterance(text);
     msg.lang = (lang === 'ru') ? 'ru-RU' : (lang === 'en') ? 'en-US' : 'uz-UZ';
     window.speechSynthesis.speak(msg);
-    alert(text);
 }
 </script>
 </body>
