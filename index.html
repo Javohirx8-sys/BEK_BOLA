@@ -6,64 +6,56 @@
     <title>BEK_BOLA | SOS</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>
-        body { margin: 0; font-family: sans-serif; background: #f0f2f5; text-align: center; }
-        header { background: #0a5cff; color: white; padding: 20px; border-radius: 0 0 20px 20px; }
-        .sos-btn { 
-            background: #ff3b3b; color: white; border: none; width: 200px; height: 200px; 
-            border-radius: 50%; font-size: 30px; font-weight: bold; margin-top: 50px;
-            box-shadow: 0 0 20px rgba(255, 59, 59, 0.5); cursor: pointer;
-        }
-        .sos-btn:active { transform: scale(0.9); }
-    </style>
 </head>
-<body>
+<body style="text-align:center; font-family:sans-serif; background:#f4f4f4;">
 
-<header>
-    <h1>BEK_BOLA</h1>
-    <p>Yordam kerak bo'lsa tugmani bosing</p>
-</header>
+    <h1 style="color:#0a5cff; margin-top:50px;">BEK BOLA SOS</h1>
+    <button id="sosBtn" style="background:#ff3b3b; color:white; border:none; width:200px; height:200px; border-radius:50%; font-size:30px; font-weight:bold; cursor:pointer; box-shadow:0 10px 20px rgba(0,0,0,0.2);">SOS 🆘</button>
 
-<button class="sos-btn" onclick="sendSOS()">SOS 🆘</button>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCwhY9eF8gIO5Ew9MaYmzSbfKUs0wByOAM",
+            authDomain: "bek-bola.firebaseapp.com",
+            databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "bek-bola",
+            storageBucket: "bek-bola.firebasestorage.app",
+            messagingSenderId: "617804928629",
+            appId: "1:617804928629:web:4402d65810cf3d30810a3c"
+        };
 
-<script>
-    // SIZNING ANIQ FIREBASE SOZLAMALARINGIZ
-    const firebaseConfig = {
-        apiKey: "AIzaSyCwhY9eF8gIO5Ew9MaYmzSbfKUs0wByOAM",
-        authDomain: "bek-bola.firebaseapp.com",
-        databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "bek-bola",
-        storageBucket: "bek-bola.firebasestorage.app",
-        messagingSenderId: "617804928629",
-        appId: "1:617804928629:web:4402d65810cf3d30810a3c"
-    };
-
-    // Firebase-ni ishga tushirish
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const database = firebase.database();
-
-    function sendSOS() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                const id = Date.now(); // Takrorlanmas ID
-                database.ref('chaqiruvlar/' + id).set({
-                    id: id,
-                    turi: "SOS 🆘",
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                    vaqt: new Date().toLocaleTimeString()
-                })
-                .then(() => alert("Xabar yuborildi!"))
-                .catch(err => alert("Xato: " + err.message));
-            }, (error) => {
-                alert("GPSni yoqing yoki ruxsat bering!");
-            });
-        } else {
-            alert("Brauzeringiz GPSni qo'llab-quvvatlamaydi");
+        // Firebaseni boshlash
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
         }
-    }
-</script>
+
+        const database = firebase.database();
+
+        document.getElementById('sosBtn').onclick = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const id = Date.now();
+                    
+                    // Ma'lumotni yuborish
+                    database.ref('chaqiruvlar/' + id).set({
+                        id: id,
+                        turi: "SOS 🆘",
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        vaqt: new Date().toLocaleTimeString()
+                    })
+                    .then(() => {
+                        alert("BAZAGA YOZILDI! Endi admin panelni tekshiring.");
+                    })
+                    .catch(error => {
+                        alert("XATO BO'LDI: " + error.message);
+                    });
+                }, (err) => {
+                    alert("GPS xatosi: " + err.message + ". Iltimos, joylashuvga ruxsat bering!");
+                });
+            } else {
+                alert("Brauzeringiz GPSni qo'llab-quvvatlamaydi.");
+            }
+        };
+    </script>
 </body>
 </html>
