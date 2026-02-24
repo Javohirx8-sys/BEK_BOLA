@@ -3,140 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEK_BOLA | Parkent Turizm Yordamchisi</title>
+    <title>BEK_BOLA | Parkent Turizm</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
-        header { background: linear-gradient(135deg, #0a5cff, #0041c2); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f0f2f5; }
+        header { background: linear-gradient(135deg, #0a5cff, #0041c2); color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
         .container { padding: 20px; }
-        label { font-weight: bold; display: block; margin-bottom: 5px; }
-        select, button { width: 100%; padding: 14px; margin-top: 10px; font-size: 16px; border-radius: 12px; border: 1px solid #ddd; outline: none; transition: 0.3s; }
-        button { background: #0a5cff; color: white; border: none; font-weight: bold; cursor: pointer; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
-        .card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .card:active { transform: scale(0.92); }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
-        .sos { background: #ff3b3b; color: white; animation: pulse-red 2s infinite; }
-        .footer { text-align: center; font-size: 13px; color: #888; margin-top: 40px; padding-bottom: 20px; }
+        .card { background: white; border-radius: 15px; padding: 25px 15px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.05); cursor: pointer; }
+        .sos { background: #ff3b3b; color: white; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
+        button { width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: none; background: #0a5cff; color: white; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <h2 id="app-title">BEK_BOLA</h2>
-    <p id="app-subtitle">Parkent tumani aqlli yordamchisi</p>
+    <h2>BEK_BOLA</h2>
+    <p>Parkent tumani aqlli yordamchisi</p>
 </header>
 
 <div class="container">
-    <label id="label-lang">Tilni tanlang:</label>
-    <select id="langSelect" onchange="changeLanguage()">
-        <option value="uz">O‘zbekcha</option>
-        <option value="ru">Русский</option>
-        <option value="en">English</option>
-    </select>
-
-    <button id="btn-location" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
+    <button onclick="getLocation()">📍 Joylashuvni aniqlash</button>
 
     <div class="grid">
-        <div class="card sos" onclick="sendToAdmin('SOS 🆘')">
-            <span style="font-size: 30px;">🆘</span><br><b id="txt-sos">SOS</b>
+        <div class="card sos" onclick="yuborish('SOS 🆘')">
+            <span style="font-size: 30px;">🆘</span><br><b>SOS</b>
         </div>
-        <div class="card" onclick="sendToAdmin('Tez yordam 🚑')">
-            <span style="font-size: 30px;">🚑</span><br><span id="txt-ambulance">Tez yordam</span>
+        <div class="card" onclick="yuborish('Tez yordam 🚑')">
+            <span style="font-size: 30px;">🚑</span><br>Tez yordam
         </div>
-        <div class="card" onclick="window.open('https://www.google.com/maps/search/gas+station')">
-            <span style="font-size: 30px;">⛽️</span><br><span id="txt-fuel">Yoqilg‘i</span>
+        <div class="card" onclick="window.open('https://www.google.com/maps/search/zapravka+parkent')">
+            <span style="font-size: 30px;">⛽️</span><br>Yoqilg‘i
         </div>
-        <div class="card" onclick="window.open('https://www.google.com/maps/search/toilet')">
-            <span style="font-size: 30px;">🚻</span><br><span id="txt-toilet">Hojatxona</span>
+        <div class="card" onclick="window.open('https://www.google.com/maps/search/restoran+parkent')">
+            <span style="font-size: 30px;">🍽</span><br>Ovqatlanish
         </div>
-        <div class="card" onclick="window.open('https://www.google.com/maps/search/restaurant')">
-            <span style="font-size: 30px;">🍽</span><br><span id="txt-food">Ovqatlanish</span>
-        </div>
-        <div class="card" onclick="speakHelp()">
-            <span style="font-size: 30px;">🎙</span><br><span id="txt-voice">Ovozli yordam</span>
-        </div>
-    </div>
-
-    <div class="footer" id="txt-footer">
-        © 2026 BEK_BOLA | Parkent innovatsion turizm
     </div>
 </div>
 
 <script>
-// 1. FIREBASE SOZLAMALARI (SHU YERGA O'ZINGIZNIKINI QO'YING)
-const firebaseConfig = {
-    apiKey: "AIza...",
-    authDomain: "loyiha-nomi.firebaseapp.com",
-    databaseURL: "https://loyiha-nomi-default-rtdb.firebaseio.com",
-    projectId: "loyiha-nomi",
-    storageBucket: "loyiha-nomi.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
-};
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+    // FIREBASE SOZLAMALARI (O'zingnikini qo'y!)
+    const firebaseConfig = {
+        apiKey: "BU_YERGA_API_KEY_QOYILADI",
+        authDomain: "bek-bola.firebaseapp.com",
+        databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/",
+        projectId: "bek-bola",
+        storageBucket: "bek-bola.appspot.com",
+        messagingSenderId: "SENDER_ID",
+        appId: "APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-// 2. ADMIN PANELGA YUBORISH FUNKSIYASI
-function sendToAdmin(type) {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            const userId = "USER_" + Math.floor(Math.random() * 9000 + 1000);
-            database.ref('chaqiruvlar/' + userId).set({
-                id: userId,
-                turi: type,
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude,
-                vaqt: new Date().toLocaleString(),
-                holat: "yangi"
-            }).then(() => {
-                alert("Xabar yuborildi! Tez orada yordam ko'rsatiladi.");
+    function yuborish(tur) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                const id = "U" + Math.floor(Math.random() * 9000);
+                database.ref('chaqiruvlar/' + id).set({
+                    id: id,
+                    turi: tur,
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    vaqt: new Date().toLocaleTimeString()
+                }).then(() => alert("Yordam so'raldi! Admin panelga xabar ketdi."));
             });
-        }, () => {
-            alert("Joylashuvni aniqlashga ruxsat bering!");
-        });
+        } else {
+            alert("GPSni yoqing!");
+        }
     }
-}
-
-// 3. QOLGAN FUNKSIYALAR (Tarjima va h.k)
-const translations = {
-    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm" },
-    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить местоположение", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм" },
-    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism" }
-};
-
-function changeLanguage() {
-    const lang = document.getElementById("langSelect").value;
-    const t = translations[lang];
-    document.getElementById("app-title").innerText = t.title;
-    document.getElementById("app-subtitle").innerText = t.subtitle;
-    document.getElementById("label-lang").innerText = t.labelLang;
-    document.getElementById("btn-location").innerText = t.btnLocation;
-    document.getElementById("txt-sos").innerText = t.sos;
-    document.getElementById("txt-ambulance").innerText = t.ambulance;
-    document.getElementById("txt-fuel").innerText = t.fuel;
-    document.getElementById("txt-toilet").innerText = t.toilet;
-    document.getElementById("txt-food").innerText = t.food;
-    document.getElementById("txt-voice").innerText = t.voice;
-    document.getElementById("txt-footer").innerText = t.footer;
-}
-
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            alert("Sizning joylashuvingiz: " + pos.coords.latitude + ", " + pos.coords.longitude);
-        });
-    }
-}
-
-function speakHelp() {
-    const lang = document.getElementById("langSelect").value;
-    let text = (lang === 'ru') ? "Чем я могу вам помочь?" : (lang === 'en') ? "How can I help you?" : "Sizga qanday yordam bera olaman?";
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = (lang === 'ru') ? 'ru-RU' : (lang === 'en') ? 'en-US' : 'uz-UZ';
-    window.speechSynthesis.speak(msg);
-}
 </script>
 </body>
 </html>
