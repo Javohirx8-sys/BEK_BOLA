@@ -3,74 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parkent Turizm Yordamchisi</title>
+    <title>Parkent Tourist Helper</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f8f9fa; color: #333; }
-        header { background: #2c3e50; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
-        .lang-select { position: absolute; right: 10px; top: 15px; background: #34495e; color: white; border: 1px solid #7f8c8d; border-radius: 5px; padding: 5px; }
-        
-        .container { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 80px; }
-        
-        .btn-item { 
-            background: white; border-radius: 15px; padding: 20px; text-align: center; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 0.2s;
+        :root { --main-bg: #121212; --card-bg: rgba(255, 255, 255, 0.1); --accent: #00d2ff; }
+        body { font-family: 'Inter', sans-serif; background: var(--main-bg); color: white; margin: 0; padding: 0; }
+        .glass-header { backdrop-filter: blur(10px); background: rgba(0,0,0,0.7); padding: 20px; position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .main-btn { 
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; 
+            padding: 25px 10px; display: flex; flex-direction: column; align-items: center; 
+            backdrop-filter: blur(5px); transition: 0.3s; cursor: pointer;
         }
-        .btn-item:active { transform: scale(0.95); }
-        .btn-item i { font-size: 40px; margin-bottom: 10px; }
-        
-        /* Maxsus ranglar */
-        .sos { grid-column: span 2; background: #e74c3c; color: white; }
-        .med { border-top: 5px solid #27ae60; }
-        .fuel { border-top: 5px solid #f1c40f; }
-        .wc { border-top: 5px solid #3498db; }
-        .food { border-top: 5px solid #e67e22; }
-        .voice { grid-column: span 2; background: #9b59b6; color: white; }
-        
-        h2 { font-size: 18px; margin: 0; }
-        .loc-info { text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 10px; }
+        .main-btn:active { transform: scale(0.9); background: var(--accent); }
+        .main-btn span { font-size: 40px; margin-bottom: 10px; }
+        .main-btn h2 { font-size: 14px; margin: 0; font-weight: 400; text-transform: uppercase; }
+        .sos-btn { grid-column: span 2; background: linear-gradient(45deg, #ff416c, #ff4b2b); border: none; }
+        .sos-btn h2 { font-weight: bold; font-size: 20px; }
+        #status-bar { font-size: 12px; text-align: center; color: var(--accent); margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<header>
-    <h3 style="margin:0">Parkent Travel 🏔</h3>
-    <select class="lang-select">
-        <option>O'zbek</option>
-        <option>English</option>
-        <option>Русский</option>
+<div class="glass-header">
+    <h2 id="app-title">PARKENT HELPER</h2>
+    <select id="langSwitcher" onchange="changeLang()" style="background:none; color:white; border:1px solid white; border-radius:5px;">
+        <option value="uz">UZ</option>
+        <option value="ru">RU</option>
+        <option value="en">EN</option>
     </select>
-</header>
+</div>
 
-<div class="loc-info">📍 Sizning joylashuvingiz nazoratda</div>
+<div id="status-bar">● GPS Ready</div>
 
-<div class="container">
-    <button class="btn-item sos" onclick="sendHelp('🆘 SOS')">
-        <i>🆘</i> <h2>SOS</h2>
-    </button>
-    
-    <button class="btn-item med" onclick="sendHelp('🚑 Tez yordam')">
-        <i>🚑</i> <h2>Tez yordam</h2>
-    </button>
-    
-    <button class="btn-item fuel" onclick="sendHelp('⛽️ Yoqilg‘i')">
-        <i>⛽️</i> <h2>Yoqilg‘i</h2>
-    </button>
-    
-    <button class="btn-item wc" onclick="sendHelp('🚻 Hojatxona')">
-        <i>🚻</i> <h2>Hojatxona</h2>
-    </button>
-    
-    <button class="btn-item food" onclick="sendHelp('🍽 Ovqatlanish')">
-        <i>🍽</i> <h2>Ovqatlanish</h2>
-    </button>
-    
-    <button class="btn-item voice" onclick="sendHelp('🎙 Ovozli yordam')">
-        <i>🎙</i> <h2>Ovozli yordam</h2>
-    </button>
+<div class="grid-container">
+    <div class="main-btn sos-btn" onclick="triggerSignal('SOS')">
+        <span>🆘</span> <h2 id="btn-sos">SOS</h2>
+    </div>
+    <div class="main-btn" onclick="triggerSignal('Medical')">
+        <span>🚑</span> <h2 id="btn-med">Tez yordam</h2>
+    </div>
+    <div class="main-btn" onclick="triggerSignal('Fuel')">
+        <span>⛽️</span> <h2 id="btn-fuel">Yoqilg'i</h2>
+    </div>
+    <div class="main-btn" onclick="triggerSignal('WC')">
+        <span>🚻</span> <h2 id="btn-wc">Hojatxona</h2>
+    </div>
+    <div class="main-btn" onclick="triggerSignal('Food')">
+        <span>🍽</span> <h2 id="btn-food">Ovqatlanish</h2>
+    </div>
+    <div class="main-btn" onclick="triggerSignal('Voice')">
+        <span>🎙</span> <h2 id="btn-voice">Ovozli yordam</h2>
+    </div>
 </div>
 
 <script>
@@ -82,23 +67,44 @@
         appId: "1:617804928629:web:4402d65810cf3d30810a3c"
     };
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    const db = firebase.database();
 
-    function sendHelp(type) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                database.ref('chaqiruvlar/').push({
-                    turi: type,
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                    vaqt: new Date().toLocaleTimeString()
-                }).then(() => {
-                    alert(type + " uchun so'rovingiz qabul qilindi!");
+    const dictionary = {
+        uz: { sos: "SOS", med: "Tez yordam", fuel: "Yoqilg'i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
+        ru: { sos: "ПОМОЩЬ", med: "Медпомощь", fuel: "Заправка", wc: "Туалет", food: "Еда", voice: "Голос" },
+        en: { sos: "SOS", med: "Medical", fuel: "Fuel", wc: "Restroom", food: "Food", voice: "Voice help" }
+    };
+
+    function changeLang() {
+        const lang = document.getElementById('langSwitcher').value;
+        document.getElementById('btn-sos').innerText = dictionary[lang].sos;
+        document.getElementById('btn-med').innerText = dictionary[lang].med;
+        document.getElementById('btn-fuel').innerText = dictionary[lang].fuel;
+        document.getElementById('btn-wc').innerText = dictionary[lang].wc;
+        document.getElementById('btn-food').innerText = dictionary[lang].food;
+        document.getElementById('btn-voice').innerText = dictionary[lang].voice;
+    }
+
+    function triggerSignal(type) {
+        document.getElementById('status-bar').innerText = "Sending...";
+        
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const signal = {
+                    type: type,
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    time: new Date().toLocaleTimeString(),
+                    device: navigator.userAgent.slice(0, 20)
+                };
+                db.ref('alerts/').push(signal).then(() => {
+                    document.getElementById('status-bar').innerText = "✅ Signal Sent!";
+                    setTimeout(() => { document.getElementById('status-bar').innerText = "● GPS Ready"; }, 3000);
                 });
-            }, () => {
-                alert("Joylashuvingizni aniqlab bo'lmadi. GPS yoqilganini tekshiring.");
-            });
-        }
+            },
+            (err) => { alert("GPS Xatosi: Joylashuvni yoqing!"); },
+            { enableHighAccuracy: true }
+        );
     }
 </script>
 </body>
