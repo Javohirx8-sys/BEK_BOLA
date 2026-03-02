@@ -3,42 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parkent SOS & Admin</title>
+    <title>Parkent Turizm Yordamchisi</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 20px; text-align: center; background: #f0f2f5; }
-        .sos-section { padding: 50px 0; }
-        .sos-btn { 
-            width: 200px; height: 200px; border-radius: 50%; background: #ff4757; color: white; 
-            font-size: 30px; border: 10px solid #ff6b81; cursor: pointer; font-weight: bold;
-            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.4); transition: 0.3s;
-        }
-        .sos-btn:active { transform: scale(0.9); box-shadow: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: #f8f9fa; color: #333; }
+        header { background: #2c3e50; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
+        .lang-select { position: absolute; right: 10px; top: 15px; background: #34495e; color: white; border: 1px solid #7f8c8d; border-radius: 5px; padding: 5px; }
         
-        .admin-section { margin-top: 50px; border-top: 3px dashed #ccc; padding-top: 30px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto; }
-        .card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; border-left: 5px solid #ff4757; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
-        .btn-map { background: #1e90ff; color: white; padding: 8px 12px; text-decoration: none; border-radius: 5px; font-size: 14px; }
-        .status { font-weight: bold; color: #2ed573; }
+        .container { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 80px; }
+        
+        .btn-item { 
+            background: white; border-radius: 15px; padding: 20px; text-align: center; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+        }
+        .btn-item:active { transform: scale(0.95); }
+        .btn-item i { font-size: 40px; margin-bottom: 10px; }
+        
+        /* Maxsus ranglar */
+        .sos { grid-column: span 2; background: #e74c3c; color: white; }
+        .med { border-top: 5px solid #27ae60; }
+        .fuel { border-top: 5px solid #f1c40f; }
+        .wc { border-top: 5px solid #3498db; }
+        .food { border-top: 5px solid #e67e22; }
+        .voice { grid-column: span 2; background: #9b59b6; color: white; }
+        
+        h2 { font-size: 18px; margin: 0; }
+        .loc-info { text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="sos-section">
-        <h1>Parkent Turizm SOS 🆘</h1>
-        <button class="sos-btn" onclick="sendSOS()">YORDAM!</button>
-        <p id="msg" style="color: #555; margin-top: 20px;">Tugmani bossangiz, joylashuvingiz adminga yuboriladi.</p>
-    </div>
+<header>
+    <h3 style="margin:0">Parkent Travel 🏔</h3>
+    <select class="lang-select">
+        <option>O'zbek</option>
+        <option>English</option>
+        <option>Русский</option>
+    </select>
+</header>
 
-    <div class="admin-section">
-        <h2>📊 Boshqaruv paneli</h2>
-        <p>Server: <span id="conn" class="status">Ulanmoqda...</span></p>
-        <div id="list">Chaqiruvlar yuklanmoqda...</div>
-    </div>
+<div class="loc-info">📍 Sizning joylashuvingiz nazoratda</div>
+
+<div class="container">
+    <button class="btn-item sos" onclick="sendHelp('🆘 SOS')">
+        <i>🆘</i> <h2>SOS</h2>
+    </button>
+    
+    <button class="btn-item med" onclick="sendHelp('🚑 Tez yordam')">
+        <i>🚑</i> <h2>Tez yordam</h2>
+    </button>
+    
+    <button class="btn-item fuel" onclick="sendHelp('⛽️ Yoqilg‘i')">
+        <i>⛽️</i> <h2>Yoqilg‘i</h2>
+    </button>
+    
+    <button class="btn-item wc" onclick="sendHelp('🚻 Hojatxona')">
+        <i>🚻</i> <h2>Hojatxona</h2>
+    </button>
+    
+    <button class="btn-item food" onclick="sendHelp('🍽 Ovqatlanish')">
+        <i>🍽</i> <h2>Ovqatlanish</h2>
+    </button>
+    
+    <button class="btn-item voice" onclick="sendHelp('🎙 Ovozli yordam')">
+        <i>🎙</i> <h2>Ovozli yordam</h2>
+    </button>
+</div>
 
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyCwhY9eF8gIO5Ew9MaYmzSbfKUs0wByOAM",
         authDomain: "bek-bola.firebaseapp.com",
         databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId
+        projectId: "bek-bola",
+        appId: "1:617804928629:web:4402d65810cf3d30810a3c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    function sendHelp(type) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                database.ref('chaqiruvlar/').push({
+                    turi: type,
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    vaqt: new Date().toLocaleTimeString()
+                }).then(() => {
+                    alert(type + " uchun so'rovingiz qabul qilindi!");
+                });
+            }, () => {
+                alert("Joylashuvingizni aniqlab bo'lmadi. GPS yoqilganini tekshiring.");
+            });
+        }
+    }
+</script>
+</body>
+</html>
