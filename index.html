@@ -37,7 +37,7 @@
     <div class="grid">
         <div class="card sos" onclick="sendAlert('SOS')">🆘<br><b id="l-sos">SOS</b></div>
         <div class="card" onclick="sendAlert('TEZ_YORDAM')">🚑<br><b id="l-amb">Tez yordam</b></div>
-        <div class="card" onclick="openMap('gas+station+Parkent')">⛽️<br><span id="l-fuel">Yoqilg‘i</span></div>
+        <div class="card" onclick="openMap('zapravka+Parkent')">⛽️<br><span id="l-fuel">Yoqilg‘i</span></div>
         <div class="card" onclick="openMap('toilet+Parkent')">🚻<br><span id="l-wc">Hojatxona</span></div>
         <div class="card" onclick="openMap('restaurant+Parkent')">🍽<br><span id="l-food">Ovqatlanish</span></div>
         <div class="card" onclick="speak()">🎙<br><span id="l-voice">Ovozli yordam</span></div>
@@ -54,18 +54,22 @@
             try {
                 const res = await fetch(`${dbURL}/alerts.json`, { method: 'POST', body: JSON.stringify(payload) });
                 if(res.ok) alert("Xabar dispetcherga yuborildi!");
-                if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
+                if(type === 'TEZ_YORDAM') window.location.assign("tel:103");
             } catch(e) { alert("Xatolik! Internetni tekshiring."); }
-        });
+        }, err => alert("GPS ruxsat berilmadi!"));
     }
 
     function getLocation() {
         navigator.geolocation.getCurrentPosition(pos => {
-            window.location.href = `https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`;
+            const url = "https://www.google.com" + pos.coords.latitude + "," + pos.coords.longitude;
+            window.location.assign(url);
         });
     }
 
-    function openMap(q) { window.location.href = `https://www.google.com{q}`; }
+    function openMap(q) { 
+        const url = "https://www.google.com" + q;
+        window.location.assign(url); 
+    }
 
     const langData = {
         uz: { title: "BEK_BOLA", sub: "Parkent tumani aqlli yordamchisi", loc: "📍 Joylashuvni aniqlash", sos: "SOS", amb: "Tez yordam", fuel: "Yoqilg‘i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
