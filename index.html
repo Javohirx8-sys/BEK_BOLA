@@ -11,11 +11,10 @@
         .container { padding: 20px; max-width: 500px; margin: auto; }
         label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 14px; }
         select, button { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 15px; border: 1px solid #ddd; outline: none; transition: 0.3s; box-sizing: border-box; }
-        button { background: var(--main-blue); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(10, 92, 255, 0.2); }
+        button { background: var(--main-blue); color: white; border: none; font-weight: bold; cursor: pointer; }
         button:active { transform: scale(0.97); }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
         .card { background: white; border-radius: 18px; padding: 25px 10px; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .card:active { transform: scale(0.9); }
         .emoji { font-size: 32px; margin-bottom: 8px; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
@@ -62,18 +61,18 @@
     </div>
 
     <div class="footer" id="txt-footer">
-        © 2026 BEK_BOLA | Parkent innovatsion turizm <br> Barcha huquqlar himoyalangan
+        © 2026 BEK_BOLA | Parkent innovatsion turizm
     </div>
 </div>
 
 <script>
-// Firebase URL manzilingizni shu yerga yozing
+// Firebase URL manzilingiz integratsiya qilindi
 const databaseURL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/";
 
 const translations = {
-    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm", msgSent: "Xabar yuborildi!", msgError: "Xatolik yuz berdi" },
-    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить локацию", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм", msgSent: "Сообщение отправлено!", msgError: "Ошибка при отправке" },
-    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get My Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism", msgSent: "Message sent!", msgError: "Sending error" }
+    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm", msgSent: "Xabar yuborildi!", msgError: "Xatolik! Internetni tekshiring", msgWait: "Yuborilmoqda..." },
+    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить локацию", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм", msgSent: "Сообщение отправлено!", msgError: "Ошибка! Проверьте интернет", msgWait: "Отправка..." },
+    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get My Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism", msgSent: "Message sent!", msgError: "Error! Check internet", msgWait: "Sending..." }
 };
 
 function changeLanguage() {
@@ -89,20 +88,22 @@ function changeLanguage() {
     document.getElementById("txt-toilet").innerText = t.toilet;
     document.getElementById("txt-food").innerText = t.food;
     document.getElementById("txt-voice").innerText = t.voice;
-    document.getElementById("txt-footer").innerHTML = t.footer + "<br> Barcha huquqlar himoyalangan";
+    document.getElementById("txt-footer").innerHTML = t.footer;
 }
 
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
             window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
-        }, () => alert("GPS ruxsat berilmadi"));
+        });
     }
 }
 
 async function sendAlert(type) {
     const lang = document.getElementById("langSelect").value;
-    if (!navigator.geolocation) return alert("GPS ishlamayapti");
+    const t = translations[lang];
+
+    if (!navigator.geolocation) return alert("GPS Error");
 
     navigator.geolocation.getCurrentPosition(async (pos) => {
         const payload = {
@@ -114,16 +115,23 @@ async function sendAlert(type) {
         };
 
         try {
-            await fetch(`${databaseURL}/alerts.json`, {
+            // Ma'lumotni bazaga yuboramiz
+            const response = await fetch(`${databaseURL}/alerts.json`, {
                 method: 'POST',
                 body: JSON.stringify(payload)
             });
-            alert(translations[lang].msgSent);
-            if(type === 'TEZ_YORDAM') window.open('tel:103');
+
+            // Agar baza ma'lumotni qabul qilsa (response.ok bo'lsa)
+            if (response.ok) {
+                alert(t.msgSent); // "Xabar yuborildi!"
+                if(type === 'TEZ_YORDAM') window.open('tel:103');
+            } else {
+                alert(t.msgError);
+            }
         } catch (e) {
-            alert(translations[lang].msgError);
+            alert(t.msgError);
         }
-    }, () => alert("Lokatsiya aniqlanmadi, lekin murojaat yozib olindi."));
+    }, () => alert("GPS ruxsat berilmadi"));
 }
 
 function speakHelp() {
@@ -136,4 +144,3 @@ function speakHelp() {
 </script>
 </body>
 </html>
-
