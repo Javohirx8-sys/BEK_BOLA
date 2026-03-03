@@ -9,137 +9,79 @@
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-gray); color: #333; }
         header { background: linear-gradient(135deg, var(--main-blue), #0041c2); color: white; padding: 25px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .container { padding: 20px; max-width: 500px; margin: auto; }
-        label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 14px; }
-        select, button { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 15px; border: 1px solid #ddd; outline: none; transition: 0.3s; box-sizing: border-box; }
-        button { background: var(--main-blue); color: white; border: none; font-weight: bold; cursor: pointer; }
-        button:active { transform: scale(0.97); }
+        button, select { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 15px; border: 1px solid #ddd; outline: none; transition: 0.3s; cursor: pointer; }
+        button { background: var(--main-blue); color: white; border: none; font-weight: bold; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
         .card { background: white; border-radius: 18px; padding: 25px 10px; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .card:active { transform: scale(0.9); }
-        .emoji { font-size: 32px; margin-bottom: 8px; }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
-        .sos { background: var(--sos-red); color: white; animation: pulse-red 2s infinite; }
-        .footer { text-align: center; font-size: 13px; color: #888; margin-top: 40px; line-height: 1.6; }
+        .sos { background: var(--sos-red); color: white; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 30px; }
     </style>
 </head>
 <body>
-
 <header>
-    <h2 id="app-title">BEK_BOLA</h2>
-    <p id="app-subtitle">Parkent tumani aqlli yordamchisi</p>
+    <h2 id="title">BEK_BOLA</h2>
+    <p id="subtitle">Parkent tumani aqlli yordamchisi</p>
 </header>
-
 <div class="container">
-    <label id="label-lang">Tilni tanlang / Выберите язык / Select language:</label>
     <select id="langSelect" onchange="changeLanguage()">
         <option value="uz">O‘zbekcha</option>
         <option value="ru">Русский</option>
         <option value="en">English</option>
     </select>
-
-    <button id="btn-location" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
-
+    <button id="btnLoc" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
     <div class="grid">
-        <div class="card sos" onclick="sendAlert('SOS')">
-            <span class="emoji">🆘</span><br><b id="txt-sos">SOS</b>
-        </div>
-        <div class="card" onclick="sendAlert('TEZ_YORDAM')">
-            <span class="emoji">🚑</span><br><b id="txt-ambulance">Tez yordam</b>
-        </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
-            <span class="emoji">⛽️</span><br><span id="txt-fuel">Yoqilg‘i</span>
-        </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
-            <span class="emoji">🚻</span><br><span id="txt-toilet">Hojatxona</span>
-        </div>
-        <div class="card" onclick="window.open('https://www.google.com')">
-            <span class="emoji">🍽</span><br><span id="txt-food">Ovqatlanish</span>
-        </div>
-        <div class="card" onclick="speakHelp()">
-            <span class="emoji">🎙</span><br><span id="txt-voice">Ovozli yordam</span>
-        </div>
+        <div class="card sos" onclick="sendAlert('SOS')">🆘<br><b id="l-sos">SOS</b></div>
+        <div class="card" onclick="sendAlert('TEZ_YORDAM')">🚑<br><b id="l-amb">Tez yordam</b></div>
+        <div class="card" onclick="searchMap('zapravka+Parkent')">⛽️<br><span id="l-fuel">Yoqilg‘i</span></div>
+        <div class="card" onclick="searchMap('toilet+Parkent')">🚻<br><span id="l-wc">Hojatxona</span></div>
+        <div class="card" onclick="searchMap('oshxona+Parkent')">🍽<br><span id="l-food">Ovqatlanish</span></div>
+        <div class="card" onclick="speak()">🎙<br><span id="l-voice">Ovozli yordam</span></div>
     </div>
-
-    <div class="footer" id="txt-footer">
-        © 2026 BEK_BOLA | Parkent innovatsion turizm
-    </div>
+    <div class="footer">© 2026 BEK_BOLA | Parkent Monitoring Center</div>
 </div>
 
 <script>
-// Firebase URL manzilingiz integratsiya qilindi
-const databaseURL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/";
+const dbURL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app";
 
-const translations = {
-    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm", msgSent: "Xabar yuborildi!", msgError: "Xatolik! Internetni tekshiring", msgWait: "Yuborilmoqda..." },
-    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить локацию", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм", msgSent: "Сообщение отправлено!", msgError: "Ошибка! Проверьте интернет", msgWait: "Отправка..." },
-    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get My Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism", msgSent: "Message sent!", msgError: "Error! Check internet", msgWait: "Sending..." }
-};
-
-function changeLanguage() {
-    const lang = document.getElementById("langSelect").value;
-    const t = translations[lang];
-    document.getElementById("app-title").innerText = t.title;
-    document.getElementById("app-subtitle").innerText = t.subtitle;
-    document.getElementById("label-lang").innerText = t.labelLang;
-    document.getElementById("btn-location").innerText = t.btnLocation;
-    document.getElementById("txt-sos").innerText = t.sos;
-    document.getElementById("txt-ambulance").innerText = t.ambulance;
-    document.getElementById("txt-fuel").innerText = t.fuel;
-    document.getElementById("txt-toilet").innerText = t.toilet;
-    document.getElementById("txt-food").innerText = t.food;
-    document.getElementById("txt-voice").innerText = t.voice;
-    document.getElementById("txt-footer").innerHTML = t.footer;
-}
-
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
-        });
-    }
+function searchMap(query) {
+    window.open(`https://www.google.com{query}`, '_blank');
 }
 
 async function sendAlert(type) {
-    const lang = document.getElementById("langSelect").value;
-    const t = translations[lang];
-
-    if (!navigator.geolocation) return alert("GPS Error");
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-        const payload = {
-            type: type,
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            time: new Date().toLocaleString(),
-            status: "YANGI"
-        };
-
-        try {
-            // Ma'lumotni bazaga yuboramiz
-            const response = await fetch(`${databaseURL}/alerts.json`, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
-
-            // Agar baza ma'lumotni qabul qilsa (response.ok bo'lsa)
-            if (response.ok) {
-                alert(t.msgSent); // "Xabar yuborildi!"
-                if(type === 'TEZ_YORDAM') window.open('tel:103');
-            } else {
-                alert(t.msgError);
-            }
-        } catch (e) {
-            alert(t.msgError);
-        }
-    }, () => alert("GPS ruxsat berilmadi"));
+    if (!navigator.geolocation) return alert("GPS xatosi");
+    navigator.geolocation.getCurrentPosition(async pos => {
+        const payload = { type, lat: pos.coords.latitude, lon: pos.coords.longitude, time: new Date().toLocaleString() };
+        await fetch(`${dbURL}/alerts.json`, { method: 'POST', body: JSON.stringify(payload) });
+        alert("Xabar yuborildi!");
+        if(type === 'TEZ_YORDAM') window.open('tel:103');
+    });
 }
 
-function speakHelp() {
-    const lang = document.getElementById("langSelect").value;
-    let text = (lang === 'ru') ? "Чем я могу вам помочь?" : (lang === 'en') ? "How can I help you?" : "Sizga qanday yordam bera olaman?";
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = (lang === 'ru') ? 'ru-RU' : (lang === 'en') ? 'en-US' : 'uz-UZ';
-    window.speechSynthesis.speak(msg);
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(pos => {
+        window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
+    });
+}
+
+const langs = {
+    uz: { title: "BEK_BOLA", sub: "Parkent tumani aqlli yordamchisi", loc: "📍 Joylashuvni aniqlash", sos: "SOS", amb: "Tez yordam", fuel: "Yoqilg‘i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
+    ru: { title: "БЕК_БОЛА", sub: "Умный помощник Паркента", loc: "📍 Определить местоположение", sos: "SOS", amb: "Скорая помощь", fuel: "Заправка", wc: "Туалет", food: "Питание", voice: "Голосовой помощник" },
+    en: { title: "BEK_BOLA", sub: "Parkent Smart Assistant", loc: "📍 Get Location", sos: "SOS", amb: "Ambulance", fuel: "Fuel", wc: "Toilet", food: "Food", voice: "Voice Help" }
+};
+
+function changeLanguage() {
+    const l = langs[document.getElementById("langSelect").value];
+    document.getElementById("title").innerText = l.title;
+    document.getElementById("subtitle").innerText = l.sub;
+    document.getElementById("btnLoc").innerText = l.loc;
+    document.getElementById("l-sos").innerText = l.sos;
+    document.getElementById("l-amb").innerText = l.amb;
+    document.getElementById("l-fuel").innerText = l.fuel;
+    document.getElementById("l-wc").innerText = l.wc;
+    document.getElementById("l-food").innerText = l.food;
+    document.getElementById("l-voice").innerText = l.voice;
 }
 </script>
 </body>
