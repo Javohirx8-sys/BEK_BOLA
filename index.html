@@ -13,7 +13,7 @@
         button { background: var(--blue); color: white; border: none; font-weight: bold; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .card { background: white; border-radius: 20px; padding: 25px 10px; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
-        .card:active { transform: scale(0.9); }
+        .card:active { transform: scale(0.92); }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
         .sos { background: var(--red); color: white; animation: pulse 2s infinite; }
     </style>
@@ -32,14 +32,14 @@
         <option value="en">English</option>
     </select>
 
-    <button id="btn-loc" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
+    <button id="btn-loc" onclick="getLocation()">📍 Mening joylashuvim</button>
 
     <div class="grid">
         <div class="card sos" onclick="sendAlert('SOS')">🆘<br><b id="l-sos">SOS</b></div>
         <div class="card" onclick="sendAlert('TEZ_YORDAM')">🚑<br><b id="l-amb">Tez yordam</b></div>
-        <div class="card" onclick="openMap('zapravka+Parkent')">⛽️<br><span id="l-fuel">Yoqilg‘i</span></div>
-        <div class="card" onclick="openMap('toilet+Parkent')">🚻<br><span id="l-wc">Hojatxona</span></div>
-        <div class="card" onclick="openMap('restaurant+Parkent')">🍽<br><span id="l-food">Ovqatlanish</span></div>
+        <div class="card" onclick="openSearch('gas+station')">⛽️<br><span id="l-fuel">Yoqilg‘i</span></div>
+        <div class="card" onclick="openSearch('toilet')">🚻<br><span id="l-wc">Hojatxona</span></div>
+        <div class="card" onclick="openSearch('restaurant')">🍽<br><span id="l-food">Ovqatlanish</span></div>
         <div class="card" onclick="speak()">🎙<br><span id="l-voice">Ovozli yordam</span></div>
     </div>
 </div>
@@ -47,34 +47,41 @@
 <script>
     const dbURL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app";
 
+    // 1. SOS va Tez Yordam yuborish
     async function sendAlert(type) {
-        if (!navigator.geolocation) return alert("GPS xatosi");
+        if (!navigator.geolocation) return alert("GPS ishlamayapti");
         navigator.geolocation.getCurrentPosition(async pos => {
             const payload = { type, lat: pos.coords.latitude, lon: pos.coords.longitude, time: new Date().toLocaleString() };
             try {
                 const res = await fetch(`${dbURL}/alerts.json`, { method: 'POST', body: JSON.stringify(payload) });
-                if(res.ok) alert("Xabar dispetcherga yuborildi!");
-                if(type === 'TEZ_YORDAM') window.location.assign("tel:103");
-            } catch(e) { alert("Xatolik! Internetni tekshiring."); }
-        }, err => alert("GPS ruxsat berilmadi!"));
+                if(res.ok) alert("Murojaat qabul qilindi!");
+                if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
+            } catch(e) { alert("Internet aloqasini tekshiring!"); }
+        }, () => alert("Iltimos, GPS ruxsatini bering!"));
     }
 
+    // 2. Foydalanuvchi turgan joyni xaritada ko'rsatish
     function getLocation() {
         navigator.geolocation.getCurrentPosition(pos => {
-            const url = "https://www.google.com" + pos.coords.latitude + "," + pos.coords.longitude;
-            window.location.assign(url);
+            window.location.href = `https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`;
+        }, () => alert("GPS aniqlanmadi!"));
+    }
+
+    // 3. Eng yaqin joylarni qidirish (Oshxona, zapravka va h.k.)
+    function openSearch(query) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            // Turgan joyingiz atrofidan qidiradi
+            window.location.href = `https://www.google.com{query}/@${pos.coords.latitude},${pos.coords.longitude},15z`;
+        }, () => {
+            // GPS ruxsat bermasa, shunchaki Parkentdan qidiradi
+            window.location.href = `https://www.google.com{query}+Parkent`;
         });
     }
 
-    function openMap(q) { 
-        const url = "https://www.google.com" + q;
-        window.location.assign(url); 
-    }
-
     const langData = {
-        uz: { title: "BEK_BOLA", sub: "Parkent tumani aqlli yordamchisi", loc: "📍 Joylashuvni aniqlash", sos: "SOS", amb: "Tez yordam", fuel: "Yoqilg‘i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
-        ru: { title: "БЕК_БОЛА", sub: "Помощник Паркента", loc: "📍 Определить локацию", sos: "SOS", amb: "Скорая помощь", fuel: "Заправка", wc: "Туалет", food: "Питание", voice: "Голосовой помощник" },
-        en: { title: "BEK_BOLA", sub: "Parkent Smart Assistant", loc: "📍 Get Location", sos: "SOS", amb: "Ambulance", fuel: "Fuel", wc: "Toilet", food: "Food", voice: "Voice Help" }
+        uz: { title: "BEK_BOLA", sub: "Parkent tumani aqlli yordamchisi", loc: "📍 Mening joylashuvim", sos: "SOS", amb: "Tez yordam", fuel: "Yoqilg‘i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
+        ru: { title: "БЕК_БОЛА", sub: "Помощник Паркента", loc: "📍 Моё местоположение", sos: "SOS", amb: "Скорая помощь", fuel: "Заправка", wc: "Туалет", food: "Питание", voice: "Голосовой помощник" },
+        en: { title: "BEK_BOLA", sub: "Parkent Smart Assistant", loc: "📍 My Location", sos: "SOS", amb: "Ambulance", fuel: "Fuel", wc: "Toilet", food: "Food", voice: "Voice Help" }
     };
 
     function changeLang() {
