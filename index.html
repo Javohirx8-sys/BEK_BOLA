@@ -3,109 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parkent Tourist Helper</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <title>BEK_BOLA | Parkent Smart City</title>
     <style>
-        :root { --main-bg: #121212; --card-bg: rgba(255, 255, 255, 0.1); --accent: #00d2ff; }
-        body { font-family: 'Inter', sans-serif; background: var(--main-bg); color: white; margin: 0; padding: 0; }
-        .glass-header { backdrop-filter: blur(10px); background: rgba(0,0,0,0.7); padding: 20px; position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .main-btn { 
-            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; 
-            padding: 25px 10px; display: flex; flex-direction: column; align-items: center; 
-            backdrop-filter: blur(5px); transition: 0.3s; cursor: pointer;
-        }
-        .main-btn:active { transform: scale(0.9); background: var(--accent); }
-        .main-btn span { font-size: 40px; margin-bottom: 10px; }
-        .main-btn h2 { font-size: 14px; margin: 0; font-weight: 400; text-transform: uppercase; }
-        .sos-btn { grid-column: span 2; background: linear-gradient(45deg, #ff416c, #ff4b2b); border: none; }
-        .sos-btn h2 { font-weight: bold; font-size: 20px; }
-        #status-bar { font-size: 12px; text-align: center; color: var(--accent); margin-top: 10px; }
+        :root { --main-blue: #0a5cff; --sos-red: #ff3b3b; --bg-gray: #f0f2f5; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-gray); color: #333; }
+        header { background: linear-gradient(135deg, var(--main-blue), #0041c2); color: white; padding: 25px 15px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 14px; }
+        select, button { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 15px; border: 1px solid #ddd; outline: none; transition: 0.3s; box-sizing: border-box; }
+        button { background: var(--main-blue); color: white; border: none; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(10, 92, 255, 0.2); }
+        button:active { transform: scale(0.97); }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 25px; }
+        .card { background: white; border-radius: 18px; padding: 25px 10px; text-align: center; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card:active { transform: scale(0.9); }
+        .emoji { font-size: 32px; margin-bottom: 8px; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
+        .sos { background: var(--sos-red); color: white; animation: pulse-red 2s infinite; }
+        .footer { text-align: center; font-size: 13px; color: #888; margin-top: 40px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-<div class="glass-header">
-    <h2 id="app-title">PARKENT HELPER</h2>
-    <select id="langSwitcher" onchange="changeLang()" style="background:none; color:white; border:1px solid white; border-radius:5px;">
-        <option value="uz">UZ</option>
-        <option value="ru">RU</option>
-        <option value="en">EN</option>
+<header>
+    <h2 id="app-title">BEK_BOLA</h2>
+    <p id="app-subtitle">Parkent tumani aqlli yordamchisi</p>
+</header>
+
+<div class="container">
+    <label id="label-lang">Tilni tanlang / Выберите язык / Select language:</label>
+    <select id="langSelect" onchange="changeLanguage()">
+        <option value="uz">O‘zbekcha</option>
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
     </select>
-</div>
 
-<div id="status-bar">● GPS Ready</div>
+    <button id="btn-location" onclick="getLocation()">📍 Joylashuvni aniqlash</button>
 
-<div class="grid-container">
-    <div class="main-btn sos-btn" onclick="triggerSignal('SOS')">
-        <span>🆘</span> <h2 id="btn-sos">SOS</h2>
+    <div class="grid">
+        <div class="card sos" onclick="sendAlert('SOS')">
+            <span class="emoji">🆘</span><br><b id="txt-sos">SOS</b>
+        </div>
+        <div class="card" onclick="sendAlert('TEZ_YORDAM')">
+            <span class="emoji">🚑</span><br><b id="txt-ambulance">Tez yordam</b>
+        </div>
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span class="emoji">⛽️</span><br><span id="txt-fuel">Yoqilg‘i</span>
+        </div>
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span class="emoji">🚻</span><br><span id="txt-toilet">Hojatxona</span>
+        </div>
+        <div class="card" onclick="window.open('https://www.google.com')">
+            <span class="emoji">🍽</span><br><span id="txt-food">Ovqatlanish</span>
+        </div>
+        <div class="card" onclick="speakHelp()">
+            <span class="emoji">🎙</span><br><span id="txt-voice">Ovozli yordam</span>
+        </div>
     </div>
-    <div class="main-btn" onclick="triggerSignal('Medical')">
-        <span>🚑</span> <h2 id="btn-med">Tez yordam</h2>
-    </div>
-    <div class="main-btn" onclick="triggerSignal('Fuel')">
-        <span>⛽️</span> <h2 id="btn-fuel">Yoqilg'i</h2>
-    </div>
-    <div class="main-btn" onclick="triggerSignal('WC')">
-        <span>🚻</span> <h2 id="btn-wc">Hojatxona</h2>
-    </div>
-    <div class="main-btn" onclick="triggerSignal('Food')">
-        <span>🍽</span> <h2 id="btn-food">Ovqatlanish</h2>
-    </div>
-    <div class="main-btn" onclick="triggerSignal('Voice')">
-        <span>🎙</span> <h2 id="btn-voice">Ovozli yordam</h2>
+
+    <div class="footer" id="txt-footer">
+        © 2026 BEK_BOLA | Parkent innovatsion turizm <br> Barcha huquqlar himoyalangan
     </div>
 </div>
 
 <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyCwhY9eF8gIO5Ew9MaYmzSbfKUs0wByOAM",
-        authDomain: "bek-bola.firebaseapp.com",
-        databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "bek-bola",
-        appId: "1:617804928629:web:4402d65810cf3d30810a3c"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+// Firebase URL manzilingizni shu yerga yozing
+const databaseURL = "SIZNING_FIREBASE_URL_MANZILINGIZ";
 
-    const dictionary = {
-        uz: { sos: "SOS", med: "Tez yordam", fuel: "Yoqilg'i", wc: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam" },
-        ru: { sos: "ПОМОЩЬ", med: "Медпомощь", fuel: "Заправка", wc: "Туалет", food: "Еда", voice: "Голос" },
-        en: { sos: "SOS", med: "Medical", fuel: "Fuel", wc: "Restroom", food: "Food", voice: "Voice help" }
-    };
+const translations = {
+    uz: { title: "BEK_BOLA", subtitle: "Parkent tumani aqlli yordamchisi", labelLang: "Tilni tanlang:", btnLocation: "📍 Joylashuvni aniqlash", sos: "SOS", ambulance: "Tez yordam", fuel: "Yoqilg‘i", toilet: "Hojatxona", food: "Ovqatlanish", voice: "Ovozli yordam", footer: "© 2026 BEK_BOLA | Parkent innovatsion turizm", msgSent: "Xabar yuborildi!", msgError: "Xatolik yuz berdi" },
+    ru: { title: "БЕК_БОЛА", subtitle: "Умный помощник Паркентского района", labelLang: "Выберите язык:", btnLocation: "📍 Определить локацию", sos: "SOS", ambulance: "Скорая помощь", fuel: "Заправка", toilet: "Туалет", food: "Питание", voice: "Голосовой помощник", footer: "© 2026 БЕК_БОЛА | Паркентский инновационный туризм", msgSent: "Сообщение отправлено!", msgError: "Ошибка при отправке" },
+    en: { title: "BEK_BOLA", subtitle: "Smart assistant of Parkent district", labelLang: "Select language:", btnLocation: "📍 Get My Location", sos: "SOS", ambulance: "Ambulance", fuel: "Fuel", toilet: "Toilet", food: "Food & Drink", voice: "Voice Help", footer: "© 2026 BEK_BOLA | Parkent Innovation Tourism", msgSent: "Message sent!", msgError: "Sending error" }
+};
 
-    function changeLang() {
-        const lang = document.getElementById('langSwitcher').value;
-        document.getElementById('btn-sos').innerText = dictionary[lang].sos;
-        document.getElementById('btn-med').innerText = dictionary[lang].med;
-        document.getElementById('btn-fuel').innerText = dictionary[lang].fuel;
-        document.getElementById('btn-wc').innerText = dictionary[lang].wc;
-        document.getElementById('btn-food').innerText = dictionary[lang].food;
-        document.getElementById('btn-voice').innerText = dictionary[lang].voice;
+function changeLanguage() {
+    const lang = document.getElementById("langSelect").value;
+    const t = translations[lang];
+    document.getElementById("app-title").innerText = t.title;
+    document.getElementById("app-subtitle").innerText = t.subtitle;
+    document.getElementById("label-lang").innerText = t.labelLang;
+    document.getElementById("btn-location").innerText = t.btnLocation;
+    document.getElementById("txt-sos").innerText = t.sos;
+    document.getElementById("txt-ambulance").innerText = t.ambulance;
+    document.getElementById("txt-fuel").innerText = t.fuel;
+    document.getElementById("txt-toilet").innerText = t.toilet;
+    document.getElementById("txt-food").innerText = t.food;
+    document.getElementById("txt-voice").innerText = t.voice;
+    document.getElementById("txt-footer").innerHTML = t.footer + "<br> Barcha huquqlar himoyalangan";
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            window.open(`https://www.google.com{pos.coords.latitude},${pos.coords.longitude}`);
+        }, () => alert("GPS ruxsat berilmadi"));
     }
+}
 
-    function triggerSignal(type) {
-        document.getElementById('status-bar').innerText = "Sending...";
-        
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const signal = {
-                    type: type,
-                    lat: pos.coords.latitude,
-                    lng: pos.coords.longitude,
-                    time: new Date().toLocaleTimeString(),
-                    device: navigator.userAgent.slice(0, 20)
-                };
-                db.ref('alerts/').push(signal).then(() => {
-                    document.getElementById('status-bar').innerText = "✅ Signal Sent!";
-                    setTimeout(() => { document.getElementById('status-bar').innerText = "● GPS Ready"; }, 3000);
-                });
-            },
-            (err) => { alert("GPS Xatosi: Joylashuvni yoqing!"); },
-            { enableHighAccuracy: true }
-        );
-    }
+async function sendAlert(type) {
+    const lang = document.getElementById("langSelect").value;
+    if (!navigator.geolocation) return alert("GPS ishlamayapti");
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const payload = {
+            type: type,
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+            time: new Date().toLocaleString(),
+            status: "YANGI"
+        };
+
+        try {
+            await fetch(`${databaseURL}/alerts.json`, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            alert(translations[lang].msgSent);
+            if(type === 'TEZ_YORDAM') window.open('tel:103');
+        } catch (e) {
+            alert(translations[lang].msgError);
+        }
+    }, () => alert("Lokatsiya aniqlanmadi, lekin murojaat yozib olindi."));
+}
+
+function speakHelp() {
+    const lang = document.getElementById("langSelect").value;
+    let text = (lang === 'ru') ? "Чем я могу вам помочь?" : (lang === 'en') ? "How can I help you?" : "Sizga qanday yordam bera olaman?";
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = (lang === 'ru') ? 'ru-RU' : (lang === 'en') ? 'en-US' : 'uz-UZ';
+    window.speechSynthesis.speak(msg);
+}
 </script>
 </body>
 </html>
