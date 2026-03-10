@@ -6,16 +6,17 @@
     <title>BEK_BOLA | Parkent</title>
     <style>
         :root { --blue: #0a5cff; --red: #ff3b3b; --bg: #f0f2f5; }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); text-align: center; }
-        header { background: linear-gradient(135deg, var(--blue), #0041c2); color: white; padding: 25px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
-        .container { padding: 20px; max-width: 450px; margin: auto; }
-        select, button { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 15px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; }
+        body { margin: 0; font-family: sans-serif; background: var(--bg); text-align: center; color: #333; }
+        header { background: linear-gradient(135deg, var(--blue), #0041c2); color: white; padding: 20px; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { padding: 15px; max-width: 450px; margin: auto; }
+        select, button { width: 100%; padding: 15px; margin-top: 10px; font-size: 16px; border-radius: 12px; border: 1px solid #ddd; cursor: pointer; font-weight: bold; }
+        button { background: var(--blue); color: white; border: none; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .card { background: white; border-radius: 20px; padding: 25px 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; }
-        .card:active { transform: scale(0.95); }
-        .sos { background: var(--red); color: white; border: none; animation: pulse 2s infinite; }
+        .card { background: white; border-radius: 18px; padding: 20px 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); cursor: pointer; transition: 0.2s; border: 1px solid #eee; }
+        .card:active { transform: scale(0.95); background: #f9f9f9; }
+        .sos { background: var(--red); color: white; animation: pulse 2s infinite; border: none; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 59, 59, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0); } }
-        #loader { display: none; color: var(--blue); font-weight: bold; margin-top: 10px; }
+        #msg { display: none; padding: 10px; color: var(--blue); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -26,76 +27,80 @@
 </header>
 
 <div class="container">
-    <select id="langSelect" onchange="updateLang()">
+    <select id="langSelect" onchange="translatePage()">
         <option value="uz">O‘zbekcha</option>
         <option value="ru">Русский</option>
         <option value="en">English</option>
     </select>
 
-    <div id="loader">⏳ Ishlanmoqda...</div>
+    <div id="msg">⏳ Jarayon bajarilmoqda...</div>
 
-    <button onclick="getPos()" style="background: var(--blue); color: white;">📍 Mening joylashuvim</button>
+    <button onclick="getAndGo('')" id="b-my">📍 Mening joylashuvim</button>
 
     <div class="grid">
-        <div class="card sos" onclick="send('SOS')">🆘<br><b id="c-sos">SOS</b></div>
-        <div class="card" onclick="send('TEZ_YORDAM')" style="border: 2px solid var(--blue);">🚑<br><b id="c-amb">Tez yordam</b></div>
-        <div class="card" onclick="find('gas+station')">⛽️<br><span id="c-fuel">Yoqilg‘i</span></div>
-        <div class="card" onclick="find('toilet')">🚻<br><span id="c-wc">Hojatxona</span></div>
-        <div class="card" onclick="find('oshxona+restaurant')">🍽<br><span id="c-food">Ovqatlanish</span></div>
-        <div class="card" onclick="alert('Yaqinda...')">🎙<br><span id="c-voice">Yordam</span></div>
+        <div class="card sos" onclick="sendSOS('SOS')">🆘<br><b id="c-sos">SOS</b></div>
+        <div class="card" onclick="sendSOS('TEZ_YORDAM')" style="border: 2px solid var(--blue);">🚑<br><b id="c-amb">Tez yordam</b></div>
+        <div class="card" onclick="getAndGo('gas+station')">⛽️<br><span id="c-fuel">Yoqilg‘i</span></div>
+        <div class="card" onclick="getAndGo('toilet')">🚻<br><span id="c-wc">Hojatxona</span></div>
+        <div class="card" onclick="getAndGo('oshxona+restaurant')">🍽<br><span id="c-food">Ovqatlanish</span></div>
+        <div class="card" onclick="alert('Tez orada...')">🎙<br><span id="c-voice">Yordam</span></div>
     </div>
 </div>
 
 <script>
-    const db = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app";
+    const firebase_url = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app";
 
-    function updateLang() {
-        const l = document.getElementById("langSelect").value;
-        const data = {
-            uz: {main:"BEK_BOLA", sub:"Parkent tumani aqlli yordamchisi", sos:"SOS", amb:"Tez yordam", fuel:"Yoqilg‘i", wc:"Hojatxona", food:"Ovqatlanish", voice:"Yordam"},
-            ru: {main:"БЕК_БОЛА", sub:"Помощник Паркента", sos:"SOS", amb:"Скорая помощь", fuel:"Заправка", wc:"Туалет", food:"Питание", voice:"Помощь"},
-            en: {main:"BEK_BOLA", sub:"Parkent Assistant", sos:"SOS", amb:"Ambulance", fuel:"Fuel", wc:"Toilet", food:"Restaurant", voice:"Help"}
+    function translatePage() {
+        const lang = document.getElementById("langSelect").value;
+        const dict = {
+            uz: {main:"BEK_BOLA", sub:"Parkent tumani aqlli yordamchisi", my:"📍 Mening joylashuvim", sos:"SOS", amb:"Tez yordam", fuel:"Yoqilg‘i", wc:"Hojatxona", food:"Ovqatlanish", voice:"Yordam", wait:"⏳ Aniqlanmoqda...", ok:"Xabar yuborildi!", err:"GPS ruxsatini yoqing!"},
+            ru: {main:"БЕК_БОЛА", sub:"Помощник Паркента", my:"📍 Моё местоположение", sos:"SOS", amb:"Скорая помощь", fuel:"Заправka", wc:"Туалет", food:"Питание", voice:"Помощь", wait:"⏳ Определяем...", ok:"Отправлено!", err:"Включите GPS!"},
+            en: {main:"BEK_BOLA", sub:"Parkent Assistant", my:"📍 My Location", sos:"SOS", amb:"Ambulance", fuel:"Fuel", wc:"Toilet", food:"Food", voice:"Help", wait:"⏳ Detecting...", ok:"Sent!", err:"Enable GPS!"}
         };
-        const t = data[l];
+        const t = dict[lang];
         document.getElementById("t-main").innerText = t.main;
         document.getElementById("t-sub").innerText = t.sub;
+        document.getElementById("b-my").innerText = t.my;
         document.getElementById("c-sos").innerText = t.sos;
         document.getElementById("c-amb").innerText = t.amb;
         document.getElementById("c-fuel").innerText = t.fuel;
         document.getElementById("c-wc").innerText = t.wc;
         document.getElementById("c-food").innerText = t.food;
         document.getElementById("c-voice").innerText = t.voice;
+        return t;
     }
 
-    function getPos() {
-        document.getElementById("loader").style.display = "block";
+    function getAndGo(query) {
+        const t = translatePage();
+        document.getElementById("msg").style.display = "block";
         navigator.geolocation.getCurrentPosition(p => {
-            document.getElementById("loader").style.display = "none";
-            location.href = `https://www.google.com{p.coords.latitude},${p.coords.longitude}`;
-        });
-    }
-
-    function find(q) {
-        document.getElementById("loader").style.display = "block";
-        navigator.geolocation.getCurrentPosition(p => {
-            document.getElementById("loader").style.display = "none";
-            location.href = `https://www.google.com{q}/@${p.coords.latitude},${p.coords.longitude},15z`;
+            document.getElementById("msg").style.display = "none";
+            const lat = p.coords.latitude;
+            const lon = p.coords.longitude;
+            let url = `https://www.google.com{lat},${lon}`;
+            if(query) url = `https://www.google.com{query}/@${lat},${lon},15z`;
+            window.location.href = url; // Bloklanmaydigan yo'naltirish
         }, () => {
-            location.href = `https://www.google.com{q}+Parkent`;
+            document.getElementById("msg").style.display = "none";
+            alert(t.err);
         });
     }
 
-    async function send(type) {
-        document.getElementById("loader").style.display = "block";
+    async function sendSOS(type) {
+        const t = translatePage();
+        document.getElementById("msg").style.display = "block";
         navigator.geolocation.getCurrentPosition(async p => {
-            const res = await fetch(db, {
-                method: 'POST',
-                body: JSON.stringify({type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString()})
-            });
-            document.getElementById("loader").style.display = "none";
-            if(res.ok) alert("Xabar yuborildi!");
-            if(type === 'TEZ_YORDAM') location.href = "tel:103";
-        }, () => alert("GPS ruxsati kerak!"));
+            const data = { type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString() };
+            try {
+                const res = await fetch(firebase_url, { method: 'POST', body: JSON.stringify(data) });
+                document.getElementById("msg").style.display = "none";
+                if(res.ok) alert(t.ok);
+                if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
+            } catch(e) { alert("Internet xatosi!"); document.getElementById("msg").style.display = "none"; }
+        }, () => {
+            document.getElementById("msg").style.display = "none";
+            alert(t.err);
+        });
     }
 </script>
 </body>
