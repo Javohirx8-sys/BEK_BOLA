@@ -3,95 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEK_BOLA | Parkent Smart City</title>
+    <title>BEK_BOLA | Parkent</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --main-blue: #2563eb; --main-red: #ef4444; }
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .sos-animate { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        .card-active:active { transform: scale(0.95); transition: 0.1s; }
+        .sos-btn { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 64, 64, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 64, 64, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 64, 64, 0); } }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
-
-    <header class="bg-blue-600 text-white p-6 rounded-b-[40px] shadow-lg text-center">
-        <h1 id="t-title" class="text-3xl font-black tracking-tight">BEK_BOLA</h1>
-        <p id="t-sub" class="text-blue-100 text-sm mt-1">Parkent tumani aqlli yordamchisi</p>
+<body class="bg-slate-50 font-sans">
+    <header class="bg-blue-600 p-6 text-white text-center rounded-b-3xl shadow-lg">
+        <h1 class="text-2xl font-black">BEK_BOLA</h1>
+        <p class="text-sm opacity-80">Parkent tumani aqlli yordamchisi</p>
     </header>
 
-    <main class="container mx-auto px-6 py-8 flex-grow max-w-md">
-        <select id="langSelect" onchange="applyLang()" class="w-full p-3 rounded-xl border-2 border-blue-100 mb-6 focus:border-blue-500 outline-none font-semibold text-gray-700">
-            <option value="uz">🇺🇿 O‘zbekcha</option>
+    <div class="p-6 max-w-md mx-auto">
+        <select id="langSelect" onchange="applyLang()" class="w-full p-4 bg-white border rounded-2xl mb-4 font-bold">
+            <option value="uz text-lg">🇺🇿 O'zbekcha</option>
             <option value="ru">🇷🇺 Русский</option>
-            <option value="en">🇺🇸 English</option>
         </select>
 
-        <div id="status" class="hidden text-center mb-4 text-blue-600 font-bold animate-bounce">⏳ Murojaat yuborilmoqda...</div>
+        <div id="status" class="hidden bg-yellow-100 text-yellow-700 p-3 rounded-xl text-center mb-4 font-bold">⏳ Yuborilmoqda...</div>
 
-        <button onclick="myLocation()" id="b-loc" class="w-full bg-white border-2 border-blue-600 text-blue-600 font-bold py-4 rounded-2xl mb-8 card-active shadow-sm flex items-center justify-center gap-2">
-            📍 Mening joylashuvim
-        </button>
+        <button onclick="myLocation()" class="w-full bg-white border-2 border-blue-600 text-blue-600 p-4 rounded-2xl font-bold mb-6 active:scale-95 transition">📍 Mening joylashuvim</button>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="triggerAlert('SOS')" class="bg-red-500 text-white p-6 rounded-3xl text-center shadow-xl card-active sos-animate cursor-pointer">
-                <span class="text-4xl">🆘</span>
-                <p id="c-sos" class="font-black mt-2 text-lg">SOS</p>
+            <div onclick="triggerAlert('SOS')" class="sos-btn bg-red-600 text-white p-8 rounded-3xl text-center cursor-pointer active:scale-90 transition">
+                <span class="text-4xl">🆘</span><br><b class="text-xl">SOS</b>
             </div>
-            <div onclick="triggerAlert('TEZ_YORDAM')" class="bg-white border-4 border-blue-600 text-blue-600 p-6 rounded-3xl text-center shadow-md card-active cursor-pointer">
-                <span class="text-4xl">🚑</span>
-                <p id="c-amb" class="font-black mt-2 text-lg">Tez yordam</p>
+            <div onclick="triggerAlert('TEZ_YORDAM')" class="bg-white border-4 border-blue-600 text-blue-600 p-8 rounded-3xl text-center cursor-pointer active:scale-90 transition">
+                <span class="text-4xl">🚑</span><br><b>TEZ YORDAM</b>
             </div>
-            <div onclick="findNear('gas+station')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 card-active cursor-pointer">
-                <span class="text-3xl">⛽️</span>
-                <p id="c-fuel" class="text-gray-700 font-bold mt-2">Yoqilg‘i</p>
+            <div onclick="findNear('gas+station')" class="bg-white p-6 rounded-3xl text-center shadow-sm border active:scale-95 transition">
+                <span class="text-3xl">⛽️</span><br><span>Yoqilg'i</span>
             </div>
-            <div onclick="findNear('toilet')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 card-active cursor-pointer">
-                <span class="text-3xl">🚻</span>
-                <p id="c-wc" class="text-gray-700 font-bold mt-2">Hojatxona</p>
-            </div>
-            <div onclick="findNear('restaurant')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 card-active cursor-pointer">
-                <span class="text-3xl">🍽</span>
-                <p id="c-food" class="text-gray-700 font-bold mt-2">Ovqatlanish</p>
-            </div>
-            <div onclick="alert('Tez kunda...')" class="bg-gray-100 p-6 rounded-3xl text-center shadow-inner card-active cursor-pointer opacity-60">
-                <span class="text-3xl">🎙</span>
-                <p id="c-voice" class="text-gray-500 font-bold mt-2">Yordam</p>
+            <div onclick="findNear('restaurant')" class="bg-white p-6 rounded-3xl text-center shadow-sm border active:scale-95 transition">
+                <span class="text-3xl">🍽</span><br><span>Ovqatlanish</span>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
         const FIREBASE_URL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
 
-        function applyLang() {
-            const lang = document.getElementById("langSelect").value;
-            const dict = {
-                uz: {title:"BEK_BOLA", sub:"Parkent tumani aqlli yordamchisi", loc:"📍 Mening joylashuvim", sos:"SOS", amb:"Tez yordam", fuel:"Yoqilg‘i", wc:"Hojatxona", food:"Ovqatlanish", voice:"Yordam", ok:"Xabar yuborildi!", err:"GPS ruxsati kerak!", confirm:"Haqiqatan ham yordam kerakmi?"},
-                ru: {title:"БЕК_БОЛА", sub:"Помощник Паркента", loc:"📍 Моё местоположение", sos:"SOS", amb:"Скорая помощь", fuel:"Заправка", wc:"Туалет", food:"Питание", voice:"Помощь", ok:"Отправлено!", err:"Нужен GPS!", confirm:"Вам действительно нужна помощь?"},
-                en: {title:"BEK_BOLA", sub:"Parkent Assistant", loc:"📍 My Location", sos:"SOS", amb:"Ambulance", fuel:"Fuel", wc:"Toilet", food:"Food", voice:"Help", ok:"Sent!", err:"GPS required!", confirm:"Do you really need help?"}
-            };
-            const t = dict[lang];
-            document.getElementById("t-title").innerText = t.title;
-            document.getElementById("t-sub").innerText = t.sub;
-            document.getElementById("b-loc").innerText = t.loc;
-            document.getElementById("c-sos").innerText = t.sos;
-            document.getElementById("c-amb").innerText = t.amb;
-            document.getElementById("c-fuel").innerText = t.fuel;
-            document.getElementById("c-wc").innerText = t.wc;
-            document.getElementById("c-food").innerText = t.food;
-            document.getElementById("c-voice").innerText = t.voice;
-            return t;
-        }
-
         async function triggerAlert(type) {
-            const t = applyLang();
-            if(!confirm(t.confirm)) return;
-
+            if (!confirm("Yordam so'rashni tasdiqlaysizmi?")) return;
             document.getElementById("status").classList.remove("hidden");
 
             navigator.geolocation.getCurrentPosition(async (p) => {
@@ -99,26 +54,30 @@
                     type: type,
                     lat: p.coords.latitude,
                     lon: p.coords.longitude,
-                    time: new Date().toLocaleString(),
-                    status: "Yangi"
+                    time: new Date().toLocaleString()
                 };
 
                 try {
                     const res = await fetch(FIREBASE_URL, {
                         method: 'POST',
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify(payload),
+                        headers: { 'Content-Type': 'application/json' }
                     });
+
                     if (res.ok) {
-                        alert(t.ok);
+                        alert("Xabar yuborildi! Tez orada yordam ko'rsatiladi.");
                         if (type === 'TEZ_YORDAM') window.location.href = "tel:103";
+                    } else {
+                        alert("Xatolik: Bazaga ulanib bo'lmadi.");
                     }
                 } catch (e) {
-                    alert("Internet xatosi!");
+                    alert("Internet xatosi! Tarmoqni tekshiring.");
+                } finally {
+                    document.getElementById("status").classList.add("hidden");
                 }
-                document.getElementById("status").classList.add("hidden");
             }, () => {
+                alert("GPS ruxsati berilmagan!");
                 document.getElementById("status").classList.add("hidden");
-                alert(t.err);
             }, { enableHighAccuracy: true });
         }
 
