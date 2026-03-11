@@ -8,11 +8,11 @@
     <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; background: #f1f5f9; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; background: #f1f5f9; transition: 0.3s; }
         .dark body { background: #020617; }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
         .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-press:active { transform: scale(0.95); transition: 0.1s; }
+        .btn-press:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-900 dark:text-white">
@@ -24,117 +24,99 @@
             <span id="clock" class="font-mono text-blue-600">00:00:00</span>
         </div>
         <div class="flex gap-2">
-            <select id="langSelect" onchange="applyLang()" class="bg-white dark:bg-slate-900 border-none rounded-xl text-xs font-bold px-2 py-1 shadow-sm focus:ring-0">
+            <select id="langSelect" onchange="applyLang()" class="bg-white dark:bg-slate-900 border-none rounded-xl text-xs font-bold px-2 py-1 shadow-sm">
                 <option value="uz">UZ</option>
                 <option value="ru">RU</option>
                 <option value="en">EN</option>
             </select>
-            <button onclick="toggleTheme()" class="glass p-2 rounded-xl shadow-sm">
-                <span id="theme-icon">🌙</span>
-            </button>
+            <button onclick="toggleTheme()" class="glass p-2 rounded-xl shadow-sm">🌓</button>
         </div>
     </header>
 
     <div class="text-center py-4">
-        <h1 class="text-3xl font-black tracking-tighter text-blue-600 dark:text-blue-500">BEK_BOLA</h1>
+        <h1 class="text-4xl font-black tracking-tighter text-blue-600 dark:text-blue-500 italic">BEK_BOLA</h1>
         <p id="t-hokimlik" class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-50">Parkent Tuman Hokimligi</p>
     </div>
 
     <main class="p-6 max-w-md mx-auto w-full space-y-5 flex-grow">
         
-        <button onclick="handleAction('LOCATION')" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-press shadow-sm border-blue-200 dark:border-slate-700">
+        <button onclick="run('LOCATION')" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-press border-2 border-blue-100 dark:border-slate-800 shadow-sm">
             📍 <span id="t-loc">Joylashuvni aniqlash</span>
         </button>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="handleAction('SOS')" class="bg-red-600 text-white p-7 rounded-[35px] text-center shadow-xl btn-press cursor-pointer">
-                <span class="text-4xl block mb-1">🆘</span>
-                <b class="text-lg font-black uppercase">SOS</b>
+            <div onclick="run('SOS')" class="bg-red-600 text-white p-8 rounded-[35px] text-center shadow-2xl btn-press cursor-pointer">
+                <span class="text-4xl block mb-1 font-bold">SOS</span>
+                <b class="text-[10px] uppercase opacity-80">Favqulodda</b>
             </div>
-            <div onclick="handleAction('TEZ_YORDAM')" class="glass p-7 rounded-[35px] text-center border-2 border-blue-600 dark:border-blue-500 shadow-lg btn-press cursor-pointer">
+            <div onclick="run('TEZ_YORDAM')" class="glass p-8 rounded-[35px] text-center border-4 border-blue-600 dark:border-blue-500 shadow-lg btn-press cursor-pointer">
                 <span class="text-4xl block mb-1">🚑</span>
-                <b id="t-amb" class="text-xs font-black uppercase text-blue-600 dark:text-blue-400 text-center">Tez Yordam</b>
+                <b id="t-amb" class="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400">Tez Yordam</b>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="handleAction('gas+station')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+            <div onclick="run('gas+station')" class="glass p-6 rounded-[30px] text-center btn-press cursor-pointer shadow-sm">
                 <span class="text-3xl">⛽️</span>
-                <p id="t-fuel" class="text-[10px] font-bold mt-2 uppercase opacity-60">Yoqilg'i</p>
+                <p id="t-fuel" class="text-[10px] font-bold mt-2 uppercase opacity-60 font-black text-blue-600">Yoqilg'i</p>
             </div>
-            <div onclick="handleAction('restaurant')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+            <div onclick="run('restaurant')" class="glass p-6 rounded-[30px] text-center btn-press cursor-pointer shadow-sm">
                 <span class="text-3xl">🍽</span>
-                <p id="t-food" class="text-[10px] font-bold mt-2 uppercase opacity-60">Ovqatlanish</p>
+                <p id="t-food" class="text-[10px] font-bold mt-2 uppercase opacity-60 font-black text-blue-600">Ovqatlanish</p>
             </div>
-            <div onclick="handleAction('toilet')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+            <div onclick="run('toilet')" class="glass p-6 rounded-[30px] text-center btn-press cursor-pointer shadow-sm">
                 <span class="text-3xl">🚻</span>
-                <p id="t-wc" class="text-[10px] font-bold mt-2 uppercase opacity-60">Hojatxona</p>
+                <p id="t-wc" class="text-[10px] font-bold mt-2 uppercase opacity-60 font-black text-blue-600">Hojatxona</p>
             </div>
-            <div onclick="comingSoon()" class="glass p-5 rounded-3xl text-center opacity-40 btn-press cursor-pointer">
+            <div onclick="comingSoon()" class="glass p-6 rounded-[30px] text-center opacity-40 btn-press cursor-pointer">
                 <span class="text-3xl">🏨</span>
                 <p id="t-hotel" class="text-[10px] font-bold mt-2 uppercase">Mehmonxona</p>
             </div>
         </div>
     </main>
 
-    <div id="gpsModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-6">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[30px] p-8 text-center">
-            <span class="text-5xl">⚠️</span>
-            <h3 class="text-xl font-bold mt-4 mb-2" id="gps-title">GPS o'chirilgan</h3>
-            <p class="text-sm opacity-60 mb-6" id="gps-text">Iltimos, brauzer sozlamalaridan lokatsiyaga ruxsat bering va sahifani yangilang.</p>
-            <button onclick="location.reload()" class="bg-blue-600 text-white w-full py-3 rounded-xl font-bold">Sahifani yangilash</button>
-        </div>
-    </div>
+    <footer class="p-8 text-center text-[10px] opacity-20 font-black uppercase tracking-widest">
+        Bek_Bola System | 2026
+    </footer>
 
     <script>
         const FIREBASE_URL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
-        const langDict = {
-            uz: { gpsTitle: "Lokatsiya rad etildi", gpsText: "Siz ruxsat bermadingiz. Tugmani ishlatish uchun brauzer sozlamalaridan 'Location'ni yoqing.", confirm: "Tasdiqlaysizmi?" },
-            ru: { gpsTitle: "Доступ запрещен", gpsText: "Вы отклонили запрос. Пожалуйста, разрешите доступ к локации в настройках браузера.", confirm: "Подтверждаете?" },
-            en: { gpsTitle: "Location Denied", gpsText: "Permission was denied. Please enable location in browser settings and reload.", confirm: "Are you sure?" }
-        };
-
-        // Markaziy boshqaruv funksiyasi
-        async function handleAction(actionType) {
+        
+        // 1. Markaziy "RUN" funksiyasi - GPSsiz qadam bosmaydi
+        async function run(mode) {
             const lang = document.getElementById('langSelect').value;
             
-            // GPS ruxsatini tekshirish va so'rash
+            // GPS so'rash
             navigator.geolocation.getCurrentPosition(
                 async (p) => {
-                    const lat = p.coords.latitude;
-                    const lon = p.coords.longitude;
+                    // Muvaffaqiyatli: Lokatsiya olindi
+                    const { latitude: lat, longitude: lon } = p.coords;
 
-                    if (actionType === 'SOS' || actionType === 'TEZ_YORDAM') {
-                        if (!confirm(langDict[lang].confirm)) return;
-                        await fetch(FIREBASE_URL, { 
-                            method: 'POST', 
-                            body: JSON.stringify({ type: actionType, lat, lon, time: new Date().toLocaleString(), timestamp: Date.now() }) 
+                    if (mode === 'SOS' || mode === 'TEZ_YORDAM') {
+                        if(!confirm(mode + " yuborilsinmi?")) return;
+                        await fetch(FIREBASE_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({ type: mode, lat, lon, time: new Date().toLocaleString(), ts: Date.now() })
                         });
                         alert("✅ Yuborildi");
-                        if (actionType === 'TEZ_YORDAM') window.location.href = "tel:103";
-                    } else if (actionType === 'LOCATION') {
+                        if(mode === 'TEZ_YORDAM') window.location.href = "tel:103";
+                    } else if (mode === 'LOCATION') {
                         window.location.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
                     } else {
                         // Yoqilg'i, Ovqatlanish, Hojatxona
-                        window.location.href = `https://www.google.com/maps/search/${actionType}/@${lat},${lon},15z`;
+                        window.location.href = `https://www.google.com/maps/search/${mode}/@${lat},${lon},15z`;
                     }
                 },
-                (error) => {
-                    // Agar ruxsat berilmasa yoki GPS o'chiq bo'lsa
-                    showGPSModal();
+                (err) => {
+                    // Xatolik: Ruxsat berilmagan yoki GPS o'chiq
+                    alert("⚠️ DIQQAT: Joylashuvni aniqlash ruxsati berilmadi!\n\nTizim ishlashi uchun 'RUXSAT BERISH' (Allow) tugmasini bosishingiz shart. Iltimos, qayta urinib ko'ring.");
+                    // Qayta so'rashga majburlash (tugmani o'zini qayta bosishga teng)
                 },
-                { enableHighAccuracy: true, timeout: 5000 }
+                { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
             );
         }
 
-        function showGPSModal() {
-            const lang = document.getElementById('langSelect').value;
-            document.getElementById('gps-title').innerText = langDict[lang].gpsTitle;
-            document.getElementById('gps-text').innerText = langDict[lang].gpsText;
-            document.getElementById('gpsModal').classList.remove('hidden');
-        }
-
-        // Qolgan funksiyalar (Soat, Weather, Lang, Theme) o'sha-o'sha qoladi...
+        // Qolgan yordamchi funksiyalar
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('uz-UZ'); }, 1000);
         async function getWeather() { try { const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true"); const data = await res.json(); document.getElementById('w-temp').innerText = Math.round(data.current_weather.temperature) + "°C"; } catch (e) { } }
         function toggleTheme() { document.documentElement.classList.toggle('dark'); }
