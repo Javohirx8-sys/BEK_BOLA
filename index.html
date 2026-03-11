@@ -5,84 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BEK_BOLA | Parkent</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; transition: all 0.5s ease; }
-        .bg-dynamic { background-size: cover; background-position: center; transition: background 1s ease-in-out; }
-        .glass { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .dark .glass { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-active:active { transform: scale(0.95); }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            -webkit-user-select: none; user-select: none;
+            background: #f1f5f9;
+        }
+        .dark body { background: #020617; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-press:active { transform: scale(0.95); transition: 0.1s; }
     </style>
 </head>
-<body class="bg-dynamic min-h-screen flex flex-col text-slate-900 dark:text-white overflow-x-hidden">
+<body class="min-h-screen flex flex-col text-slate-900 dark:text-white">
 
-    <div class="p-4 flex justify-between items-center max-w-md mx-auto w-full">
-        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-3 text-sm font-bold">
+    <header class="p-5 flex justify-between items-center max-w-md mx-auto w-full">
+        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-2 text-sm font-bold shadow-sm">
             <span id="w-temp">--°C</span>
-            <span class="opacity-30">|</span>
-            <span id="clock" class="font-mono text-blue-600 dark:text-blue-400">00:00:00</span>
+            <span class="opacity-20">|</span>
+            <span id="clock" class="font-mono text-blue-600">00:00:00</span>
         </div>
-        <button onclick="toggleTheme()" class="glass p-2 rounded-xl">
-            <span id="theme-icon">🌙</span>
-        </button>
-    </div>
-
-    <header class="text-center py-6">
-        <h1 class="text-4xl font-black tracking-tighter text-white drop-shadow-lg">BEK_BOLA</h1>
-        <p class="text-white text-[10px] font-bold uppercase tracking-[0.3em] opacity-80">Parkent Hokimligi</p>
+        <div class="flex gap-2">
+            <select id="langSelect" onchange="applyLang()" class="bg-white dark:bg-slate-900 border-none rounded-xl text-xs font-bold px-2 py-1 shadow-sm focus:ring-0">
+                <option value="uz">UZ</option>
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+            </select>
+            <button onclick="toggleTheme()" class="glass p-2 rounded-xl shadow-sm">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </div>
     </header>
 
-    <main class="p-6 max-w-md mx-auto w-full space-y-6 flex-grow">
-        <button onclick="myLocation()" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-active">
+    <div class="text-center py-4">
+        <h1 class="text-3xl font-black tracking-tighter text-blue-600 dark:text-blue-500">BEK_BOLA</h1>
+        <p id="t-hokimlik" class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-50">Parkent Tuman Hokimligi</p>
+    </div>
+
+    <main class="p-6 max-w-md mx-auto w-full space-y-5 flex-grow">
+        
+        <button onclick="myLocation()" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-press shadow-sm border-blue-200 dark:border-slate-700">
             📍 <span id="t-loc">Joylashuvni aniqlash</span>
         </button>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="triggerAlert('SOS')" class="bg-red-600/90 text-white p-8 rounded-[40px] text-center shadow-xl btn-active cursor-pointer">
-                <span class="text-4xl block mb-2">🆘</span>
-                <b class="text-lg font-black uppercase tracking-widest">SOS</b>
+            <div onclick="triggerAlert('SOS')" class="bg-red-600 text-white p-7 rounded-[35px] text-center shadow-xl btn-press cursor-pointer">
+                <span class="text-4xl block mb-1">🆘</span>
+                <b class="text-lg font-black uppercase">SOS</b>
             </div>
-            <div onclick="triggerAlert('TEZ_YORDAM')" class="glass p-8 rounded-[40px] text-center border-2 border-blue-500 shadow-lg btn-active cursor-pointer">
-                <span class="text-4xl block mb-2">🚑</span>
-                <b id="t-amb" class="text-xs font-black uppercase">Tez Yordam</b>
+            <div onclick="triggerAlert('TEZ_YORDAM')" class="glass p-7 rounded-[35px] text-center border-2 border-blue-600 dark:border-blue-500 shadow-lg btn-press cursor-pointer">
+                <span class="text-4xl block mb-1">🚑</span>
+                <b id="t-amb" class="text-xs font-black uppercase text-blue-600 dark:text-blue-400 text-center">Tez Yordam</b>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="findNear('gas+station')" class="glass p-5 rounded-3xl text-center btn-active cursor-pointer">
-                <span class="text-2xl">⛽️</span>
-                <p id="t-fuel" class="text-[10px] font-bold mt-2 uppercase opacity-70">Yoqilg'i</p>
+            <div onclick="findNear('gas+station')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+                <span class="text-3xl">⛽️</span>
+                <p id="t-fuel" class="text-[10px] font-bold mt-2 uppercase opacity-60">Yoqilg'i</p>
             </div>
-            <div onclick="findNear('restaurant')" class="glass p-5 rounded-3xl text-center btn-active cursor-pointer">
-                <span class="text-2xl">🍽</span>
-                <p id="t-food" class="text-[10px] font-bold mt-2 uppercase opacity-70">Ovqatlanish</p>
+            <div onclick="findNear('restaurant')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+                <span class="text-3xl">🍽</span>
+                <p id="t-food" class="text-[10px] font-bold mt-2 uppercase opacity-60">Ovqatlanish</p>
             </div>
-            <div onclick="comingSoon()" class="glass p-5 rounded-3xl text-center opacity-50 btn-active cursor-pointer">
-                <span class="text-2xl">🚻</span>
-                <p id="t-wc" class="text-[10px] font-bold mt-2 uppercase">Hojatxona</p>
+            <div onclick="findNear('toilet')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
+                <span class="text-3xl">🚻</span>
+                <p id="t-wc" class="text-[10px] font-bold mt-2 uppercase opacity-60">Hojatxona</p>
             </div>
-            <div onclick="comingSoon()" class="glass p-5 rounded-3xl text-center opacity-50 btn-active cursor-pointer">
+            <div onclick="comingSoon()" class="glass p-5 rounded-3xl text-center opacity-40 btn-press cursor-pointer">
+                <span class="text-3xl">🏨</span>
+                <p id="t-hotel" class="text-[10px] font-bold mt-2 uppercase">Mehmonxona</p>
+            </div>
+            <div onclick="comingSoon()" class="col-span-2 glass p-4 rounded-3xl text-center opacity-40 btn-press cursor-pointer flex items-center justify-center gap-3">
                 <span class="text-2xl">🎙</span>
-                <p id="t-voice" class="text-[10px] font-bold mt-2 uppercase">Yordamchi</p>
+                <p id="t-voice" class="text-[10px] font-bold uppercase">Ovozli yordamchi</p>
             </div>
         </div>
     </main>
 
+    <footer class="p-6 text-center text-[10px] opacity-30 font-bold uppercase tracking-widest">
+        BEK_BOLA v3.0 | Parkent Smart City
+    </footer>
+
     <script>
         const FIREBASE_URL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
-        
-        // Background changer
-        const bgs = [
-            'https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1920',
-            'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920',
-            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=1920'
-        ];
-        document.body.style.backgroundImage = `url('${bgs[Math.floor(Math.random() * bgs.length)]}')`;
+
+        const langDict = {
+            uz: { hokimlik: "Parkent Tuman Hokimligi", loc: "Joylashuvni aniqlash", amb: "Tez Yordam", fuel: "Yoqilg'i", food: "Ovqatlanish", wc: "Hojatxona", hotel: "Mehmonxona", voice: "Ovozli yordamchi", soon: "Tez kunda...", confirm: "Xabar yuborilsinmi?" },
+            ru: { hokimlik: "Хокимият Паркентского района", loc: "Определить локацию", amb: "Скорая Помощь", fuel: "Заправка", food: "Питание", wc: "Туалет", hotel: "Гостиница", voice: "Голосовой помощник", soon: "Скоро...", confirm: "Отправить сообщение?" },
+            en: { hokimlik: "Parkent District Khokimiyat", loc: "Determine location", amb: "Ambulance", fuel: "Fuel", food: "Dining", wc: "Toilet", hotel: "Hotel", voice: "Voice Assistant", soon: "Coming soon...", confirm: "Send message?" }
+        };
+
+        function applyLang() {
+            const lang = document.getElementById('langSelect').value;
+            const d = langDict[lang];
+            document.getElementById('t-hokimlik').innerText = d.hokimlik;
+            document.getElementById('t-loc').innerText = d.loc;
+            document.getElementById('t-amb').innerText = d.amb;
+            document.getElementById('t-fuel').innerText = d.fuel;
+            document.getElementById('t-food').innerText = d.food;
+            document.getElementById('t-wc').innerText = d.wc;
+            document.getElementById('t-hotel').innerText = d.hotel;
+            document.getElementById('t-voice').innerText = d.voice;
+            localStorage.setItem('bek_bola_lang', lang);
+        }
 
         // Clock & Weather
         setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('uz-UZ');
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString('uz-UZ');
         }, 1000);
 
         async function getWeather() {
@@ -95,14 +127,19 @@
 
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('theme-icon').innerText = isDark ? "☀️" : "🌙";
         }
 
         async function triggerAlert(type) {
-            if (!confirm("Tasdiqlaysizmi?")) return;
+            const lang = document.getElementById('langSelect').value;
+            if (!confirm(langDict[lang].confirm)) return;
+
             navigator.geolocation.getCurrentPosition(async (p) => {
                 const payload = { type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString(), timestamp: Date.now() };
                 await fetch(FIREBASE_URL, { method: 'POST', body: JSON.stringify(payload) });
-                alert("✅ Yuborildi");
+                alert("✅ OK");
+                if (type === 'TEZ_YORDAM') window.location.href = "tel:103";
             }, null, { enableHighAccuracy: true });
         }
 
@@ -111,8 +148,29 @@
                 window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
             });
         }
-        
-        getWeather();
+
+        function findNear(query) {
+            navigator.geolocation.getCurrentPosition(p => {
+                const url = `https://www.google.com/maps/search/${query}/@${p.coords.latitude},${p.coords.longitude},15z`;
+                window.location.href = url;
+            }, () => {
+                window.location.href = `https://www.google.com/maps/search/${query}+Parkent`;
+            });
+        }
+
+        function comingSoon() {
+            const lang = document.getElementById('langSelect').value;
+            alert(langDict[lang].soon);
+        }
+
+        window.onload = () => {
+            getWeather();
+            const savedLang = localStorage.getItem('bek_bola_lang');
+            if (savedLang) {
+                document.getElementById('langSelect').value = savedLang;
+                applyLang();
+            }
+        };
     </script>
 </body>
 </html>
