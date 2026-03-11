@@ -6,82 +6,106 @@
     <title>BEK_BOLA | Parkent Smart City</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .sos-btn { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-        .card-active:active { transform: scale(0.95); transition: 0.1s; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sos-btn { animation: pulse-red 2s infinite; }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .active-scale:active { transform: scale(0.95); transition: 0.1s; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans min-h-screen flex flex-col">
-    <header class="bg-blue-600 p-8 text-white text-center rounded-b-[40px] shadow-2xl">
-        <h1 class="text-3xl font-black tracking-tighter">BEK_BOLA</h1>
-        <p class="text-blue-100 text-sm mt-1">Parkent tumani aqlli yordamchisi</p>
+<body class="flex flex-col min-h-screen">
+
+    <header class="bg-blue-600 text-white p-8 rounded-b-[40px] shadow-2xl text-center">
+        <h1 class="text-3xl font-black tracking-tighter uppercase">BEK_BOLA</h1>
+        <p class="text-blue-100 text-sm mt-1 opacity-80">Parkent tumani aqlli yordamchisi</p>
     </header>
 
-    <main class="p-6 max-w-md mx-auto flex-grow w-full">
-        <div id="status" class="hidden bg-blue-100 text-blue-700 p-4 rounded-2xl text-center mb-6 font-bold animate-pulse border-2 border-blue-200">
+    <main class="p-6 max-w-md mx-auto w-full flex-grow">
+        <div id="status" class="hidden bg-blue-100 text-blue-700 p-4 rounded-2xl text-center mb-6 font-bold border-2 border-blue-200 animate-pulse">
             ⏳ Amaliyot bajarilmoqda...
         </div>
 
-        <button onclick="myLocation()" class="w-full bg-white border-2 border-blue-600 text-blue-600 p-5 rounded-2xl font-black mb-8 shadow-sm card-active flex items-center justify-center gap-2">
+        <button onclick="myLocation()" class="w-full bg-white border-2 border-blue-600 text-blue-600 font-black py-5 rounded-2xl mb-8 active-scale shadow-sm flex items-center justify-center gap-2">
             📍 MENING JOYLASHUVIM
         </button>
 
         <div class="grid grid-cols-2 gap-5">
-            <div onclick="triggerAlert('SOS')" class="sos-btn bg-red-600 text-white p-8 rounded-[32px] text-center cursor-pointer shadow-xl card-active">
-                <span class="text-5xl">🆘</span><br><b class="text-xl block mt-2">SOS</b>
+            <div onclick="triggerAlert('SOS')" class="sos-btn bg-red-600 text-white p-8 rounded-[35px] text-center cursor-pointer shadow-xl active-scale">
+                <span class="text-5xl">🆘</span>
+                <b class="block mt-3 text-xl uppercase tracking-widest">SOS</b>
             </div>
-            <div onclick="triggerAlert('TEZ_YORDAM')" class="bg-white border-4 border-blue-600 text-blue-600 p-8 rounded-[32px] text-center cursor-pointer shadow-md card-active">
-                <span class="text-5xl">🚑</span><br><b class="text-lg block mt-2 uppercase">Tez yordam</b>
+            
+            <div onclick="triggerAlert('TEZ_YORDAM')" class="bg-white border-4 border-blue-600 text-blue-600 p-8 rounded-[35px] text-center cursor-pointer shadow-lg active-scale">
+                <span class="text-5xl">🚑</span>
+                <b class="block mt-3 text-lg uppercase">Tez yordam</b>
             </div>
-            <div onclick="findNear('gas+station')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 card-active cursor-pointer">
-                <span class="text-3xl font-bold">⛽️</span><br><span class="text-gray-600 font-bold">Yoqilg'i</span>
+
+            <div onclick="findNear('gas+station')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 active-scale cursor-pointer">
+                <span class="text-3xl">⛽️</span>
+                <p class="text-gray-600 font-bold mt-2">Yoqilg'i</p>
             </div>
-            <div onclick="findNear('restaurant')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 card-active cursor-pointer">
-                <span class="text-3xl font-bold">🍽</span><br><span class="text-gray-600 font-bold">Ovqatlanish</span>
+            
+            <div onclick="findNear('restaurant')" class="bg-white p-6 rounded-3xl text-center shadow-sm border border-gray-100 active-scale cursor-pointer">
+                <span class="text-3xl">🍽</span>
+                <p class="text-gray-600 font-bold mt-2">Ovqatlanish</p>
             </div>
         </div>
     </main>
 
     <script>
+        // FIREBASE URL - OXIRIDA .json BO'LISHI SHART!
         const FIREBASE_URL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
 
         async function triggerAlert(type) {
             if (!confirm("Haqiqatan ham yordam so'ramoqchimisiz?")) return;
+
             const statusDiv = document.getElementById("status");
             statusDiv.classList.remove("hidden");
             statusDiv.innerText = "⏳ Joylashuv aniqlanmoqda...";
 
+            if (!navigator.geolocation) {
+                alert("GPS xatosi: Brauzeringiz GPS-ni qo'llab-quvvatlamaydi.");
+                statusDiv.classList.add("hidden");
+                return;
+            }
+
             navigator.geolocation.getCurrentPosition(async (p) => {
                 statusDiv.innerText = "🚀 Ma'lumot yuborilmoqda...";
+                
                 const payload = {
                     type: type,
                     lat: p.coords.latitude,
                     lon: p.coords.longitude,
-                    time: new Date().toLocaleString()
+                    time: new Date().toLocaleString(),
+                    timestamp: Date.now()
                 };
 
                 try {
                     const res = await fetch(FIREBASE_URL, {
                         method: 'POST',
-                        body: JSON.stringify(payload),
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
 
                     if (res.ok) {
                         alert("✅ Yuborildi! Yordam yo'lga chiqdi.");
                         if (type === 'TEZ_YORDAM') window.location.href = "tel:103";
                     } else {
-                        alert("❌ Xato: Server qabul qilmadi.");
+                        alert("❌ Server xatosi! Firebase Rules-ni tekshiring.");
                     }
                 } catch (e) {
-                    alert("❌ Internet xatosi! Aloqani tekshiring.");
+                    alert("❌ Internet xatosi! Tarmoqni tekshiring.");
                 } finally {
                     statusDiv.classList.add("hidden");
                 }
             }, (err) => {
                 statusDiv.classList.add("hidden");
-                alert("❌ GPS Xatosi: Joylashuvga ruxsat bering!");
-            }, { enableHighAccuracy: true });
+                alert("❌ GPS RUXSATI RAD ETILDI! Iltimos, sozlamalardan ruxsat bering.");
+            }, { enableHighAccuracy: true, timeout: 10000 });
         }
 
         function myLocation() {
