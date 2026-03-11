@@ -6,63 +6,62 @@
     <title>BEK_BOLA | Parkent</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; background: #f1f5f9; }
-        .dark body { background: #020617; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .dark .glass { background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-user-select: none; user-select: none; background-color: #f8fafc; }
+        .dark body { background-color: #0f172a; }
         .btn-press:active { transform: scale(0.95); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .dark .glass { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900 dark:text-white">
+<body class="min-h-screen flex flex-col text-slate-900 dark:text-white transition-colors duration-300">
 
-    <header class="p-5 flex justify-between items-center max-w-md mx-auto w-full">
-        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-2 text-sm font-bold shadow-sm">
+    <div class="p-4 flex justify-between items-center max-w-md mx-auto w-full">
+        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-3 text-sm font-bold shadow-sm">
             <span id="w-temp">--°C</span>
             <span class="opacity-20">|</span>
             <span id="clock" class="font-mono text-blue-600">00:00:00</span>
         </div>
-        <button onclick="document.documentElement.classList.toggle('dark')" class="glass p-2 rounded-xl">🌓</button>
-    </header>
-
-    <div class="text-center py-4">
-        <h1 class="text-3xl font-black text-blue-600 dark:text-blue-500 italic">BEK_BOLA</h1>
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Parkent Tuman Hokimligi</p>
+        <button onclick="document.documentElement.classList.toggle('dark')" class="glass p-2 rounded-xl shadow-sm">🌓</button>
     </div>
 
+    <header class="text-center py-4">
+        <h1 class="text-4xl font-black tracking-tighter text-blue-600 italic">BEK_BOLA</h1>
+        <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Parkent Tuman Hokimligi</p>
+    </header>
+
     <main class="p-6 max-w-md mx-auto w-full space-y-5 flex-grow">
-        
-        <button onclick="getLocationOnly()" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-press border-2 border-blue-500 shadow-sm">
+        <button onclick="getLocation()" class="glass w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-2 btn-press border-2 border-blue-500/30 text-blue-600">
             📍 Joylashuvni aniqlash
         </button>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="sendEmergency('SOS')" class="bg-red-600 text-white p-7 rounded-[35px] text-center shadow-xl btn-press cursor-pointer">
+            <div onclick="triggerAlert('SOS')" class="bg-red-600 text-white p-8 rounded-[35px] text-center shadow-xl btn-press cursor-pointer">
                 <span class="text-4xl block mb-1">🆘</span>
-                <b class="text-lg font-black uppercase tracking-widest">SOS</b>
+                <b class="text-lg font-black uppercase">SOS</b>
             </div>
-            <div onclick="sendEmergency('TEZ_YORDAM')" class="glass p-7 rounded-[35px] text-center border-4 border-blue-600 shadow-lg btn-press cursor-pointer">
+            <div onclick="triggerAlert('TEZ_YORDAM')" class="glass p-8 rounded-[35px] text-center border-4 border-blue-600 shadow-lg btn-press cursor-pointer">
                 <span class="text-4xl block mb-1">🚑</span>
-                <b class="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400">Tez Yordam</b>
+                <b class="text-[10px] font-black uppercase text-blue-600">Tez Yordam</b>
             </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-            <div onclick="findNearby('gas+station')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
-                <span class="text-3xl">⛽️</span>
+            <div onclick="findNear('gas+station')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+                <span class="text-2xl">⛽️</span>
                 <p class="text-[10px] font-bold mt-2 uppercase opacity-60">Yoqilg'i</p>
             </div>
-            <div onclick="findNearby('restaurant')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
-                <span class="text-3xl">🍽</span>
+            <div onclick="findNear('restaurant')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+                <span class="text-2xl">🍽</span>
                 <p class="text-[10px] font-bold mt-2 uppercase opacity-60">Ovqatlanish</p>
             </div>
-            <div onclick="findNearby('toilet')" class="glass p-5 rounded-3xl text-center btn-press cursor-pointer">
-                <span class="text-3xl">🚻</span>
+            <div onclick="findNear('toilet')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+                <span class="text-2xl">🚻</span>
                 <p class="text-[10px] font-bold mt-2 uppercase opacity-60">Hojatxona</p>
             </div>
-            <div onclick="alert('Tez kunda...')" class="glass p-5 rounded-3xl text-center opacity-30 cursor-pointer">
-                <span class="text-3xl">🏨</span>
-                <p class="text-[10px] font-bold mt-2 uppercase">Mehmonxona</p>
+            <div onclick="alert('Tez kunda...')" class="glass p-6 rounded-3xl text-center opacity-30 cursor-pointer">
+                <span class="text-2xl">🎙</span>
+                <p class="text-[10px] font-bold mt-2 uppercase">Yordamchi</p>
             </div>
         </div>
     </main>
@@ -70,49 +69,33 @@
     <script>
         const DB_URL = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
 
-        // 1. SOS va Tez yordam
-        function sendEmergency(type) {
-            navigator.geolocation.getCurrentPosition((p) => {
-                const payload = {
-                    type: type,
-                    lat: p.coords.latitude,
-                    lon: p.coords.longitude,
-                    time: new Date().toLocaleString()
-                };
-                fetch(DB_URL, { method: 'POST', body: JSON.stringify(payload) });
-                alert("✅ Yuborildi!");
+        function triggerAlert(type) {
+            if(!confirm("Xabar yuborilsinmi?")) return;
+            navigator.geolocation.getCurrentPosition(p => {
+                const data = { type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString() };
+                fetch(DB_URL, { method: 'POST', body: JSON.stringify(data) });
+                alert("✅ Yuborildi");
                 if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
-            }, (err) => {
-                alert("Joylashuvni aniqlashga ruxsat bering!");
-            });
+            }, () => alert("GPS ruxsatini bering!"));
         }
 
-        // 2. Joylashuvni aniqlash
-        function getLocationOnly() {
-            navigator.geolocation.getCurrentPosition((p) => {
+        function getLocation() {
+            navigator.geolocation.getCurrentPosition(p => {
                 window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-            }, (err) => {
-                alert("Joylashuvni aniqlashga ruxsat bering!");
-            });
+            }, () => alert("GPS ruxsatini bering!"));
         }
 
-        // 3. Yaqin atrofdagi joylar
-        function findNearby(q) {
-            navigator.geolocation.getCurrentPosition((p) => {
+        function findNear(q) {
+            navigator.geolocation.getCurrentPosition(p => {
                 window.location.href = `https://www.google.com/maps/search/${q}/@${p.coords.latitude},${p.coords.longitude},15z`;
-            }, (err) => {
-                alert("Joylashuvni aniqlashga ruxsat bering!");
-            });
+            }, () => alert("GPS ruxsatini bering!"));
         }
 
-        // Soat va Ob-havo
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('uz-UZ'); }, 1000);
         async function getWeather() {
-            try {
-                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
-                const data = await res.json();
-                document.getElementById('w-temp').innerText = Math.round(data.current_weather.temperature) + "°C";
-            } catch (e) { }
+            const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
+            const data = await res.json();
+            document.getElementById('w-temp').innerText = Math.round(data.current_weather.temperature) + "°C";
         }
         getWeather();
     </script>
