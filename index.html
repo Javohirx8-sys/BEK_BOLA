@@ -2,63 +2,282 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SafeParkent | Smart Tourism & Safety</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeParkent | Taqdimot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --primary: #3b82f6;
-            --accent: #2dd4bf;
+        @import url('https://googleapis.com');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top right, #0f172a, #020617);
+            color: #f8fafc;
+            overflow-x: hidden;
         }
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: #f0f4f8;
+
+        .glass {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1.5rem;
+        }
+
+        .glass:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+            background: rgba(30, 41, 59, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -20px rgba(59, 130, 246, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .animate-up {
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pulse-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .lang-btn {
             transition: all 0.3s ease;
         }
-        .dark body { background: #020617; color: white; }
         
-        /* Glassmorphism effects */
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        .lang-btn.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
-        .dark .glass {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .btn-active:active { transform: scale(0.96); }
-        
-        /* Custom SOS Animation */
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
-        }
-        .sos-pulse { animation: pulse-red 2s infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col p-4 md:p-8">
+<body class="p-6 md:p-12 lg:p-20 min-h-screen flex flex-col justify-between">
 
-    <div class="max-w-md mx-auto w-full flex justify-between items-center mb-6">
-        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-4 text-sm font-semibold">
-            <div class="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                <span id="w-icon">☀️</span>
-                <span id="w-temp">--°C</span>
-            </div>
-            <span class="opacity-20">|</span>
-            <span id="clock" class="font-mono tracking-tighter">00:00:00</span>
+    <!-- Tilni tanlash paneli -->
+    <div class="fixed top-6 right-6 z-50 flex gap-1 bg-slate-800/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/50">
+        <button onclick="setLanguage('uz')" id="lang-uz" class="lang-btn active px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">UZB</button>
+        <button onclick="setLanguage('en')" id="lang-en" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">ENG</button>
+        <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">RUS</button>
+    </div>
+
+    <!-- Markaziy sarlavha -->
+    <header class="max-w-4xl mx-auto text-center mb-20 animate-up">
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass mb-8 border-emerald-500/20">
+            <div class="pulse-dot"></div>
+            <span id="badge-text" class="text-xs font-bold uppercase tracking-widest text-emerald-400">Pilot loyiha tayyor</span>
         </div>
         
-        <div class="flex gap-2">
-            <select id="lang-select" onchange="changeLang()" class="glass px-2 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer">
-                <option value="uz">UZ</option>
-                <option value="ru">RU</option>
-                <option value="en">EN</option>
-            </select>
-            <button onclick="toggleTheme
+        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter">
+            Safe<span class="gradient-text">Parkent</span>
+        </h1>
+        
+        <p id="hero-sub" class="text-lg md:text-xl text-slate-400 font-light max-w-2xl mx-auto leading-relaxed">
+            Parkent tumanining raqamli xavfsizlik va aqlli turizm ekotizimi
+        </p>
+    </header>
+
+    <!-- Grid Konteyner -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-20">
+        
+        <!-- 01. Muammo -->
+        <div class="glass p-8 lg:p-10 animate-up flex flex-col justify-between" style="animation-delay: 0.2s;">
+            <div>
+                <span class="text-xs font-bold uppercase text-blue-500 mb-2 block tracking-widest">01. </span>
+                <h2 id="prob-title" class="text-3xl font-extrabold mb-6 text-white tracking-tight">Tarqoq infratuzilma va kechikish</h2>
+                <ul class="space-y-4 text-slate-300">
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-rose-500 font-bold">✕</span> 
+                        <span id="prob-1">Favqulodda vaziyatlarda koordinata aniqlashdagi kechikishlar</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-rose-500 font-bold">✕</span> 
+                        <span id="prob-2">Sayyohlar uchun ijtimoiy ob'ektlar haqida ma'lumot yo'qligi</span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-rose-500 font-bold">✕</span> 
+                        <span id="prob-3">Tuman miqyosidagi raqamli monitoring tizimining yetishmasligi</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mt-8 border-t border-white/5 pt-4 opacity-40 text-xs uppercase tracking-widest font-semibold">Current State</div>
+        </div>
+
+        <!-- 02. Yechim -->
+        <div class="glass p-8 lg:p-10 animate-up flex flex-col justify-between border-emerald-500/10" style="animation-delay: 0.3s;">
+            <div>
+                <span class="text-xs font-bold uppercase text-emerald-500 mb-2 block tracking-widest">02. </span>
+                <h2 id="sol-title" class="text-3xl font-extrabold mb-6 text-white tracking-tight">SafeParkent PWA Platformasi</h2>
+                <ul class="space-y-4 text-slate-300">
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-emerald-500 font-bold">✓</span> 
+                        <span><b class="text-white">Instant SOS:</b> <span id="sol-1">Bir tugma bilan koordinata yuborish</span></span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-emerald-500 font-bold">✓</span> 
+                        <span><b class="text-white">Smart Navigation:</b> <span id="sol-2">Ijtimoiy ob'ektlar raqamli xaritasi</span></span>
+                    </li>
+                    <li class="flex items-start gap-3 text-sm leading-relaxed">
+                        <span class="text-emerald-500 font-bold">✓</span> 
+                        <span><b class="text-white">Big Data:</b> <span id="sol-3">Hokimiyat uchun real-vaqt monitoringi</span></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mt-8 border-t border-white/5 pt-4 opacity-40 text-xs uppercase tracking-widest font-semibold">Future State</div>
+        </div>
+
+        <!-- 03. Statistika -->
+        <div class="glass p-10 animate-up md:col-span-2 border-slate-700/50" style="animation-delay: 0.4s;">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+                <div class="p-4">
+                    <h4 class="text-6xl font-extrabold gradient-text mb-2">-40%</h4>
+                    <p id="stat-1" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Yordam yetib borish vaqti</p>
+                </div>
+                <div class="p-4 border-y sm:border-y-0 sm:border-x border-slate-800">
+                    <h4 class="text-6xl font-extrabold gradient-text mb-2">100%</h4>
+                    <p id="stat-2" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Texnik tayyorgarlik</p>
+                </div>
+                <div class="p-4">
+                    <h4 class="text-6xl font-extrabold gradient-text mb-2">+2x</h4>
+                    <p id="stat-3" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Turistik jozibadorlik</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04. Moliyaviy strategiya -->
+        <div class="glass p-10 md:col-span-2 animate-up bg-gradient-to-br from-slate-900/50 to-blue-900/10 border-blue-500/20" style="animation-delay: 0.5s;">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
+                <div class="text-left">
+                    <span class="text-xs font-bold uppercase text-blue-400 mb-2 block tracking-widest">03. Strategy</span>
+                    <h2 id="fin-title" class="text-3xl font-extrabold text-white tracking-tight mb-4">Viloyat budjetidan maqsadli ssuda</h2>
+                    <p id="fin-desc" class="text-slate-400 max-w-2xl text-sm leading-relaxed">
+                        Tuman zaxira mablag'lari yetarli bo'lmagani sababli, loyihani server infratuzilmasiga ko'chirish va kengaytirish uchun <b class="text-white">viloyatdan qaytarish sharti bilan</b> maqsadli ssuda olish taklif etiladi.
+                    </p>
+                </div>
+                <div class="px-6 py-6 bg-slate-800/50 rounded-2xl border border-blue-500/20 text-center min-w-[240px] w-full lg:w-auto">
+                    <p id="fin-status-title" class="text-xs uppercase text-slate-500 mb-2 font-bold tracking-wider">Moliyaviy status</p>
+                    <p id="fin-status-badge" class="text-sm font-bold text-emerald-400 leading-snug">Fond ochilguncha <br>vaqtinchalik ko'mak</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center animate-up" style="animation-delay: 0.6s;">
+        <p class="text-xs text-slate-600 font-bold uppercase tracking-[0.4em]">Raqamli O'zbekiston — 2030</p>
+    </footer>
+
+    <!-- Ko'p tillilik scripti -->
+    <script>
+        const translations = {
+            uz: {
+                badge: "Pilot loyiha tayyor",
+                heroSub: "Parkent tumanining raqamli xavfsizlik va aqlli turizm ekotizimi",
+                probTitle: "Tarqoq infratuzilma va kechikish",
+                prob1: "Favqulodda vaziyatlarda koordinata aniqlashdagi kechikishlar",
+                prob2: "Sayyohlar uchun ijtimoiy ob'ektlar haqida ma'lumot yo'qligi",
+                prob3: "Tuman miqyosidagi raqamli monitoring tizimining yetishmasligi",
+                solTitle: "SafeParkent PWA Platformasi",
+                sol1: "Bir tugma bilan koordinata yuborish",
+                sol2: "Ijtimoiy ob'ektlar raqamli xaritasi",
+                sol3: "Hokimiyat uchun real-vaqt monitoringi",
+                stat1: "Yordam yetib borish vaqti",
+                stat2: "Texnik tayyorgarlik",
+                stat3: "Turistik jozibadorlik",
+                finTitle: "Viloyat budjetidan maqsadli ssuda",
+                finDesc: "Tuman zaxira mablag'lari yetarli bo'lmagani sababli, loyihani server infratuzilmasiga ko'chirish va kengaytirish uchun viloyatdan qaytarish sharti bilan maqsadli ssuda olish taklif etiladi.",
+                finStatusTitle: "Moliyaviy status",
+                finStatusBadge: "Fond ochilguncha <br>vaqtinchalik ko'mak"
+            },
+            en: {
+                badge: "Pilot Project Ready",
+                heroSub: "Digital security and smart tourism ecosystem of Parkent district",
+                probTitle: "Scattered Infrastructure and Delays",
+                prob1: "Delays in determining coordinates during emergencies",
+                prob2: "Lack of information about social objects for tourists",
+                prob3: "Lack of a digital monitoring system at the district level",
+                solTitle: "SafeParkent PWA Platform",
+                sol1: "Send coordinates with a single button",
+                sol2: "Digital map of social objects",
+                sol3: "Real-time monitoring for the municipality",
+                stat1: "Emergency response time",
+                stat2: "Technical readiness",
+                stat3: "Tourism attractiveness",
+                finTitle: "Targeted Loan from the Regional Budget",
+                finDesc: "Due to insufficient district reserve funds, it is proposed to receive a targeted loan on the condition of repayment from the region to migrate the project to server infrastructure and scale.",
+                finStatusTitle: "Financial Status",
+                finStatusBadge: "Temporary support <br>until the fund opens"
+            },
+            ru: {
+                badge: "Пилотный проект готов",
+                heroSub: "Экосистема цифровой безопасности и умного туризма Паркентского района",
+                probTitle: "Разрозненная инфраструктура и задержки",
+                prob1: "Задержки в определении координат при чрезвычайных ситуациях",
+                prob2: "Отсутствие информации о социальных объектах для туристов",
+                prob3: "Отсутствие цифровой системы мониторинга на уровне района",
+                solTitle: "Платформа SafeParkent PWA",
+                sol1: "Отправка координат одной кнопкой",
+                sol2: "Цифровая карта социальных объектов",
+                sol3: "Мониторинг в реальном времени для хокимията",
+                stat1: "Время прибытия помощи",
+                stat2: "Техническая готовность",
+                stat3: "Туристическая привлекательность",
+                finTitle: "Целевая ссуда из областного бюджета",
+                finDesc: "В связи с недостаточностью резервных средств района, предлагается получить целевую ссуду из области на условии возврата для переноса проекта на серверную инфраструктуру и расширения.",
+                finStatusTitle: "Финансовый статус",
+                finStatusBadge: "Временная помощь <br>до открытия фонда"
+            }
+        };
+
+        function setLanguage(lang) {
+            // Aktiv tugmani belgilash
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`lang-${lang}`).classList.add('active');
+
+            // Matnlarni o'zgartirish
+            document.getElementById('badge-text').innerText = translations[lang].badge;
+            document.getElementById('hero-sub').innerText = translations[lang].heroSub;
+            
+            document.getElementById('prob-title').innerText = translations[lang].probTitle;
+            document.getElementById('prob-1').innerText = translations[lang].prob1;
+            document.getElementById('prob-2').innerText = translations[lang].prob2;
+            document.getElementById('prob-3').innerText = translations[lang].prob3;
+
+            document.getElementById('sol-title').innerText = translations[lang].solTitle;
+            document.getElementById('sol-1').innerText = translations[lang].sol1;
+            document.getElementById('sol-2').innerText = translations[lang].sol2;
+            document.getElementById('sol-3').innerText = translations[lang].sol3;
+
+            document.getElementById('stat-1').innerText = translations[lang].stat1;
+            document.getElementById('stat-2').innerText = translations[lang].stat2;
+            document.getElementById('stat-3').innerText = translations[lang].stat3;
+
+            document.getElementById('fin-title').innerText = translations[lang].finTitle;
+            document.getElementById('fin-desc').innerHTML = translations[lang].finDesc;
+            document.getElementById('fin-status-title').innerText = translations[lang].finStatusTitle;
+            document.getElementById('fin-status-badge').innerHTML = translations[lang].finStatusBadge;
+        }
+    </script>
+</body>
+</html>
