@@ -3,115 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BEK_BOLA | Parkent</title>
+    <title>SafeParkent | Smart Tourism & Safety</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
-        body { font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; background: #f8fafc; }
-        .dark body { background: #020617; }
-        .btn-press:active { transform: scale(0.94); }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
-        .dark .glass { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
+        :root {
+            --primary: #3b82f6;
+            --accent: #2dd4bf;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #f0f4f8;
+            transition: all 0.3s ease;
+        }
+        .dark body { background: #020617; color: white; }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-active:active { transform: scale(0.96); }
+        
+        /* Custom SOS Animation */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+        .sos-pulse { animation: pulse-red 2s infinite; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-900 dark:text-white transition-colors duration-300">
+<body class="min-h-screen flex flex-col p-4 md:p-8">
 
-    <div class="p-4 flex justify-between items-center max-w-md mx-auto w-full">
-        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-3 text-sm font-bold shadow-sm">
-            <span id="w-temp">--°C</span>
+    <div class="max-w-md mx-auto w-full flex justify-between items-center mb-6">
+        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-4 text-sm font-semibold">
+            <div class="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+                <span id="w-icon">☀️</span>
+                <span id="w-temp">--°C</span>
+            </div>
             <span class="opacity-20">|</span>
-            <span id="clock" class="font-mono text-blue-600">00:00:00</span>
+            <span id="clock" class="font-mono tracking-tighter">00:00:00</span>
         </div>
-        <button onclick="document.documentElement.classList.toggle('dark')" class="glass p-2 rounded-xl shadow-sm text-xl">🌓</button>
-    </div>
-
-    <header class="text-center py-4">
-        <h1 class="text-4xl font-black tracking-tighter text-blue-600 italic">BEK_BOLA</h1>
-        <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Parkent Tuman Hokimligi</p>
-    </header>
-
-    <main class="p-6 max-w-md mx-auto w-full space-y-6 flex-grow">
         
-        <div class="grid grid-cols-2 gap-4">
-            <div onclick="sendData('SOS')" class="bg-red-600 text-white p-8 rounded-[40px] text-center shadow-2xl btn-press cursor-pointer">
-                <span class="text-5xl block mb-2 font-bold">SOS</span>
-                <b class="text-[10px] uppercase opacity-80 tracking-widest">Yuborish</b>
-            </div>
-            <div onclick="sendData('TEZ_YORDAM')" class="glass p-8 rounded-[40px] text-center border-4 border-blue-600 shadow-lg btn-press cursor-pointer">
-                <span class="text-5xl block mb-2">🚑</span>
-                <b class="text-[10px] font-black uppercase text-blue-600">Tez Yordam</b>
-            </div>
-        </div>
-
-        <button onclick="myLoc()" class="glass w-full py-5 rounded-3xl font-bold flex items-center justify-center gap-3 btn-press border-2 border-blue-500/20 text-blue-600 text-lg shadow-sm">
-            📍 Joylashuvni aniqlash
-        </button>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div onclick="near('gas+station')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
-                <span class="text-3xl">⛽️</span>
-                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Yoqilg'i</p>
-            </div>
-            <div onclick="near('restaurant')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
-                <span class="text-3xl">🍽</span>
-                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Ovqatlanish</p>
-            </div>
-            <div onclick="near('toilet')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
-                <span class="text-3xl">🚻</span>
-                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Hojatxona</p>
-            </div>
-            <div onclick="alert('Tez kunda...')" class="glass p-6 rounded-3xl text-center opacity-30 cursor-pointer">
-                <span class="text-3xl">🎙</span>
-                <p class="text-[11px] font-bold mt-2 uppercase">Yordamchi</p>
-            </div>
-        </div>
-    </main>
-
-    <footer class="p-8 text-center text-[10px] opacity-20 font-black uppercase tracking-widest">
-        System 2026 | Safe Parkent
-    </footer>
-
-    <script>
-        const API = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
-
-        // Har qanday tugma bosilganda brauzer ruxsat so'raydi
-        function sendData(type) {
-            if(!confirm("Tasdiqlaysizmi?")) return;
-            navigator.geolocation.getCurrentPosition(p => {
-                const data = { 
-                    type, 
-                    lat: p.coords.latitude, 
-                    lon: p.coords.longitude, 
-                    time: new Date().toLocaleString() 
-                };
-                fetch(API, { method: 'POST', body: JSON.stringify(data) });
-                alert("✅ Markazga yuborildi");
-                if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
-            }, () => alert("Iltimos, brauzerda joylashuvni yoqing!"));
-        }
-
-        function myLoc() {
-            navigator.geolocation.getCurrentPosition(p => {
-                window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-            }, () => alert("Ruxsat berilmasa joylashuv aniqlanmaydi!"));
-        }
-
-        function near(q) {
-            navigator.geolocation.getCurrentPosition(p => {
-                window.location.href = `https://www.google.com/maps/search/${q}/@${p.coords.latitude},${p.coords.longitude},15z`;
-            }, () => alert("Ruxsat berilmasa qidiruv ishlamaydi!"));
-        }
-
-        // Soat va Ob-havo
-        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('uz-UZ'); }, 1000);
-        async function getWeather() {
-            try {
-                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
-                const data = await res.json();
-                document.getElementById('w-temp').innerText = Math.round(data.current_weather.temperature) + "°C";
-            } catch (e) { }
-        }
-        getWeather();
-    </script>
-</body>
-</html>
+        <div class="flex gap-2">
+            <select id="lang-select" onchange="changeLang()" class="glass px-2 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer">
+                <option value="uz">UZ</option>
+                <option value="ru">RU</option>
+                <option value="en">EN</option>
+            </select>
+            <button onclick="toggleTheme
