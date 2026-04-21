@@ -1,261 +1,233 @@
 <!DOCTYPE html>
+
 <html lang="uz">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeParkent | Smart Tourist App</title>
-    <script src="https://tailwindcss.com"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>BEK_BOLA | Parkent</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        @import url('https://googleapis.com');
-        
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #020617;
-            color: #f8fafc;
-            overflow-x: hidden;
-        }
 
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            border-radius: 1.5rem;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap');
 
-        .glass-card:hover {
-            border-color: rgba(59, 130, 246, 0.2);
-            background: rgba(30, 41, 59, 0.6);
-        }
+        body { font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; background: #f8fafc; }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa, #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .dark body { background: #020617; }
 
-        .pulse-sos {
-            animation: pulse 1.5s infinite;
-        }
+        .btn-press:active { transform: scale(0.94); }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
 
-        .lang-btn.active {
-            background: #2563eb;
-            color: white;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
+        .dark .glass { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); }
+
     </style>
-</head>
-<body class="p-4 md:p-8 max-w-lg mx-auto min-h-screen flex flex-col justify-between">
 
-    <!-- Tilni tanlash paneli -->
-    <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-2">
-            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
-            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">PWA Online</span>
+</head>
+
+<body class="min-h-screen flex flex-col text-slate-900 dark:text-white transition-colors duration-300">
+
+
+
+    <div class="p-4 flex justify-between items-center max-w-md mx-auto w-full">
+
+        <div class="glass px-4 py-2 rounded-2xl flex items-center gap-3 text-sm font-bold shadow-sm">
+
+            <span id="w-temp">--°C</span>
+
+            <span class="opacity-20">|</span>
+
+            <span id="clock" class="font-mono text-blue-600">00:00:00</span>
+
         </div>
-        <div class="flex gap-1 bg-slate-800/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/50">
-            <button onclick="setLanguage('uz')" id="lang-uz" class="lang-btn active px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">UZ</button>
-            <button onclick="setLanguage('en')" id="lang-en" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">EN</button>
-            <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">RU</button>
-        </div>
+
+        <button onclick="document.documentElement.classList.toggle('dark')" class="glass p-2 rounded-xl shadow-sm text-xl">🌓</button>
+
     </div>
 
-    <!-- LOGO -->
-    <header class="text-center mb-6">
-        <h1 class="text-4xl font-black mb-1 tracking-tighter">Safe<span class="gradient-text">Parkent</span></h1>
-        <p id="app-subtitle" class="text-xs text-slate-400">Smart Tourism & Safety System</p>
+
+
+    <header class="text-center py-4">
+
+        <h1 class="text-4xl font-black tracking-tighter text-blue-600 italic">BEK_BOLA</h1>
+
+        <p class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Parkent Tuman Hokimligi</p>
+
     </header>
 
-    <!-- ASOSIY SOS TUGMASI (ISHLAYDI) -->
-    <div class="glass-card p-6 text-center mb-6 border-red-500/20">
-        <h2 id="sos-title" class="text-lg font-bold mb-2 text-white">Yordam kerakmi?</h2>
-        <p id="sos-desc" class="text-xs text-slate-400 mb-6">Favqulodda vaziyatda tugmani bosing. Koordinatangiz yuboriladi.</p>
+
+
+    <main class="p-6 max-w-md mx-auto w-full space-y-6 flex-grow">
+
         
-        <button onclick="sendSOS()" class="pulse-sos w-32 h-32 bg-red-600 hover:bg-red-700 rounded-full mx-auto flex flex-col items-center justify-center border-4 border-red-400/30 transition-all active:scale-95">
-            <svg xmlns="http://w3.org" class="h-10 w-10 text-white mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span id="sos-btn-text" class="text-white text-base font-black">SOS</span>
+
+        <div class="grid grid-cols-2 gap-4">
+
+            <div onclick="sendData('SOS')" class="bg-red-600 text-white p-8 rounded-[40px] text-center shadow-2xl btn-press cursor-pointer">
+
+                <span class="text-5xl block mb-2 font-bold">SOS</span>
+
+                <b class="text-[10px] uppercase opacity-80 tracking-widest">Yuborish</b>
+
+            </div>
+
+            <div onclick="sendData('TEZ_YORDAM')" class="glass p-8 rounded-[40px] text-center border-4 border-blue-600 shadow-lg btn-press cursor-pointer">
+
+                <span class="text-5xl block mb-2">🚑</span>
+
+                <b class="text-[10px] font-black uppercase text-blue-600">Tez Yordam</b>
+
+            </div>
+
+        </div>
+
+
+
+        <button onclick="myLoc()" class="glass w-full py-5 rounded-3xl font-bold flex items-center justify-center gap-3 btn-press border-2 border-blue-500/20 text-blue-600 text-lg shadow-sm">
+
+            📍 Joylashuvni aniqlash
+
         </button>
 
-        <div id="sos-status" class="mt-4 text-xs text-slate-500 font-medium"></div>
-    </div>
 
-    <!-- SMART NAVIGATSIYA VA XARITA -->
-    <div class="grid grid-cols-2 gap-4 mb-6">
-        <!-- Turistik Joylar -->
-        <div class="glass-card p-4 flex flex-col justify-between hover:border-blue-500/30">
-            <div>
-                <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mb-3">
-                    <svg xmlns="http://w3.org" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </div>
-                <h3 id="nav-1-title" class="text-sm font-bold text-white mb-1">Diqqatga sazovor joylar</h3>
-                <p id="nav-1-desc" class="text-[10px] text-slate-500 leading-tight">Parkentning go'zal go'shalarini toping</p>
+
+        <div class="grid grid-cols-2 gap-4">
+
+            <div onclick="near('gas+station')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+
+                <span class="text-3xl">⛽️</span>
+
+                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Yoqilg'i</p>
+
             </div>
-            <button onclick="window.open('https://google.com', '_blank')" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded-lg transition-all">
-                <span id="nav-btn-1">Xaritada ko'rish</span>
-            </button>
+
+            <div onclick="near('restaurant')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+
+                <span class="text-3xl">🍽</span>
+
+                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Ovqatlanish</p>
+
+            </div>
+
+            <div onclick="near('toilet')" class="glass p-6 rounded-3xl text-center btn-press cursor-pointer shadow-sm">
+
+                <span class="text-3xl">🚻</span>
+
+                <p class="text-[11px] font-bold mt-2 uppercase opacity-60">Hojatxona</p>
+
+            </div>
+
+            <div onclick="alert('Tez kunda...')" class="glass p-6 rounded-3xl text-center opacity-30 cursor-pointer">
+
+                <span class="text-3xl">🎙</span>
+
+                <p class="text-[11px] font-bold mt-2 uppercase">Yordamchi</p>
+
+            </div>
+
         </div>
 
-        <!-- Ijtimoiy obyektlar -->
-        <div class="glass-card p-4 flex flex-col justify-between hover:border-emerald-500/30">
-            <div>
-                <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-3">
-                    <svg xmlns="http://w3.org" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0V9a2 2 0 012-2h2a2 2 0 012 2v12" />
-                    </svg>
-                </div>
-                <h3 id="nav-2-title" class="text-sm font-bold text-white mb-1">Ijtimoiy Obyektlar</h3>
-                <p id="nav-2-desc" class="text-[10px] text-slate-500 leading-tight">Shifoxona, bekatlar va xizmatlar</p>
-            </div>
-            <button onclick="window.open('https://google.com', '_blank')" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded-lg transition-all">
-                <span id="nav-btn-2">Xaritada ko'rish</span>
-            </button>
-        </div>
-    </div>
+    </main>
 
-    <!-- STATISTIKA (Ilova samaradorligi ko'rsatkichi) -->
-    <div class="glass-card p-4 mb-6">
-        <h3 id="stat-title" class="text-xs font-bold uppercase text-slate-500 mb-3 tracking-wider text-center">Tizim samaradorligi</h3>
-        <div class="grid grid-cols-3 gap-2 text-center">
-            <div>
-                <p class="text-xl font-bold text-blue-400">-40%</p>
-                <p id="stat-1" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Yordam vaqti</p>
-            </div>
-            <div class="border-x border-slate-800">
-                <p class="text-xl font-bold text-emerald-400">100%</p>
-                <p id="stat-2" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Tayyorgarlik</p>
-            </div>
-            <div>
-                <p class="text-xl font-bold text-emerald-400">+2x</p>
-                <p id="stat-3" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Sayyoh oqimi</p>
-            </div>
-        </div>
-    </div>
 
-    <!-- FOOTER -->
-    <footer class="text-center">
-        <p class="text-[10px] text-slate-700 font-bold uppercase tracking-[0.4em]">Raqamli O'zbekiston — 2030</p>
+
+    <footer class="p-8 text-center text-[10px] opacity-20 font-black uppercase tracking-widest">
+
+        System 2026 | Safe Parkent
+
     </footer>
 
-    <!-- Ilova Funksiyalari JS (SOS va Til) -->
+
+
     <script>
-        // 1. SOS FUKTSIYASI (Haqiqiy geolokatsiya)
-        function sendSOS() {
-            const statusDiv = document.getElementById('sos-status');
-            statusDiv.innerHTML = "🛰 Koordinata aniqlanmoqda...";
-            
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        statusDiv.innerHTML = `✅ Yuborildi! Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
-                        statusDiv.classList.remove('text-slate-500');
-                        statusDiv.classList.add('text-emerald-400');
-                        
-                        // Bu yerga serveringizning SOS API havolasini ulab qo'yishingiz mumkin.
-                        // Masalan: fetch('/api/sos', {method: 'POST', body: JSON.stringify({lat, lng})})
-                    },
-                    (error) => {
-                        statusDiv.innerHTML = "❌ Geolokatsiyaga ruxsat berilmadi.";
-                        statusDiv.classList.remove('text-slate-500');
-                        statusDiv.classList.add('text-rose-400');
-                    }
-                );
-            } else {
-                statusDiv.innerHTML = "❌ Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi.";
-            }
+
+        const API = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
+
+
+
+        // Har qanday tugma bosilganda brauzer ruxsat so'raydi
+
+        function sendData(type) {
+
+            if(!confirm("Tasdiqlaysizmi?")) return;
+
+            navigator.geolocation.getCurrentPosition(p => {
+
+                const data = { 
+
+                    type, 
+
+                    lat: p.coords.latitude, 
+
+                    lon: p.coords.longitude, 
+
+                    time: new Date().toLocaleString() 
+
+                };
+
+                fetch(API, { method: 'POST', body: JSON.stringify(data) });
+
+                alert("✅ Markazga yuborildi");
+
+                if(type === 'TEZ_YORDAM') window.location.href = "tel:103";
+
+            }, () => alert("Iltimos, brauzerda joylashuvni yoqing!"));
+
         }
 
-        // 2. KO'P TILLILIK TIZIMI
-        const translations = {
-            uz: {
-                subtitle: "Smart Tourism & Safety System",
-                sosTitle: "Yordam kerakmi?",
-                sosDesc: "Favqulodda vaziyatda tugmani bosing. Koordinatangiz yuboriladi.",
-                sosBtn: "SOS",
-                nav1Title: "Diqqatga sazovor joylar",
-                nav1Desc: "Parkentning go'zal go'shalarini toping",
-                navBtn1: "Xaritada ko'rish",
-                nav2Title: "Ijtimoiy Obyektlar",
-                nav2Desc: "Shifoxona, bekatlar va xizmatlar",
-                navBtn2: "Xaritada ko'rish",
-                statTitle: "Tizim samaradorligi",
-                stat1: "Yordam vaqti",
-                stat2: "Tayyorgarlik",
-                stat3: "Sayyoh oqimi"
-            },
-            en: {
-                subtitle: "Smart Tourism & Safety System",
-                sosTitle: "Need help?",
-                sosDesc: "Press button in an emergency. Your coordinates will be sent.",
-                sosBtn: "SOS",
-                nav1Title: "Famous Attractions",
-                nav1Desc: "Find beautiful spots of Parkent",
-                navBtn1: "View on Map",
-                nav2Title: "Social Objects",
-                nav2Desc: "Hospitals, stations and services",
-                navBtn2: "View on Map",
-                statTitle: "System Efficiency",
-                stat1: "Response Time",
-                stat2: "Readiness",
-                stat3: "Tourist Flow"
-            },
-            ru: {
-                subtitle: "Smart Tourism & Safety System",
-                sosTitle: "Нужна помощь?",
-                sosDesc: "Нажмите кнопку в экстренной ситуации. Ваши координаты будут отправлены.",
-                sosBtn: "SOS",
-                nav1Title: "Достопримечательности",
-                nav1Desc: "Найдите красивые места Паркента",
-                navBtn1: "На карте",
-                nav2Title: "Социальные объекты",
-                nav2Desc: "Больницы, станции и услуги",
-                navBtn2: "На карте",
-                statTitle: "Эффективность системы",
-                stat1: "Время помощи",
-                stat2: "Готовность",
-                stat3: "Поток туристов"
-            }
-        };
 
-        function setLanguage(lang) {
-            // Aktiv tugmani o'zgartirish
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`lang-${lang}`).classList.add('active');
 
-            // Matnlarni tarjima qilish
-            document.getElementById('app-subtitle').innerText = translations[lang].subtitle;
-            document.getElementById('sos-title').innerText = translations[lang].sosTitle;
-            document.getElementById('sos-desc').innerText = translations[lang].sosDesc;
-            document.getElementById('sos-btn-text').innerText = translations[lang].sosBtn;
-            
-            document.getElementById('nav-1-title').innerText = translations[lang].nav1Title;
-            document.getElementById('nav-1-desc').innerText = translations[lang].nav1Desc;
-            document.getElementById('nav-btn-1').innerText = translations[lang].navBtn1;
-            
-            document.getElementById('nav-2-title').innerText = translations[lang].nav2Title;
-            document.getElementById('nav-2-desc').innerText = translations[lang].nav2Desc;
-            document.getElementById('nav-btn-2').innerText = translations[lang].navBtn2;
+        function myLoc() {
 
-            document.getElementById('stat-title').innerText = translations[lang].statTitle;
-            document.getElementById('stat-1').innerText = translations[lang].stat1;
-            document.getElementById('stat-2').innerText = translations[lang].stat2;
-            document.getElementById('stat-3').innerText = translations[lang].stat3;
-            
-            // Status xabarini tozalash
-            document.getElementById('sos-status').innerText = "";
+            navigator.geolocation.getCurrentPosition(p => {
+
+                window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
+
+            }, () => alert("Ruxsat berilmasa joylashuv aniqlanmaydi!"));
+
         }
+
+
+
+        function near(q) {
+
+            navigator.geolocation.getCurrentPosition(p => {
+
+                window.location.href = `https://www.google.com/maps/search/${q}/@${p.coords.latitude},${p.coords.longitude},15z`;
+
+            }, () => alert("Ruxsat berilmasa qidiruv ishlamaydi!"));
+
+        }
+
+
+
+        // Soat va Ob-havo
+
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString('uz-UZ'); }, 1000);
+
+        async function getWeather() {
+
+            try {
+
+                const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
+
+                const data = await res.json();
+
+                document.getElementById('w-temp').innerText = Math.round(data.current_weather.temperature) + "°C";
+
+            } catch (e) { }
+
+        }
+
+        getWeather();
+
     </script>
+
 </body>
+
 </html>
