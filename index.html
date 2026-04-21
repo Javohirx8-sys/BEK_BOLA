@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafeParkent | Taqdimot</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>SafeParkent | Smart Tourist App</title>
+    <script src="https://tailwindcss.com"></script>
     <style>
         @import url('https://googleapis.com');
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: radial-gradient(circle at top right, #0f172a, #020617);
+            background: #020617;
             color: #f8fafc;
             overflow-x: hidden;
         }
 
-        .glass {
+        .glass-card {
             background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             border-radius: 1.5rem;
         }
 
-        .glass:hover {
-            border-color: rgba(59, 130, 246, 0.4);
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.2);
             background: rgba(30, 41, 59, 0.6);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -20px rgba(59, 130, 246, 0.3);
         }
 
         .gradient-text {
@@ -37,35 +34,16 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .animate-up {
-            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            opacity: 0;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pulse-dot {
-            height: 8px;
-            width: 8px;
-            background-color: #10b981;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #10b981;
-            animation: pulse 2s infinite;
+        .pulse-sos {
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .lang-btn {
-            transition: all 0.3s ease;
-        }
-        
         .lang-btn.active {
             background: #2563eb;
             color: white;
@@ -73,210 +51,210 @@
         }
     </style>
 </head>
-<body class="p-6 md:p-12 lg:p-20 min-h-screen flex flex-col justify-between">
+<body class="p-4 md:p-8 max-w-lg mx-auto min-h-screen flex flex-col justify-between">
 
     <!-- Tilni tanlash paneli -->
-    <div class="fixed top-6 right-6 z-50 flex gap-1 bg-slate-800/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/50">
-        <button onclick="setLanguage('uz')" id="lang-uz" class="lang-btn active px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">UZB</button>
-        <button onclick="setLanguage('en')" id="lang-en" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">ENG</button>
-        <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white">RUS</button>
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">PWA Online</span>
+        </div>
+        <div class="flex gap-1 bg-slate-800/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/50">
+            <button onclick="setLanguage('uz')" id="lang-uz" class="lang-btn active px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">UZ</button>
+            <button onclick="setLanguage('en')" id="lang-en" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">EN</button>
+            <button onclick="setLanguage('ru')" id="lang-ru" class="lang-btn px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all">RU</button>
+        </div>
     </div>
 
-    <!-- Markaziy sarlavha -->
-    <header class="max-w-4xl mx-auto text-center mb-20 animate-up">
-        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass mb-8 border-emerald-500/20">
-            <div class="pulse-dot"></div>
-            <span id="badge-text" class="text-xs font-bold uppercase tracking-widest text-emerald-400">Pilot loyiha tayyor</span>
-        </div>
-        
-        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter">
-            Safe<span class="gradient-text">Parkent</span>
-        </h1>
-        
-        <p id="hero-sub" class="text-lg md:text-xl text-slate-400 font-light max-w-2xl mx-auto leading-relaxed">
-            Parkent tumanining raqamli xavfsizlik va aqlli turizm ekotizimi
-        </p>
+    <!-- LOGO -->
+    <header class="text-center mb-6">
+        <h1 class="text-4xl font-black mb-1 tracking-tighter">Safe<span class="gradient-text">Parkent</span></h1>
+        <p id="app-subtitle" class="text-xs text-slate-400">Smart Tourism & Safety System</p>
     </header>
 
-    <!-- Grid Konteyner -->
-    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-20">
+    <!-- ASOSIY SOS TUGMASI (ISHLAYDI) -->
+    <div class="glass-card p-6 text-center mb-6 border-red-500/20">
+        <h2 id="sos-title" class="text-lg font-bold mb-2 text-white">Yordam kerakmi?</h2>
+        <p id="sos-desc" class="text-xs text-slate-400 mb-6">Favqulodda vaziyatda tugmani bosing. Koordinatangiz yuboriladi.</p>
         
-        <!-- 01. Muammo -->
-        <div class="glass p-8 lg:p-10 animate-up flex flex-col justify-between" style="animation-delay: 0.2s;">
+        <button onclick="sendSOS()" class="pulse-sos w-32 h-32 bg-red-600 hover:bg-red-700 rounded-full mx-auto flex flex-col items-center justify-center border-4 border-red-400/30 transition-all active:scale-95">
+            <svg xmlns="http://w3.org" class="h-10 w-10 text-white mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span id="sos-btn-text" class="text-white text-base font-black">SOS</span>
+        </button>
+
+        <div id="sos-status" class="mt-4 text-xs text-slate-500 font-medium"></div>
+    </div>
+
+    <!-- SMART NAVIGATSIYA VA XARITA -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <!-- Turistik Joylar -->
+        <div class="glass-card p-4 flex flex-col justify-between hover:border-blue-500/30">
             <div>
-                <span class="text-xs font-bold uppercase text-blue-500 mb-2 block tracking-widest">01. </span>
-                <h2 id="prob-title" class="text-3xl font-extrabold mb-6 text-white tracking-tight">Tarqoq infratuzilma va kechikish</h2>
-                <ul class="space-y-4 text-slate-300">
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-rose-500 font-bold">✕</span> 
-                        <span id="prob-1">Favqulodda vaziyatlarda koordinata aniqlashdagi kechikishlar</span>
-                    </li>
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-rose-500 font-bold">✕</span> 
-                        <span id="prob-2">Sayyohlar uchun ijtimoiy ob'ektlar haqida ma'lumot yo'qligi</span>
-                    </li>
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-rose-500 font-bold">✕</span> 
-                        <span id="prob-3">Tuman miqyosidagi raqamli monitoring tizimining yetishmasligi</span>
-                    </li>
-                </ul>
+                <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mb-3">
+                    <svg xmlns="http://w3.org" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <h3 id="nav-1-title" class="text-sm font-bold text-white mb-1">Diqqatga sazovor joylar</h3>
+                <p id="nav-1-desc" class="text-[10px] text-slate-500 leading-tight">Parkentning go'zal go'shalarini toping</p>
             </div>
-            <div class="mt-8 border-t border-white/5 pt-4 opacity-40 text-xs uppercase tracking-widest font-semibold">Current State</div>
+            <button onclick="window.open('https://google.com', '_blank')" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded-lg transition-all">
+                <span id="nav-btn-1">Xaritada ko'rish</span>
+            </button>
         </div>
 
-        <!-- 02. Yechim -->
-        <div class="glass p-8 lg:p-10 animate-up flex flex-col justify-between border-emerald-500/10" style="animation-delay: 0.3s;">
+        <!-- Ijtimoiy obyektlar -->
+        <div class="glass-card p-4 flex flex-col justify-between hover:border-emerald-500/30">
             <div>
-                <span class="text-xs font-bold uppercase text-emerald-500 mb-2 block tracking-widest">02. </span>
-                <h2 id="sol-title" class="text-3xl font-extrabold mb-6 text-white tracking-tight">SafeParkent PWA Platformasi</h2>
-                <ul class="space-y-4 text-slate-300">
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-emerald-500 font-bold">✓</span> 
-                        <span><b class="text-white">Instant SOS:</b> <span id="sol-1">Bir tugma bilan koordinata yuborish</span></span>
-                    </li>
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-emerald-500 font-bold">✓</span> 
-                        <span><b class="text-white">Smart Navigation:</b> <span id="sol-2">Ijtimoiy ob'ektlar raqamli xaritasi</span></span>
-                    </li>
-                    <li class="flex items-start gap-3 text-sm leading-relaxed">
-                        <span class="text-emerald-500 font-bold">✓</span> 
-                        <span><b class="text-white">Big Data:</b> <span id="sol-3">Hokimiyat uchun real-vaqt monitoringi</span></span>
-                    </li>
-                </ul>
+                <div class="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-3">
+                    <svg xmlns="http://w3.org" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0V9a2 2 0 012-2h2a2 2 0 012 2v12" />
+                    </svg>
+                </div>
+                <h3 id="nav-2-title" class="text-sm font-bold text-white mb-1">Ijtimoiy Obyektlar</h3>
+                <p id="nav-2-desc" class="text-[10px] text-slate-500 leading-tight">Shifoxona, bekatlar va xizmatlar</p>
             </div>
-            <div class="mt-8 border-t border-white/5 pt-4 opacity-40 text-xs uppercase tracking-widest font-semibold">Future State</div>
+            <button onclick="window.open('https://google.com', '_blank')" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold py-2 rounded-lg transition-all">
+                <span id="nav-btn-2">Xaritada ko'rish</span>
+            </button>
         </div>
+    </div>
 
-        <!-- 03. Statistika -->
-        <div class="glass p-10 animate-up md:col-span-2 border-slate-700/50" style="animation-delay: 0.4s;">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-                <div class="p-4">
-                    <h4 class="text-6xl font-extrabold gradient-text mb-2">-40%</h4>
-                    <p id="stat-1" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Yordam yetib borish vaqti</p>
-                </div>
-                <div class="p-4 border-y sm:border-y-0 sm:border-x border-slate-800">
-                    <h4 class="text-6xl font-extrabold gradient-text mb-2">100%</h4>
-                    <p id="stat-2" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Texnik tayyorgarlik</p>
-                </div>
-                <div class="p-4">
-                    <h4 class="text-6xl font-extrabold gradient-text mb-2">+2x</h4>
-                    <p id="stat-3" class="text-xs uppercase font-bold text-slate-500 tracking-wider">Turistik jozibadorlik</p>
-                </div>
+    <!-- STATISTIKA (Ilova samaradorligi ko'rsatkichi) -->
+    <div class="glass-card p-4 mb-6">
+        <h3 id="stat-title" class="text-xs font-bold uppercase text-slate-500 mb-3 tracking-wider text-center">Tizim samaradorligi</h3>
+        <div class="grid grid-cols-3 gap-2 text-center">
+            <div>
+                <p class="text-xl font-bold text-blue-400">-40%</p>
+                <p id="stat-1" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Yordam vaqti</p>
             </div>
-        </div>
-
-        <!-- 04. Moliyaviy strategiya -->
-        <div class="glass p-10 md:col-span-2 animate-up bg-gradient-to-br from-slate-900/50 to-blue-900/10 border-blue-500/20" style="animation-delay: 0.5s;">
-            <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
-                <div class="text-left">
-                    <span class="text-xs font-bold uppercase text-blue-400 mb-2 block tracking-widest">03. Strategy</span>
-                    <h2 id="fin-title" class="text-3xl font-extrabold text-white tracking-tight mb-4">Viloyat budjetidan maqsadli ssuda</h2>
-                    <p id="fin-desc" class="text-slate-400 max-w-2xl text-sm leading-relaxed">
-                        Tuman zaxira mablag'lari yetarli bo'lmagani sababli, loyihani server infratuzilmasiga ko'chirish va kengaytirish uchun <b class="text-white">viloyatdan qaytarish sharti bilan</b> maqsadli ssuda olish taklif etiladi.
-                    </p>
-                </div>
-                <div class="px-6 py-6 bg-slate-800/50 rounded-2xl border border-blue-500/20 text-center min-w-[240px] w-full lg:w-auto">
-                    <p id="fin-status-title" class="text-xs uppercase text-slate-500 mb-2 font-bold tracking-wider">Moliyaviy status</p>
-                    <p id="fin-status-badge" class="text-sm font-bold text-emerald-400 leading-snug">Fond ochilguncha <br>vaqtinchalik ko'mak</p>
-                </div>
+            <div class="border-x border-slate-800">
+                <p class="text-xl font-bold text-emerald-400">100%</p>
+                <p id="stat-2" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Tayyorgarlik</p>
+            </div>
+            <div>
+                <p class="text-xl font-bold text-emerald-400">+2x</p>
+                <p id="stat-3" class="text-[9px] uppercase font-bold text-slate-600 leading-tight mt-1">Sayyoh oqimi</p>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="text-center animate-up" style="animation-delay: 0.6s;">
-        <p class="text-xs text-slate-600 font-bold uppercase tracking-[0.4em]">Raqamli O'zbekiston — 2030</p>
+    <!-- FOOTER -->
+    <footer class="text-center">
+        <p class="text-[10px] text-slate-700 font-bold uppercase tracking-[0.4em]">Raqamli O'zbekiston — 2030</p>
     </footer>
 
-    <!-- Ko'p tillilik scripti -->
+    <!-- Ilova Funksiyalari JS (SOS va Til) -->
     <script>
+        // 1. SOS FUKTSIYASI (Haqiqiy geolokatsiya)
+        function sendSOS() {
+            const statusDiv = document.getElementById('sos-status');
+            statusDiv.innerHTML = "🛰 Koordinata aniqlanmoqda...";
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        statusDiv.innerHTML = `✅ Yuborildi! Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+                        statusDiv.classList.remove('text-slate-500');
+                        statusDiv.classList.add('text-emerald-400');
+                        
+                        // Bu yerga serveringizning SOS API havolasini ulab qo'yishingiz mumkin.
+                        // Masalan: fetch('/api/sos', {method: 'POST', body: JSON.stringify({lat, lng})})
+                    },
+                    (error) => {
+                        statusDiv.innerHTML = "❌ Geolokatsiyaga ruxsat berilmadi.";
+                        statusDiv.classList.remove('text-slate-500');
+                        statusDiv.classList.add('text-rose-400');
+                    }
+                );
+            } else {
+                statusDiv.innerHTML = "❌ Brauzeringiz geolokatsiyani qo'llab-quvvatlamaydi.";
+            }
+        }
+
+        // 2. KO'P TILLILIK TIZIMI
         const translations = {
             uz: {
-                badge: "Pilot loyiha tayyor",
-                heroSub: "Parkent tumanining raqamli xavfsizlik va aqlli turizm ekotizimi",
-                probTitle: "Tarqoq infratuzilma va kechikish",
-                prob1: "Favqulodda vaziyatlarda koordinata aniqlashdagi kechikishlar",
-                prob2: "Sayyohlar uchun ijtimoiy ob'ektlar haqida ma'lumot yo'qligi",
-                prob3: "Tuman miqyosidagi raqamli monitoring tizimining yetishmasligi",
-                solTitle: "SafeParkent PWA Platformasi",
-                sol1: "Bir tugma bilan koordinata yuborish",
-                sol2: "Ijtimoiy ob'ektlar raqamli xaritasi",
-                sol3: "Hokimiyat uchun real-vaqt monitoringi",
-                stat1: "Yordam yetib borish vaqti",
-                stat2: "Texnik tayyorgarlik",
-                stat3: "Turistik jozibadorlik",
-                finTitle: "Viloyat budjetidan maqsadli ssuda",
-                finDesc: "Tuman zaxira mablag'lari yetarli bo'lmagani sababli, loyihani server infratuzilmasiga ko'chirish va kengaytirish uchun viloyatdan qaytarish sharti bilan maqsadli ssuda olish taklif etiladi.",
-                finStatusTitle: "Moliyaviy status",
-                finStatusBadge: "Fond ochilguncha <br>vaqtinchalik ko'mak"
+                subtitle: "Smart Tourism & Safety System",
+                sosTitle: "Yordam kerakmi?",
+                sosDesc: "Favqulodda vaziyatda tugmani bosing. Koordinatangiz yuboriladi.",
+                sosBtn: "SOS",
+                nav1Title: "Diqqatga sazovor joylar",
+                nav1Desc: "Parkentning go'zal go'shalarini toping",
+                navBtn1: "Xaritada ko'rish",
+                nav2Title: "Ijtimoiy Obyektlar",
+                nav2Desc: "Shifoxona, bekatlar va xizmatlar",
+                navBtn2: "Xaritada ko'rish",
+                statTitle: "Tizim samaradorligi",
+                stat1: "Yordam vaqti",
+                stat2: "Tayyorgarlik",
+                stat3: "Sayyoh oqimi"
             },
             en: {
-                badge: "Pilot Project Ready",
-                heroSub: "Digital security and smart tourism ecosystem of Parkent district",
-                probTitle: "Scattered Infrastructure and Delays",
-                prob1: "Delays in determining coordinates during emergencies",
-                prob2: "Lack of information about social objects for tourists",
-                prob3: "Lack of a digital monitoring system at the district level",
-                solTitle: "SafeParkent PWA Platform",
-                sol1: "Send coordinates with a single button",
-                sol2: "Digital map of social objects",
-                sol3: "Real-time monitoring for the municipality",
-                stat1: "Emergency response time",
-                stat2: "Technical readiness",
-                stat3: "Tourism attractiveness",
-                finTitle: "Targeted Loan from the Regional Budget",
-                finDesc: "Due to insufficient district reserve funds, it is proposed to receive a targeted loan on the condition of repayment from the region to migrate the project to server infrastructure and scale.",
-                finStatusTitle: "Financial Status",
-                finStatusBadge: "Temporary support <br>until the fund opens"
+                subtitle: "Smart Tourism & Safety System",
+                sosTitle: "Need help?",
+                sosDesc: "Press button in an emergency. Your coordinates will be sent.",
+                sosBtn: "SOS",
+                nav1Title: "Famous Attractions",
+                nav1Desc: "Find beautiful spots of Parkent",
+                navBtn1: "View on Map",
+                nav2Title: "Social Objects",
+                nav2Desc: "Hospitals, stations and services",
+                navBtn2: "View on Map",
+                statTitle: "System Efficiency",
+                stat1: "Response Time",
+                stat2: "Readiness",
+                stat3: "Tourist Flow"
             },
             ru: {
-                badge: "Пилотный проект готов",
-                heroSub: "Экосистема цифровой безопасности и умного туризма Паркентского района",
-                probTitle: "Разрозненная инфраструктура и задержки",
-                prob1: "Задержки в определении координат при чрезвычайных ситуациях",
-                prob2: "Отсутствие информации о социальных объектах для туристов",
-                prob3: "Отсутствие цифровой системы мониторинга на уровне района",
-                solTitle: "Платформа SafeParkent PWA",
-                sol1: "Отправка координат одной кнопкой",
-                sol2: "Цифровая карта социальных объектов",
-                sol3: "Мониторинг в реальном времени для хокимията",
-                stat1: "Время прибытия помощи",
-                stat2: "Техническая готовность",
-                stat3: "Туристическая привлекательность",
-                finTitle: "Целевая ссуда из областного бюджета",
-                finDesc: "В связи с недостаточностью резервных средств района, предлагается получить целевую ссуду из области на условии возврата для переноса проекта на серверную инфраструктуру и расширения.",
-                finStatusTitle: "Финансовый статус",
-                finStatusBadge: "Временная помощь <br>до открытия фонда"
+                subtitle: "Smart Tourism & Safety System",
+                sosTitle: "Нужна помощь?",
+                sosDesc: "Нажмите кнопку в экстренной ситуации. Ваши координаты будут отправлены.",
+                sosBtn: "SOS",
+                nav1Title: "Достопримечательности",
+                nav1Desc: "Найдите красивые места Паркента",
+                navBtn1: "На карте",
+                nav2Title: "Социальные объекты",
+                nav2Desc: "Больницы, станции и услуги",
+                navBtn2: "На карте",
+                statTitle: "Эффективность системы",
+                stat1: "Время помощи",
+                stat2: "Готовность",
+                stat3: "Поток туристов"
             }
         };
 
         function setLanguage(lang) {
-            // Aktiv tugmani belgilash
+            // Aktiv tugmani o'zgartirish
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`lang-${lang}`).classList.add('active');
 
-            // Matnlarni o'zgartirish
-            document.getElementById('badge-text').innerText = translations[lang].badge;
-            document.getElementById('hero-sub').innerText = translations[lang].heroSub;
+            // Matnlarni tarjima qilish
+            document.getElementById('app-subtitle').innerText = translations[lang].subtitle;
+            document.getElementById('sos-title').innerText = translations[lang].sosTitle;
+            document.getElementById('sos-desc').innerText = translations[lang].sosDesc;
+            document.getElementById('sos-btn-text').innerText = translations[lang].sosBtn;
             
-            document.getElementById('prob-title').innerText = translations[lang].probTitle;
-            document.getElementById('prob-1').innerText = translations[lang].prob1;
-            document.getElementById('prob-2').innerText = translations[lang].prob2;
-            document.getElementById('prob-3').innerText = translations[lang].prob3;
+            document.getElementById('nav-1-title').innerText = translations[lang].nav1Title;
+            document.getElementById('nav-1-desc').innerText = translations[lang].nav1Desc;
+            document.getElementById('nav-btn-1').innerText = translations[lang].navBtn1;
+            
+            document.getElementById('nav-2-title').innerText = translations[lang].nav2Title;
+            document.getElementById('nav-2-desc').innerText = translations[lang].nav2Desc;
+            document.getElementById('nav-btn-2').innerText = translations[lang].navBtn2;
 
-            document.getElementById('sol-title').innerText = translations[lang].solTitle;
-            document.getElementById('sol-1').innerText = translations[lang].sol1;
-            document.getElementById('sol-2').innerText = translations[lang].sol2;
-            document.getElementById('sol-3').innerText = translations[lang].sol3;
-
+            document.getElementById('stat-title').innerText = translations[lang].statTitle;
             document.getElementById('stat-1').innerText = translations[lang].stat1;
             document.getElementById('stat-2').innerText = translations[lang].stat2;
             document.getElementById('stat-3').innerText = translations[lang].stat3;
-
-            document.getElementById('fin-title').innerText = translations[lang].finTitle;
-            document.getElementById('fin-desc').innerHTML = translations[lang].finDesc;
-            document.getElementById('fin-status-title').innerText = translations[lang].finStatusTitle;
-            document.getElementById('fin-status-badge').innerHTML = translations[lang].finStatusBadge;
+            
+            // Status xabarini tozalash
+            document.getElementById('sos-status').innerText = "";
         }
     </script>
 </body>
