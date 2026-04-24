@@ -18,165 +18,79 @@
       --accent: #e63946;
       --accent2: #1a6ef7;
       --green: #25a244;
+      --orange: #f4820a;
+      --yellow: #d4a017;
       --radius: 24px;
       --shadow: 0 2px 20px rgba(0,0,0,0.06);
     }
 
     .dark {
-      --bg: #0a0a0a;
-      --surface: #161616;
-      --surface2: #222;
-      --border: rgba(255,255,255,0.07);
-      --text: #f0f0f0;
-      --text-muted: #666;
+      --bg: #0a0a0a; --surface: #161616; --surface2: #222;
+      --border: rgba(255,255,255,0.07); --text: #f0f0f0; --text-muted: #666;
       --shadow: 0 2px 20px rgba(0,0,0,0.4);
     }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      max-width: 430px;
-      margin: 0 auto;
+      background: var(--bg); color: var(--text);
+      min-height: 100dvh; display: flex; flex-direction: column;
+      max-width: 430px; margin: 0 auto;
       transition: background 0.3s, color 0.3s;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      -webkit-tap-highlight-color: transparent; user-select: none;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 20px;
-      gap: 8px;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-      min-width: 0;
-    }
-
+    /* TOPBAR */
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; gap: 8px; }
+    .topbar-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
     .weather-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      padding: 7px 12px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: var(--shadow);
-      white-space: nowrap;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 50px;
+      padding: 7px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted);
+      display: flex; align-items: center; gap: 5px; box-shadow: var(--shadow); white-space: nowrap;
     }
     .weather-pill .temp { color: var(--text); font-weight: 600; }
-
     .clock {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--accent2);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      padding: 7px 10px;
-      box-shadow: var(--shadow);
-      white-space: nowrap;
+      font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--accent2);
+      background: var(--surface); border: 1px solid var(--border); border-radius: 50px;
+      padding: 7px 10px; box-shadow: var(--shadow); white-space: nowrap;
     }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
+    .topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .icon-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 38px; height: 38px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 16px;
-      box-shadow: var(--shadow);
-      transition: transform 0.15s;
-      flex-shrink: 0;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 50%;
+      width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; box-shadow: var(--shadow); transition: transform 0.15s; flex-shrink: 0;
     }
     .icon-btn:active { transform: scale(0.9); }
-
     .lang-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50px;
-      height: 38px;
-      padding: 0 12px;
-      display: flex; align-items: center; gap: 5px;
-      cursor: pointer;
-      font-size: 13px; font-weight: 700;
-      color: var(--text);
-      box-shadow: var(--shadow);
-      transition: transform 0.15s;
-      white-space: nowrap;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 50px;
+      height: 38px; padding: 0 12px; display: flex; align-items: center; gap: 5px;
+      cursor: pointer; font-size: 13px; font-weight: 700; color: var(--text);
+      box-shadow: var(--shadow); transition: transform 0.15s; white-space: nowrap;
     }
     .lang-btn:active { transform: scale(0.92); }
     .lang-flag { font-size: 16px; line-height: 1; }
 
     /* LANG PANEL */
     .lang-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 200;
-      display: flex; align-items: flex-end;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      z-index: 200; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.25s;
     }
     .lang-overlay.open { opacity: 1; pointer-events: all; }
-
     .lang-panel {
-      background: var(--surface);
-      border-radius: 28px 28px 0 0;
-      padding: 20px 20px 40px;
-      width: 100%;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+      background: var(--surface); border-radius: 28px 28px 0 0; padding: 20px 20px 40px; width: 100%;
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
     .lang-overlay.open .lang-panel { transform: translateY(0); }
-
     .lang-panel-title {
-      font-size: 13px; font-weight: 700;
-      letter-spacing: 0.12em; text-transform: uppercase;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--text-muted); margin-bottom: 16px; text-align: center;
     }
-
-    .lang-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
+    .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .lang-option {
-      background: var(--surface2);
-      border: 2px solid transparent;
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: flex; align-items: center; gap: 10px;
-      cursor: pointer;
-      transition: transform 0.1s, border-color 0.15s;
+      background: var(--surface2); border: 2px solid transparent; border-radius: 16px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.1s, border-color 0.15s;
     }
     .lang-option:active { transform: scale(0.96); }
-    .lang-option.active {
-      border-color: var(--accent2);
-      background: rgba(26,110,247,0.08);
-    }
-
+    .lang-option.active { border-color: var(--accent2); background: rgba(26,110,247,0.08); }
     .lang-option-flag { font-size: 24px; }
     .lang-option-info { display: flex; flex-direction: column; gap: 1px; }
     .lang-option-name { font-size: 14px; font-weight: 700; color: var(--text); }
@@ -184,51 +98,35 @@
 
     /* HEADER */
     .header { padding: 8px 20px 20px; }
-
-    .logo {
-      font-size: 32px; font-weight: 700;
-      letter-spacing: -1.5px; color: var(--text);
-    }
+    .logo { font-size: 32px; font-weight: 700; letter-spacing: -1.5px; color: var(--text); }
     .logo em { color: var(--accent2); font-style: normal; }
+    .tagline { font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-top: 2px; }
 
-    .tagline {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-muted); margin-top: 2px;
-    }
-
-    /* STATUS */
+    /* STATUS STRIP — dynamic */
     .status-strip {
-      margin: 0 20px 20px;
-      background: var(--green);
-      border-radius: 14px;
-      padding: 10px 16px;
+      margin: 0 20px 20px; border-radius: 14px; padding: 10px 16px;
       display: flex; align-items: center; gap: 8px;
+      transition: background 0.4s;
     }
+    .status-strip.online  { background: var(--green); }
+    .status-strip.offline { background: #555; }
+    .status-strip.no-gps  { background: var(--orange); }
     .status-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%; background: #fff;
-      flex-shrink: 0;
+      width: 8px; height: 8px; border-radius: 50%; background: #fff; flex-shrink: 0;
       animation: pulse-dot 2s infinite;
     }
+    .status-strip.offline .status-dot { animation: none; opacity: 0.5; }
     @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
-    .status-text {
-      font-size: 12px; font-weight: 600; color: #fff;
-      letter-spacing: 0.04em; text-transform: uppercase;
-    }
+    .status-text { font-size: 12px; font-weight: 600; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; flex: 1; }
+    .status-gps-icon { font-size: 14px; opacity: 0.8; }
 
     /* MAIN */
-    main {
-      padding: 0 20px; flex: 1;
-      display: flex; flex-direction: column; gap: 12px;
-    }
+    main { padding: 0 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 
     /* SOS */
     .sos-btn {
-      background: var(--accent);
-      border-radius: var(--radius);
-      padding: 32px 20px;
-      display: flex; align-items: center; justify-content: space-between;
+      background: var(--accent); border-radius: var(--radius);
+      padding: 32px 20px; display: flex; align-items: center; justify-content: space-between;
       cursor: pointer; position: relative; overflow: hidden;
       transition: transform 0.12s, box-shadow 0.12s;
       box-shadow: 0 8px 32px rgba(230,57,70,0.35);
@@ -239,103 +137,81 @@
       pointer-events: none;
     }
     .sos-btn:active { transform: scale(0.97); box-shadow: 0 4px 16px rgba(230,57,70,0.25); }
+    /* live pulse ring when tracking */
+    .sos-btn.tracking::after {
+      content: ''; position: absolute; inset: -4px; border-radius: calc(var(--radius) + 4px);
+      border: 3px solid rgba(230,57,70,0.5); animation: ring-pulse 1.4s infinite;
+    }
+    @keyframes ring-pulse { 0%{transform:scale(1);opacity:1} 100%{transform:scale(1.04);opacity:0} }
 
     .sos-left { display: flex; flex-direction: column; gap: 4px; }
-    .sos-label {
-      font-size: 11px; font-weight: 600;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-    }
-    .sos-title {
-      font-size: 48px; font-weight: 700; color: #fff;
-      letter-spacing: -2px; line-height: 1;
-    }
+    .sos-label { font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+    .sos-title { font-size: 48px; font-weight: 700; color: #fff; letter-spacing: -2px; line-height: 1; }
     .sos-sub { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; }
+    .sos-live-badge {
+      display: none; align-items: center; gap: 5px; margin-top: 6px;
+      background: rgba(255,255,255,0.2); border-radius: 50px; padding: 4px 10px; width: fit-content;
+    }
+    .sos-live-badge.show { display: flex; }
+    .sos-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: pulse-dot 1s infinite; }
+    .sos-live-text { font-size: 10px; font-weight: 700; color: #fff; letter-spacing: 0.1em; text-transform: uppercase; }
     .sos-icon { font-size: 52px; opacity: 0.9; }
 
-    /* CARDS */
+    /* ROWS */
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px 18px;
-      display: flex; flex-direction: column; gap: 8px;
-      cursor: pointer;
-      transition: transform 0.12s, box-shadow 0.12s;
-      box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 22px 18px; display: flex; flex-direction: column; gap: 8px; cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s; box-shadow: var(--shadow);
     }
     .card:active { transform: scale(0.96); box-shadow: none; }
-
     .card-icon { font-size: 28px; line-height: 1; }
     .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
     .card-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
     .card-arrow { font-size: 18px; color: var(--text-muted); margin-top: auto; align-self: flex-end; }
-
-    .card.tez-yordam {
-      background: var(--accent2); border-color: transparent;
-      box-shadow: 0 6px 24px rgba(26,110,247,0.3);
-    }
-    .card.tez-yordam .card-title,
-    .card.tez-yordam .card-arrow { color: rgba(255,255,255,0.9); }
+    .card.tez-yordam { background: var(--accent2); border-color: transparent; box-shadow: 0 6px 24px rgba(26,110,247,0.3); }
+    .card.tez-yordam .card-title, .card.tez-yordam .card-arrow { color: rgba(255,255,255,0.9); }
     .card.tez-yordam .card-sub { color: rgba(255,255,255,0.6); }
+    /* TAXI card */
+    .card.taxi { background: #f4820a; border-color: transparent; box-shadow: 0 6px 24px rgba(244,130,10,0.3); }
+    .card.taxi .card-title, .card.taxi .card-arrow { color: rgba(255,255,255,0.95); }
+    .card.taxi .card-sub { color: rgba(255,255,255,0.65); }
 
     /* NEAR GRID */
-    .near-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    }
+    .near-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .near-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px 10px;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      cursor: pointer;
-      transition: transform 0.12s;
-      box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      padding: 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer; transition: transform 0.12s; box-shadow: var(--shadow);
     }
     .near-card:active { transform: scale(0.94); }
     .near-card.soon { opacity: 0.35; cursor: default; }
     .near-icon { font-size: 26px; }
-    .near-label {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 0.05em; text-transform: uppercase;
-      color: var(--text-muted); text-align: center;
-    }
+    .near-label { font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); text-align: center; }
 
     footer { padding: 24px 20px 32px; text-align: center; }
-    .footer-text {
-      font-size: 10px; font-weight: 600;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--text-muted); opacity: 0.5;
-    }
+    .footer-text { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); opacity: 0.5; }
 
     /* TOAST */
     .toast {
       position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: var(--text); color: var(--bg);
-      padding: 12px 24px; border-radius: 50px;
-      font-size: 13px; font-weight: 600; white-space: nowrap;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 12px 24px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      white-space: nowrap; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 999; max-width: 90vw;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
     /* CONFIRM MODAL */
     .overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-      z-index: 100; display: flex; align-items: flex-end;
-      opacity: 0; pointer-events: none; transition: opacity 0.25s;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      z-index: 100; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.25s;
     }
     .overlay.open { opacity: 1; pointer-events: all; }
     .modal {
-      background: var(--surface); border-radius: 28px 28px 0 0;
-      padding: 28px 24px 40px; width: 100%;
-      transform: translateY(100%);
-      transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+      background: var(--surface); border-radius: 28px 28px 0 0; padding: 28px 24px 40px; width: 100%;
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
     .overlay.open .modal { transform: translateY(0); }
     .modal-icon { font-size: 44px; text-align: center; margin-bottom: 12px; }
@@ -343,27 +219,43 @@
     .modal-desc { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 24px; line-height: 1.5; }
     .modal-btns { display: flex; gap: 10px; }
     .modal-btn {
-      flex: 1; padding: 16px; border-radius: 16px;
-      font-size: 15px; font-weight: 600; border: none;
-      cursor: pointer; font-family: 'DM Sans', sans-serif;
-      transition: transform 0.1s;
+      flex: 1; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 600;
+      border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: transform 0.1s;
     }
     .modal-btn:active { transform: scale(0.96); }
     .modal-btn.cancel { background: var(--surface2); color: var(--text-muted); }
     .modal-btn.confirm-sos { background: var(--accent); color: #fff; }
     .modal-btn.confirm-blue { background: var(--accent2); color: #fff; }
+
+    /* STOP SOS BAR */
+    .stop-bar {
+      position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+      width: 100%; max-width: 430px;
+      background: var(--accent); padding: 16px 20px 36px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1); z-index: 90;
+    }
+    .stop-bar.show { transform: translateX(-50%) translateY(0); }
+    .stop-bar-info { display: flex; flex-direction: column; gap: 2px; }
+    .stop-bar-title { font-size: 13px; font-weight: 700; color: #fff; }
+    .stop-bar-sub { font-size: 11px; color: rgba(255,255,255,0.65); }
+    .stop-btn {
+      background: rgba(255,255,255,0.2); border: none; border-radius: 14px;
+      padding: 10px 18px; font-size: 13px; font-weight: 700; color: #fff;
+      cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; transition: transform 0.1s;
+    }
+    .stop-btn:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
 
-  <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="weather-pill">☁️ <span class="temp" id="w-temp">--°C</span></div>
       <div class="clock" id="clock">00:00</div>
     </div>
     <div class="topbar-right">
-      <button class="lang-btn" onclick="openLang()" aria-label="Language">
+      <button class="lang-btn" onclick="openLang()">
         <span class="lang-flag" id="cur-flag">🇺🇿</span>
         <span id="cur-code">UZ</span>
       </button>
@@ -371,29 +263,34 @@
     </div>
   </div>
 
-  <!-- HEADER -->
   <div class="header">
     <div class="logo">BEK<em>_</em>BOLA</div>
     <div class="tagline" id="t-tagline">Parkent Tuman Hokimligi</div>
   </div>
 
-  <!-- STATUS -->
-  <div class="status-strip">
+  <!-- STATUS STRIP — dynamic -->
+  <div class="status-strip online" id="status-strip">
     <div class="status-dot"></div>
     <div class="status-text" id="t-status">Tizim faol · Xizmat ko'rsatishga tayyor</div>
+    <div class="status-gps-icon" id="status-gps-icon">📍</div>
   </div>
 
-  <!-- MAIN -->
   <main>
-    <div class="sos-btn" onclick="openModal('SOS')" role="button">
+    <!-- SOS -->
+    <div class="sos-btn" id="sos-btn" onclick="openModal('SOS')" role="button">
       <div class="sos-left">
         <span class="sos-label" id="t-sos-label">Favqulodda</span>
         <span class="sos-title">SOS</span>
         <span class="sos-sub" id="t-sos-sub">Markazga signal yuborish</span>
+        <div class="sos-live-badge" id="sos-live-badge">
+          <div class="sos-live-dot"></div>
+          <span class="sos-live-text" id="t-live">JONLI</span>
+        </div>
       </div>
       <div class="sos-icon">🆘</div>
     </div>
 
+    <!-- TEZ YORDAM + JOYLASHUV -->
     <div class="row">
       <div class="card tez-yordam" onclick="openModal('TEZ_YORDAM')" role="button">
         <div class="card-icon">🚑</div>
@@ -409,6 +306,23 @@
       </div>
     </div>
 
+    <!-- TAXI + 1054 -->
+    <div class="row">
+      <div class="card taxi" onclick="callTaxi()" role="button">
+        <div class="card-icon">🚕</div>
+        <div class="card-title" id="t-taxi">Taxi</div>
+        <div class="card-sub" id="t-taxi-sub">1054 ga qo'ng'iroq</div>
+        <div class="card-arrow">↗</div>
+      </div>
+      <div class="card" onclick="near('police')" role="button">
+        <div class="card-icon">🚔</div>
+        <div class="card-title" id="t-police">Militsiya</div>
+        <div class="card-sub" id="t-police-sub">Yaqin post</div>
+        <div class="card-arrow">↗</div>
+      </div>
+    </div>
+
+    <!-- YAQIN JOYLAR -->
     <div class="near-grid">
       <div class="near-card" onclick="near('gas+station')">
         <span class="near-icon">⛽️</span>
@@ -456,6 +370,15 @@
     </div>
   </div>
 
+  <!-- STOP SOS BAR -->
+  <div class="stop-bar" id="stop-bar">
+    <div class="stop-bar-info">
+      <div class="stop-bar-title" id="t-stop-title">SOS jonli uzatilmoqda</div>
+      <div class="stop-bar-sub" id="t-stop-sub">Har 10 soniyada joylashuv yangilanadi</div>
+    </div>
+    <button class="stop-btn" id="t-stop-btn" onclick="stopLiveTracking()">To'xtatish</button>
+  </div>
+
   <!-- LANGUAGE PANEL -->
   <div class="lang-overlay" id="lang-overlay" onclick="closeLang(event)">
     <div class="lang-panel">
@@ -479,19 +402,95 @@
     ];
 
     const T = {
-      uz:{ tagline:"Parkent Tuman Hokimligi", status:"Tizim faol · Xizmat ko'rsatishga tayyor", sosLabel:"Favqulodda", sosSub:"Markazga signal yuborish", amb:"Tez Yordam", ambSub:"103 raqamiga qo'ng'iroq", loc:"Joylashuv", locSub:"Haritada ko'rish", fuel:"Yoqilg'i", food:"Ovqat", toilet:"Hojatxona", hospital:"Shifoxona", pharmacy:"Dorixona", assistant:"Yordamchi", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent hokimligi markaziga darhol yuboriladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 raqamiga ulanasiz.", toastSos:"✅ Signal markazga yuborildi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering" },
-      ru:{ tagline:"Паркентский районный хокимият", status:"Система активна · Готова к работе", sosLabel:"Экстренно", sosSub:"Отправить сигнал в центр", amb:"Скорая помощь", ambSub:"Звонок на 103", loc:"Моё место", locSub:"Открыть на карте", fuel:"Заправка", food:"Еда", toilet:"Туалет", hospital:"Больница", pharmacy:"Аптека", assistant:"Помощник", langTitle:"Выберите язык", cancel:"Отмена", sosSend:"Отправить", ambCall:"Да, вызвать", modalSosTitle:"Отправить SOS?", modalSosDesc:"Ваше местоположение немедленно отправится в центр Паркента.", modalAmbTitle:"Вызвать скорую?", modalAmbDesc:"Ваше местоположение отправится и произойдёт звонок на 103.", toastSos:"✅ Сигнал отправлен в центр", toastAmb:"🚑 Вызываем скорую...", toastGeo:"⚠️ Разрешите доступ к геолокации" },
-      en:{ tagline:"Parkent District Administration", status:"System active · Ready to serve", sosLabel:"Emergency", sosSub:"Send signal to center", amb:"Ambulance", ambSub:"Call 103", loc:"My location", locSub:"Open on map", fuel:"Fuel", food:"Food", toilet:"Toilet", hospital:"Hospital", pharmacy:"Pharmacy", assistant:"Assistant", langTitle:"Select language", cancel:"Cancel", sosSend:"Send", ambCall:"Yes, call", modalSosTitle:"Send SOS?", modalSosDesc:"Your location will be immediately sent to the Parkent center.", modalAmbTitle:"Call ambulance?", modalAmbDesc:"Your location will be sent and a call to 103 will be placed.", toastSos:"✅ Signal sent to center", toastAmb:"🚑 Calling ambulance...", toastGeo:"⚠️ Please allow location access" },
-      zh:{ tagline:"帕尔肯特区行政管理局", status:"系统运行中 · 随时为您服务", sosLabel:"紧急情况", sosSub:"向中心发送信号", amb:"急救", ambSub:"拨打103", loc:"我的位置", locSub:"在地图上查看", fuel:"加油站", food:"餐厅", toilet:"厕所", hospital:"医院", pharmacy:"药店", assistant:"助手", langTitle:"选择语言", cancel:"取消", sosSend:"发送", ambCall:"是，呼叫", modalSosTitle:"发送SOS？", modalSosDesc:"您的位置将立即发送至帕尔肯特中心。", modalAmbTitle:"呼叫救护车？", modalAmbDesc:"您的位置将被发送，并拨打103。", toastSos:"✅ 信号已发送至中心", toastAmb:"🚑 正在呼叫救护车...", toastGeo:"⚠️ 请允许访问位置" },
-      ar:{ tagline:"إدارة منطقة باركنت", status:"النظام نشط · جاهز للخدمة", sosLabel:"طوارئ", sosSub:"إرسال إشارة إلى المركز", amb:"إسعاف", ambSub:"الاتصال بـ 103", loc:"موقعي", locSub:"عرض على الخريطة", fuel:"وقود", food:"طعام", toilet:"مرحاض", hospital:"مستشفى", pharmacy:"صيدلية", assistant:"مساعد", langTitle:"اختر اللغة", cancel:"إلغاء", sosSend:"إرسال", ambCall:"نعم، اتصل", modalSosTitle:"إرسال SOS؟", modalSosDesc:"سيتم إرسال موقعك فورًا إلى مركز باركنت.", modalAmbTitle:"طلب سيارة إسعاف؟", modalAmbDesc:"سيتم إرسال موقعك والاتصال بـ 103.", toastSos:"✅ تم إرسال الإشارة إلى المركز", toastAmb:"🚑 جارٍ استدعاء الإسعاف...", toastGeo:"⚠️ يرجى السماح بالوصول إلى الموقع" },
-      tr:{ tagline:"Parkent İlçe Yönetimi", status:"Sistem aktif · Hizmet vermeye hazır", sosLabel:"Acil Durum", sosSub:"Merkeze sinyal gönder", amb:"Ambulans", ambSub:"103'ü ara", loc:"Konumum", locSub:"Haritada görüntüle", fuel:"Yakıt", food:"Yemek", toilet:"Tuvalet", hospital:"Hastane", pharmacy:"Eczane", assistant:"Asistan", langTitle:"Dil seçin", cancel:"İptal", sosSend:"Gönder", ambCall:"Evet, ara", modalSosTitle:"SOS gönderilsin mi?", modalSosDesc:"Konumunuz anında Parkent merkezine gönderilecek.", modalAmbTitle:"Ambulans çağrılsın mı?", modalAmbDesc:"Konumunuz gönderilecek ve 103 aranacak.", toastSos:"✅ Sinyal merkeze gönderildi", toastAmb:"🚑 Ambulans çağrılıyor...", toastGeo:"⚠️ Lütfen konum iznine izin verin" },
-      kk:{ tagline:"Паркент аудандық әкімдігі", status:"Жүйе белсенді · Қызмет көрсетуге дайын", sosLabel:"Төтенше жағдай", sosSub:"Орталыққа сигнал жіберу", amb:"Жедел жәрдем", ambSub:"103 нөміріне қоңырау", loc:"Менің орным", locSub:"Картада көру", fuel:"Жанармай", food:"Тамақ", toilet:"Дәретхана", hospital:"Аурухана", pharmacy:"Дәріхана", assistant:"Көмекші", langTitle:"Тілді таңдаңыз", cancel:"Болдырмау", sosSend:"Жіберу", ambCall:"Иә, шақыру", modalSosTitle:"SOS жіберілсін бе?", modalSosDesc:"Орныңыз бірден Паркент орталығына жіберіледі.", modalAmbTitle:"Жедел жәрдем шақырылсын ба?", modalAmbDesc:"Орныңыз жіберіліп, 103 нөміріне қоңырау шалынады.", toastSos:"✅ Сигнал орталыққа жіберілді", toastAmb:"🚑 Жедел жәрдем шақырылуда...", toastGeo:"⚠️ Орынға рұқсат беріңіз" },
-      tg:{ tagline:"Ҳокимияти ноҳияи Паркент", status:"Система фаъол · Барои хидмат омода", sosLabel:"Фавқулода", sosSub:"Ба марказ сигнал фиристодан", amb:"Ёрии таъҷилӣ", ambSub:"Занги 103", loc:"Ҷойгиршавии ман", locSub:"Дар харита дидан", fuel:"Сӯзишворӣ", food:"Хӯрок", toilet:"Ҳоҷатхона", hospital:"Беморхона", pharmacy:"Дорухона", assistant:"Ёрдамчи", langTitle:"Забонро интихоб кунед", cancel:"Бекор кардан", sosSend:"Фиристодан", ambCall:"Бале, даъват кунед", modalSosTitle:"SOS фиристода шавад?", modalSosDesc:"Ҷойгиршавии шумо фавран ба маркази Паркент фиристода мешавад.", modalAmbTitle:"Ёрии таъҷилӣ даъват шавад?", modalAmbDesc:"Ҷойгиршавии шумо фиристода шуда, ба 103 занг зада мешавад.", toastSos:"✅ Сигнал ба марказ фиристода шуд", toastAmb:"🚑 Ёрии таъҷилӣ даъват мешавад...", toastGeo:"⚠️ Лутфан ба ҷойгиршавӣ иҷозат диҳед" },
+      uz:{ tagline:"Parkent Tuman Hokimligi", statusOnline:"Tizim faol · Xizmat ko'rsatishga tayyor", statusOffline:"Internet yo'q · Offline rejim", statusNoGps:"GPS o'chirilgan · Joylashuv aniqlanmaydi", sosLabel:"Favqulodda", sosSub:"Markazga signal yuborish", live:"JONLI", amb:"Tez Yordam", ambSub:"103 raqamiga qo'ng'iroq", loc:"Joylashuv", locSub:"Haritada ko'rish", taxi:"Taxi", taxiSub:"1054 ga qo'ng'iroq", police:"Militsiya", policeSub:"Yaqin post", fuel:"Yoqilg'i", food:"Ovqat", toilet:"Hojatxona", hospital:"Shifoxona", pharmacy:"Dorixona", assistant:"Yordamchi", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent hokimligi markaziga darhol yuboriladi. Signal bekor qilinmaguncha jonli uzatiladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 raqamiga ulanasiz.", toastSos:"✅ SOS jonli uzatish boshlandi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering", toastStopped:"⛔ SOS to'xtatildi", stopTitle:"SOS jonli uzatilmoqda", stopSub:"Har 10 soniyada joylashuv yangilanadi", stopBtn:"To'xtatish" },
+      ru:{ tagline:"Паркентский районный хокимият", statusOnline:"Система активна · Готова к работе", statusOffline:"Нет интернета · Офлайн режим", statusNoGps:"GPS отключён · Местоположение недоступно", sosLabel:"Экстренно", sosSub:"Отправить сигнал в центр", live:"ПРЯМОЙ ЭФИР", amb:"Скорая помощь", ambSub:"Звонок на 103", loc:"Моё место", locSub:"Открыть на карте", taxi:"Такси", taxiSub:"Звонок на 1054", police:"Полиция", policeSub:"Ближайший пост", fuel:"Заправка", food:"Еда", toilet:"Туалет", hospital:"Больница", pharmacy:"Аптека", assistant:"Помощник", langTitle:"Выберите язык", cancel:"Отмена", sosSend:"Отправить", ambCall:"Да, вызвать", modalSosTitle:"Отправить SOS?", modalSosDesc:"Ваше местоположение будет отправлено в центр Паркента. Сигнал будет передаваться в прямом эфире до отмены.", modalAmbTitle:"Вызвать скорую?", modalAmbDesc:"Ваше местоположение отправится и произойдёт звонок на 103.", toastSos:"✅ SOS трансляция началась", toastAmb:"🚑 Вызываем скорую...", toastGeo:"⚠️ Разрешите доступ к геолокации", toastStopped:"⛔ SOS остановлен", stopTitle:"SOS ведётся в прямом эфире", stopSub:"Местоположение обновляется каждые 10 сек", stopBtn:"Остановить" },
+      en:{ tagline:"Parkent District Administration", statusOnline:"System active · Ready to serve", statusOffline:"No internet · Offline mode", statusNoGps:"GPS off · Location unavailable", sosLabel:"Emergency", sosSub:"Send signal to center", live:"LIVE", amb:"Ambulance", ambSub:"Call 103", loc:"My location", locSub:"Open on map", taxi:"Taxi", taxiSub:"Call 1054", police:"Police", policeSub:"Nearest post", fuel:"Fuel", food:"Food", toilet:"Toilet", hospital:"Hospital", pharmacy:"Pharmacy", assistant:"Assistant", langTitle:"Select language", cancel:"Cancel", sosSend:"Send", ambCall:"Yes, call", modalSosTitle:"Send SOS?", modalSosDesc:"Your location will be sent to the Parkent center. Live tracking continues until you stop it.", modalAmbTitle:"Call ambulance?", modalAmbDesc:"Your location will be sent and a call to 103 will be placed.", toastSos:"✅ SOS live tracking started", toastAmb:"🚑 Calling ambulance...", toastGeo:"⚠️ Please allow location access", toastStopped:"⛔ SOS stopped", stopTitle:"SOS live tracking active", stopSub:"Location updates every 10 seconds", stopBtn:"Stop" },
+      zh:{ tagline:"帕尔肯特区行政管理局", statusOnline:"系统运行中 · 随时为您服务", statusOffline:"无网络 · 离线模式", statusNoGps:"GPS已关闭 · 无法定位", sosLabel:"紧急情况", sosSub:"向中心发送信号", live:"实时", amb:"急救", ambSub:"拨打103", loc:"我的位置", locSub:"在地图上查看", taxi:"出租车", taxiSub:"拨打1054", police:"警察", policeSub:"最近的岗位", fuel:"加油站", food:"餐厅", toilet:"厕所", hospital:"医院", pharmacy:"药店", assistant:"助手", langTitle:"选择语言", cancel:"取消", sosSend:"发送", ambCall:"是，呼叫", modalSosTitle:"发送SOS？", modalSosDesc:"您的位置将发送至帕尔肯特中心。实时追踪将持续至您停止。", modalAmbTitle:"呼叫救护车？", modalAmbDesc:"您的位置将被发送，并拨打103。", toastSos:"✅ SOS实时追踪已开始", toastAmb:"🚑 正在呼叫救护车...", toastGeo:"⚠️ 请允许访问位置", toastStopped:"⛔ SOS已停止", stopTitle:"SOS实时追踪中", stopSub:"每10秒更新一次位置", stopBtn:"停止" },
+      ar:{ tagline:"إدارة منطقة باركنت", statusOnline:"النظام نشط · جاهز للخدمة", statusOffline:"لا يوجد إنترنت · وضع غير متصل", statusNoGps:"GPS مغلق · الموقع غير متاح", sosLabel:"طوارئ", sosSub:"إرسال إشارة إلى المركز", live:"مباشر", amb:"إسعاف", ambSub:"الاتصال بـ 103", loc:"موقعي", locSub:"عرض على الخريطة", taxi:"تاكسي", taxiSub:"الاتصال بـ 1054", police:"شرطة", policeSub:"أقرب نقطة", fuel:"وقود", food:"طعام", toilet:"مرحاض", hospital:"مستشفى", pharmacy:"صيدلية", assistant:"مساعد", langTitle:"اختر اللغة", cancel:"إلغاء", sosSend:"إرسال", ambCall:"نعم، اتصل", modalSosTitle:"إرسال SOS؟", modalSosDesc:"سيتم إرسال موقعك إلى مركز باركنت. سيستمر البث المباشر حتى تقوم بإيقافه.", modalAmbTitle:"طلب سيارة إسعاف؟", modalAmbDesc:"سيتم إرسال موقعك والاتصال بـ 103.", toastSos:"✅ بدأ التتبع المباشر SOS", toastAmb:"🚑 جارٍ استدعاء الإسعاف...", toastGeo:"⚠️ يرجى السماح بالوصول إلى الموقع", toastStopped:"⛔ تم إيقاف SOS", stopTitle:"تتبع SOS مباشر نشط", stopSub:"يتم تحديث الموقع كل 10 ثوان", stopBtn:"إيقاف" },
+      tr:{ tagline:"Parkent İlçe Yönetimi", statusOnline:"Sistem aktif · Hizmet vermeye hazır", statusOffline:"İnternet yok · Çevrimdışı mod", statusNoGps:"GPS kapalı · Konum belirlenemiyor", sosLabel:"Acil Durum", sosSub:"Merkeze sinyal gönder", live:"CANLI", amb:"Ambulans", ambSub:"103'ü ara", loc:"Konumum", locSub:"Haritada görüntüle", taxi:"Taksi", taxiSub:"1054'ü ara", police:"Polis", policeSub:"En yakın karakol", fuel:"Yakıt", food:"Yemek", toilet:"Tuvalet", hospital:"Hastane", pharmacy:"Eczane", assistant:"Asistan", langTitle:"Dil seçin", cancel:"İptal", sosSend:"Gönder", ambCall:"Evet, ara", modalSosTitle:"SOS gönderilsin mi?", modalSosDesc:"Konumunuz Parkent merkezine gönderilecek. Siz durdurana kadar canlı takip devam eder.", modalAmbTitle:"Ambulans çağrılsın mı?", modalAmbDesc:"Konumunuz gönderilecek ve 103 aranacak.", toastSos:"✅ SOS canlı takip başladı", toastAmb:"🚑 Ambulans çağrılıyor...", toastGeo:"⚠️ Lütfen konum iznine izin verin", toastStopped:"⛔ SOS durduruldu", stopTitle:"SOS canlı takip aktif", stopSub:"Konum her 10 saniyede güncellenir", stopBtn:"Durdur" },
+      kk:{ tagline:"Паркент аудандық әкімдігі", statusOnline:"Жүйе белсенді · Қызмет көрсетуге дайын", statusOffline:"Интернет жоқ · Офлайн режим", statusNoGps:"GPS өшірулі · Орын анықталмайды", sosLabel:"Төтенше жағдай", sosSub:"Орталыққа сигнал жіберу", live:"ТІКЕЛЕЙ", amb:"Жедел жәрдем", ambSub:"103 нөміріне қоңырау", loc:"Менің орным", locSub:"Картада көру", taxi:"Такси", taxiSub:"1054 нөміріне қоңырау", police:"Полиция", policeSub:"Жақын пост", fuel:"Жанармай", food:"Тамақ", toilet:"Дәретхана", hospital:"Аурухана", pharmacy:"Дәріхана", assistant:"Көмекші", langTitle:"Тілді таңдаңыз", cancel:"Болдырмау", sosSend:"Жіберу", ambCall:"Иә, шақыру", modalSosTitle:"SOS жіберілсін бе?", modalSosDesc:"Орныңыз Паркент орталығына жіберіледі. Тікелей бақылау тоқтатылғанша жалғасады.", modalAmbTitle:"Жедел жәрдем шақырылсын ба?", modalAmbDesc:"Орныңыз жіберіліп, 103 нөміріне қоңырау шалынады.", toastSos:"✅ SOS тікелей бақылау басталды", toastAmb:"🚑 Жедел жәрдем шақырылуда...", toastGeo:"⚠️ Орынға рұқсат беріңіз", toastStopped:"⛔ SOS тоқтатылды", stopTitle:"SOS тікелей бақылау белсенді", stopSub:"Орын әр 10 секунд сайын жаңартылады", stopBtn:"Тоқтату" },
+      tg:{ tagline:"Ҳокимияти ноҳияи Паркент", statusOnline:"Система фаъол · Барои хидмат омода", statusOffline:"Интернет нест · Режими офлайн", statusNoGps:"GPS хомӯш · Ҷойгиршавӣ муайян намешавад", sosLabel:"Фавқулода", sosSub:"Ба марказ сигнал фиристодан", live:"ЗИНДА", amb:"Ёрии таъҷилӣ", ambSub:"Занги 103", loc:"Ҷойгиршавии ман", locSub:"Дар харита дидан", taxi:"Такси", taxiSub:"Занги 1054", police:"Милиция", policeSub:"Пости наздик", fuel:"Сӯзишворӣ", food:"Хӯрок", toilet:"Ҳоҷатхона", hospital:"Беморхона", pharmacy:"Дорухона", assistant:"Ёрдамчи", langTitle:"Забонро интихоб кунед", cancel:"Бекор кардан", sosSend:"Фиристодан", ambCall:"Бале, даъват кунед", modalSosTitle:"SOS фиристода шавад?", modalSosDesc:"Ҷойгиршавии шумо ба маркази Паркент фиристода мешавад. Пайгирии зинда то қатъ намудан идома меёбад.", modalAmbTitle:"Ёрии таъҷилӣ даъват шавад?", modalAmbDesc:"Ҷойгиршавии шумо фиристода шуда, ба 103 занг зада мешавад.", toastSos:"✅ Пайгирии зиндаи SOS оғоз ёфт", toastAmb:"🚑 Ёрии таъҷилӣ даъват мешавад...", toastGeo:"⚠️ Лутфан ба ҷойгиршавӣ иҷозат диҳед", toastStopped:"⛔ SOS қатъ шуд", stopTitle:"Пайгирии зиндаи SOS фаъол аст", stopSub:"Ҷойгиршавӣ ҳар 10 сония навсозӣ мешавад", stopBtn:"Қатъ кардан" },
     };
 
     let currentLang = localStorage.getItem('bb_lang') || 'uz';
     let pendingAction = null;
+    let liveInterval = null;
+    let liveSessionKey = null;
+    let isOnline = navigator.onLine;
+    let hasGps = true;
 
+    // ── STATUS STRIP ──────────────────────────────────────────
+    function updateStatus() {
+      const strip = document.getElementById('status-strip');
+      const txt = document.getElementById('t-status');
+      const gps = document.getElementById('status-gps-icon');
+      const t = T[currentLang];
+      if (!isOnline) {
+        strip.className = 'status-strip offline';
+        txt.textContent = t.statusOffline;
+        gps.textContent = '📵';
+      } else if (!hasGps) {
+        strip.className = 'status-strip no-gps';
+        txt.textContent = t.statusNoGps;
+        gps.textContent = '📍';
+        gps.style.opacity = '0.4';
+      } else {
+        strip.className = 'status-strip online';
+        txt.textContent = t.statusOnline;
+        gps.textContent = '📍';
+        gps.style.opacity = '0.8';
+      }
+    }
+
+    window.addEventListener('online',  () => { isOnline = true;  updateStatus(); });
+    window.addEventListener('offline', () => { isOnline = false; updateStatus(); });
+
+    // Check GPS availability
+    function checkGps() {
+      if (!navigator.geolocation) { hasGps = false; updateStatus(); return; }
+      navigator.geolocation.getCurrentPosition(
+        () => { hasGps = true;  updateStatus(); },
+        (err) => {
+          if (err.code === err.PERMISSION_DENIED || err.code === err.POSITION_UNAVAILABLE) {
+            hasGps = false; updateStatus();
+          }
+        },
+        { timeout: 5000 }
+      );
+    }
+
+    // ── LIVE SOS TRACKING ─────────────────────────────────────
+    function startLiveTracking(sessionKey) {
+      liveSessionKey = sessionKey;
+      document.getElementById('sos-btn').classList.add('tracking');
+      document.getElementById('sos-live-badge').classList.add('show');
+      document.getElementById('stop-bar').classList.add('show');
+
+      function sendLive() {
+        navigator.geolocation.getCurrentPosition(p => {
+          hasGps = true; updateStatus();
+          fetch(API.replace('murojaatlar', 'live_sos/' + liveSessionKey), {
+            method: 'PUT',
+            body: JSON.stringify({ lat: p.coords.latitude, lon: p.coords.longitude, updated: new Date().toLocaleString(), lang: currentLang })
+          });
+        }, () => {});
+      }
+
+      sendLive();
+      liveInterval = setInterval(sendLive, 10000);
+    }
+
+    function stopLiveTracking() {
+      clearInterval(liveInterval);
+      liveInterval = null;
+      liveSessionKey = null;
+      document.getElementById('sos-btn').classList.remove('tracking');
+      document.getElementById('sos-live-badge').classList.remove('show');
+      document.getElementById('stop-bar').classList.remove('show');
+      showToast(T[currentLang].toastStopped);
+    }
+
+    // ── LANG ──────────────────────────────────────────────────
     function applyLang(code) {
       currentLang = code;
       localStorage.setItem('bb_lang', code);
@@ -500,13 +499,17 @@
       document.getElementById('cur-flag').textContent = l.flag;
       document.getElementById('cur-code').textContent = code.toUpperCase();
       document.getElementById('t-tagline').textContent = t.tagline;
-      document.getElementById('t-status').textContent = t.status;
       document.getElementById('t-sos-label').textContent = t.sosLabel;
       document.getElementById('t-sos-sub').textContent = t.sosSub;
+      document.getElementById('t-live').textContent = t.live;
       document.getElementById('t-amb').textContent = t.amb;
       document.getElementById('t-amb-sub').textContent = t.ambSub;
       document.getElementById('t-loc').textContent = t.loc;
       document.getElementById('t-loc-sub').textContent = t.locSub;
+      document.getElementById('t-taxi').textContent = t.taxi;
+      document.getElementById('t-taxi-sub').textContent = t.taxiSub;
+      document.getElementById('t-police').textContent = t.police;
+      document.getElementById('t-police-sub').textContent = t.policeSub;
       document.getElementById('t-fuel').textContent = t.fuel;
       document.getElementById('t-food').textContent = t.food;
       document.getElementById('t-toilet').textContent = t.toilet;
@@ -514,10 +517,12 @@
       document.getElementById('t-pharmacy').textContent = t.pharmacy;
       document.getElementById('t-assistant').textContent = t.assistant;
       document.getElementById('t-lang-title').textContent = t.langTitle;
+      document.getElementById('t-stop-title').textContent = t.stopTitle;
+      document.getElementById('t-stop-sub').textContent = t.stopSub;
+      document.getElementById('t-stop-btn').textContent = t.stopBtn;
       document.body.dir = (code === 'ar') ? 'rtl' : 'ltr';
-      document.querySelectorAll('.lang-option').forEach(el => {
-        el.classList.toggle('active', el.dataset.code === code);
-      });
+      updateStatus();
+      document.querySelectorAll('.lang-option').forEach(el => el.classList.toggle('active', el.dataset.code === code));
     }
 
     function openLang() {
@@ -539,6 +544,7 @@
       document.getElementById('lang-overlay').classList.remove('open');
     }
 
+    // ── MODAL ─────────────────────────────────────────────────
     function openModal(type) {
       pendingAction = type;
       const t = T[currentLang];
@@ -563,23 +569,42 @@
       document.getElementById('overlay').classList.remove('open');
       const type = pendingAction; pendingAction = null;
       const t = T[currentLang];
-      navigator.geolocation.getCurrentPosition(p => {
-        fetch(API, { method:'POST', body: JSON.stringify({ type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString(), lang: currentLang }) });
-        showToast(type === 'SOS' ? t.toastSos : t.toastAmb);
-        if (type === 'TEZ_YORDAM') setTimeout(() => { window.location.href = "tel:103"; }, 1200);
-      }, () => showToast(t.toastGeo));
+      if (type === 'SOS') {
+        // Stop previous tracking if any
+        if (liveInterval) stopLiveTracking();
+        navigator.geolocation.getCurrentPosition(p => {
+          hasGps = true; updateStatus();
+          const key = 'sos_' + Date.now();
+          // Initial SOS record
+          fetch(API, { method:'POST', body: JSON.stringify({ type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString(), lang: currentLang, sessionKey: key }) });
+          showToast(t.toastSos);
+          startLiveTracking(key);
+        }, () => { hasGps = false; updateStatus(); showToast(t.toastGeo); });
+      } else {
+        // TEZ YORDAM — single send + call
+        navigator.geolocation.getCurrentPosition(p => {
+          hasGps = true; updateStatus();
+          fetch(API, { method:'POST', body: JSON.stringify({ type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString(), lang: currentLang }) });
+          showToast(t.toastAmb);
+          setTimeout(() => { window.location.href = "tel:103"; }, 1200);
+        }, () => { hasGps = false; updateStatus(); showToast(t.toastGeo); });
+      }
     }
+
+    function callTaxi() { window.location.href = "tel:1054"; }
 
     function myLoc() {
       navigator.geolocation.getCurrentPosition(p => {
+        hasGps = true; updateStatus();
         window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-      }, () => showToast(T[currentLang].toastGeo));
+      }, () => { hasGps = false; updateStatus(); showToast(T[currentLang].toastGeo); });
     }
 
     function near(q) {
       navigator.geolocation.getCurrentPosition(p => {
+        hasGps = true; updateStatus();
         window.location.href = `https://www.google.com/maps/search/${q}/@${p.coords.latitude},${p.coords.longitude},15z`;
-      }, () => showToast(T[currentLang].toastGeo));
+      }, () => { hasGps = false; updateStatus(); showToast(T[currentLang].toastGeo); });
     }
 
     function showToast(msg) {
@@ -604,6 +629,7 @@
     getWeather();
 
     applyLang(currentLang);
+    checkGps();
   </script>
 </body>
 </html>
