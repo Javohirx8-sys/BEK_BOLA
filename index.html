@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
     :root {
       --bg: #f5f5f3;
       --surface: #ffffff;
@@ -21,7 +21,7 @@
       --radius: 24px;
       --shadow: 0 2px 20px rgba(0,0,0,0.06);
     }
- 
+
     .dark {
       --bg: #0a0a0a;
       --surface: #161616;
@@ -31,7 +31,7 @@
       --text-muted: #666;
       --shadow: 0 2px 20px rgba(0,0,0,0.4);
     }
- 
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--bg);
@@ -45,40 +45,39 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
- 
-    /* TOP BAR */
+
     .topbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
+      gap: 8px;
     }
- 
+
     .topbar-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex: 1;
+      min-width: 0;
     }
- 
+
     .weather-pill {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 50px;
-      padding: 7px 14px;
+      padding: 7px 12px;
       font-size: 13px;
       font-weight: 500;
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: var(--shadow);
+      white-space: nowrap;
     }
- 
-    .weather-pill span.temp {
-      color: var(--text);
-      font-weight: 600;
-    }
- 
+    .weather-pill .temp { color: var(--text); font-weight: 600; }
+
     .clock {
       font-family: 'DM Mono', monospace;
       font-size: 12px;
@@ -87,555 +86,524 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 50px;
-      padding: 7px 12px;
+      padding: 7px 10px;
       box-shadow: var(--shadow);
+      white-space: nowrap;
     }
- 
-    .theme-btn {
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 16px;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px;
       box-shadow: var(--shadow);
       transition: transform 0.15s;
+      flex-shrink: 0;
     }
-    .theme-btn:active { transform: scale(0.9); }
- 
-    /* HEADER */
-    .header {
-      padding: 8px 20px 20px;
+    .icon-btn:active { transform: scale(0.9); }
+
+    .lang-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      height: 38px;
+      padding: 0 12px;
+      display: flex; align-items: center; gap: 5px;
+      cursor: pointer;
+      font-size: 13px; font-weight: 700;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      transition: transform 0.15s;
+      white-space: nowrap;
     }
- 
-    .logo-line {
-      display: flex;
-      align-items: baseline;
+    .lang-btn:active { transform: scale(0.92); }
+    .lang-flag { font-size: 16px; line-height: 1; }
+
+    /* LANG PANEL */
+    .lang-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex; align-items: flex-end;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .lang-overlay.open { opacity: 1; pointer-events: all; }
+
+    .lang-panel {
+      background: var(--surface);
+      border-radius: 28px 28px 0 0;
+      padding: 20px 20px 40px;
+      width: 100%;
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+    .lang-overlay.open .lang-panel { transform: translateY(0); }
+
+    .lang-panel-title {
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 16px; text-align: center;
+    }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 10px;
     }
- 
+
+    .lang-option {
+      background: var(--surface2);
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer;
+      transition: transform 0.1s, border-color 0.15s;
+    }
+    .lang-option:active { transform: scale(0.96); }
+    .lang-option.active {
+      border-color: var(--accent2);
+      background: rgba(26,110,247,0.08);
+    }
+
+    .lang-option-flag { font-size: 24px; }
+    .lang-option-info { display: flex; flex-direction: column; gap: 1px; }
+    .lang-option-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .lang-option-native { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+    /* HEADER */
+    .header { padding: 8px 20px 20px; }
+
     .logo {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -1.5px;
-      color: var(--text);
+      font-size: 32px; font-weight: 700;
+      letter-spacing: -1.5px; color: var(--text);
     }
- 
-    .logo em {
-      color: var(--accent2);
-      font-style: normal;
-    }
- 
+    .logo em { color: var(--accent2); font-style: normal; }
+
     .tagline {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: 2px;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 2px;
     }
- 
-    /* STATUS STRIP */
+
+    /* STATUS */
     .status-strip {
       margin: 0 20px 20px;
       background: var(--green);
       border-radius: 14px;
       padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: flex; align-items: center; gap: 8px;
     }
- 
     .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #fff;
+      width: 8px; height: 8px;
+      border-radius: 50%; background: #fff;
+      flex-shrink: 0;
       animation: pulse-dot 2s infinite;
     }
- 
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
- 
+    @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .status-text {
-      font-size: 12px;
-      font-weight: 600;
-      color: #fff;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      font-size: 12px; font-weight: 600; color: #fff;
+      letter-spacing: 0.04em; text-transform: uppercase;
     }
- 
+
     /* MAIN */
     main {
-      padding: 0 20px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      padding: 0 20px; flex: 1;
+      display: flex; flex-direction: column; gap: 12px;
     }
- 
-    /* SOS BUTTON */
+
+    /* SOS */
     .sos-btn {
       background: var(--accent);
       border-radius: var(--radius);
       padding: 32px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; position: relative; overflow: hidden;
       transition: transform 0.12s, box-shadow 0.12s;
       box-shadow: 0 8px 32px rgba(230,57,70,0.35);
     }
- 
     .sos-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.15), transparent 60%);
       pointer-events: none;
     }
- 
-    .sos-btn:active {
-      transform: scale(0.97);
-      box-shadow: 0 4px 16px rgba(230,57,70,0.25);
-    }
- 
+    .sos-btn:active { transform: scale(0.97); box-shadow: 0 4px 16px rgba(230,57,70,0.25); }
+
     .sos-left { display: flex; flex-direction: column; gap: 4px; }
- 
     .sos-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
       color: rgba(255,255,255,0.7);
     }
- 
     .sos-title {
-      font-size: 48px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -2px;
-      line-height: 1;
+      font-size: 48px; font-weight: 700; color: #fff;
+      letter-spacing: -2px; line-height: 1;
     }
- 
-    .sos-sub {
-      font-size: 12px;
-      color: rgba(255,255,255,0.65);
-      font-weight: 500;
-    }
- 
-    .sos-icon {
-      font-size: 52px;
-      opacity: 0.9;
-    }
- 
-    /* ROW CARDS */
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
- 
+    .sos-sub { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; }
+    .sos-icon { font-size: 52px; opacity: 0.9; }
+
+    /* CARDS */
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 22px 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: flex; flex-direction: column; gap: 8px;
       cursor: pointer;
       transition: transform 0.12s, box-shadow 0.12s;
       box-shadow: var(--shadow);
     }
- 
     .card:active { transform: scale(0.96); box-shadow: none; }
- 
-    .card.blue-accent {
-      border-color: rgba(26,110,247,0.2);
-    }
- 
+
     .card-icon { font-size: 28px; line-height: 1; }
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .card-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
- 
-    .card-arrow {
-      font-size: 18px;
-      color: var(--text-muted);
-      margin-top: auto;
-      align-self: flex-end;
-    }
- 
-    /* TEZ YORDAM special */
+    .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .card-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+    .card-arrow { font-size: 18px; color: var(--text-muted); margin-top: auto; align-self: flex-end; }
+
     .card.tez-yordam {
-      background: var(--accent2);
-      border-color: transparent;
+      background: var(--accent2); border-color: transparent;
       box-shadow: 0 6px 24px rgba(26,110,247,0.3);
     }
     .card.tez-yordam .card-title,
-    .card.tez-yordam .card-sub,
     .card.tez-yordam .card-arrow { color: rgba(255,255,255,0.9); }
     .card.tez-yordam .card-sub { color: rgba(255,255,255,0.6); }
- 
-    /* LOCATION BAR */
-    .loc-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: transform 0.12s;
-      box-shadow: var(--shadow);
-    }
-    .loc-btn:active { transform: scale(0.98); }
- 
-    .loc-left { display: flex; align-items: center; gap: 12px; }
-    .loc-icon-wrap {
-      width: 40px; height: 40px;
-      background: var(--surface2);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-    }
-    .loc-title { font-size: 15px; font-weight: 600; }
-    .loc-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
-    .loc-chevron { font-size: 20px; color: var(--text-muted); }
- 
+
     /* NEAR GRID */
     .near-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
     }
- 
     .near-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 16px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
       cursor: pointer;
       transition: transform 0.12s;
       box-shadow: var(--shadow);
     }
     .near-card:active { transform: scale(0.94); }
     .near-card.soon { opacity: 0.35; cursor: default; }
- 
     .near-icon { font-size: 26px; }
     .near-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-align: center;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--text-muted); text-align: center;
     }
- 
-    /* FOOTER */
-    footer {
-      padding: 24px 20px 32px;
-      text-align: center;
-    }
- 
+
+    footer { padding: 24px 20px 32px; text-align: center; }
     .footer-text {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      opacity: 0.5;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-muted); opacity: 0.5;
     }
- 
+
     /* TOAST */
     .toast {
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
+      position: fixed; bottom: 32px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--text);
-      color: var(--bg);
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
+      background: var(--text); color: var(--bg);
+      padding: 12px 24px; border-radius: 50px;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 999;
-      max-width: 90vw;
+      z-index: 999; max-width: 90vw;
     }
     .toast.show { transform: translateX(-50%) translateY(0); }
- 
+
     /* CONFIRM MODAL */
     .overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      display: flex;
-      align-items: flex-end;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+      z-index: 100; display: flex; align-items: flex-end;
+      opacity: 0; pointer-events: none; transition: opacity 0.25s;
     }
     .overlay.open { opacity: 1; pointer-events: all; }
- 
     .modal {
-      background: var(--surface);
-      border-radius: 28px 28px 0 0;
-      padding: 28px 24px 40px;
-      width: 100%;
+      background: var(--surface); border-radius: 28px 28px 0 0;
+      padding: 28px 24px 40px; width: 100%;
       transform: translateY(100%);
       transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
     .overlay.open .modal { transform: translateY(0); }
- 
     .modal-icon { font-size: 44px; text-align: center; margin-bottom: 12px; }
-    .modal-title {
-      font-size: 20px;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 6px;
-    }
-    .modal-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
+    .modal-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+    .modal-desc { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 24px; line-height: 1.5; }
     .modal-btns { display: flex; gap: 10px; }
     .modal-btn {
-      flex: 1;
-      padding: 16px;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
+      flex: 1; padding: 16px; border-radius: 16px;
+      font-size: 15px; font-weight: 600; border: none;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
       transition: transform 0.1s;
     }
     .modal-btn:active { transform: scale(0.96); }
-    .modal-btn.cancel {
-      background: var(--surface2);
-      color: var(--text-muted);
-    }
-    .modal-btn.confirm-sos {
-      background: var(--accent);
-      color: #fff;
-    }
-    .modal-btn.confirm-blue {
-      background: var(--accent2);
-      color: #fff;
-    }
+    .modal-btn.cancel { background: var(--surface2); color: var(--text-muted); }
+    .modal-btn.confirm-sos { background: var(--accent); color: #fff; }
+    .modal-btn.confirm-blue { background: var(--accent2); color: #fff; }
   </style>
 </head>
 <body>
- 
+
   <!-- TOP BAR -->
   <div class="topbar">
     <div class="topbar-left">
-      <div class="weather-pill">
-        ☁️ <span class="temp" id="w-temp">--°C</span>
-      </div>
+      <div class="weather-pill">☁️ <span class="temp" id="w-temp">--°C</span></div>
       <div class="clock" id="clock">00:00</div>
     </div>
-    <button class="theme-btn" onclick="document.documentElement.classList.toggle('dark')" aria-label="Tema">🌓</button>
+    <div class="topbar-right">
+      <button class="lang-btn" onclick="openLang()" aria-label="Language">
+        <span class="lang-flag" id="cur-flag">🇺🇿</span>
+        <span id="cur-code">UZ</span>
+      </button>
+      <button class="icon-btn" onclick="document.documentElement.classList.toggle('dark')">🌓</button>
+    </div>
   </div>
- 
+
   <!-- HEADER -->
   <div class="header">
-    <div class="logo-line">
-      <div class="logo">BEK<em>_</em>BOLA</div>
-    </div>
-    <div class="tagline">Parkent Tuman Hokimligi</div>
+    <div class="logo">BEK<em>_</em>BOLA</div>
+    <div class="tagline" id="t-tagline">Parkent Tuman Hokimligi</div>
   </div>
- 
+
   <!-- STATUS -->
   <div class="status-strip">
     <div class="status-dot"></div>
-    <div class="status-text">Tizim faol · Xizmat ko'rsatishga tayyor</div>
+    <div class="status-text" id="t-status">Tizim faol · Xizmat ko'rsatishga tayyor</div>
   </div>
- 
+
   <!-- MAIN -->
   <main>
- 
-    <!-- SOS -->
-    <div class="sos-btn" onclick="openModal('SOS')" role="button" aria-label="SOS yuborish">
+    <div class="sos-btn" onclick="openModal('SOS')" role="button">
       <div class="sos-left">
-        <span class="sos-label">Favqulodda</span>
+        <span class="sos-label" id="t-sos-label">Favqulodda</span>
         <span class="sos-title">SOS</span>
-        <span class="sos-sub">Markazga signal yuborish</span>
+        <span class="sos-sub" id="t-sos-sub">Markazga signal yuborish</span>
       </div>
       <div class="sos-icon">🆘</div>
     </div>
- 
-    <!-- TEZ YORDAM + JOYLASHUV -->
+
     <div class="row">
       <div class="card tez-yordam" onclick="openModal('TEZ_YORDAM')" role="button">
         <div class="card-icon">🚑</div>
-        <div class="card-title">Tez Yordam</div>
-        <div class="card-sub">103 raqamiga qo'ng'iroq</div>
+        <div class="card-title" id="t-amb">Tez Yordam</div>
+        <div class="card-sub" id="t-amb-sub">103 raqamiga qo'ng'iroq</div>
         <div class="card-arrow">↗</div>
       </div>
       <div class="card" onclick="myLoc()" role="button">
         <div class="card-icon">📍</div>
-        <div class="card-title">Joylashuv</div>
-        <div class="card-sub">Haritada ko'rish</div>
+        <div class="card-title" id="t-loc">Joylashuv</div>
+        <div class="card-sub" id="t-loc-sub">Haritada ko'rish</div>
         <div class="card-arrow">↗</div>
       </div>
     </div>
- 
-    <!-- YAQIN JOYLAR -->
+
     <div class="near-grid">
-      <div class="near-card" onclick="near('gas+station')" role="button">
+      <div class="near-card" onclick="near('gas+station')">
         <span class="near-icon">⛽️</span>
-        <span class="near-label">Yoqilg'i</span>
+        <span class="near-label" id="t-fuel">Yoqilg'i</span>
       </div>
-      <div class="near-card" onclick="near('restaurant')" role="button">
+      <div class="near-card" onclick="near('restaurant')">
         <span class="near-icon">🍽</span>
-        <span class="near-label">Ovqat</span>
+        <span class="near-label" id="t-food">Ovqat</span>
       </div>
-      <div class="near-card" onclick="near('toilet')" role="button">
+      <div class="near-card" onclick="near('toilet')">
         <span class="near-icon">🚻</span>
-        <span class="near-label">Hojatxona</span>
+        <span class="near-label" id="t-toilet">Hojatxona</span>
       </div>
-      <div class="near-card" onclick="near('hospital')" role="button">
+      <div class="near-card" onclick="near('hospital')">
         <span class="near-icon">🏥</span>
-        <span class="near-label">Shifoxona</span>
+        <span class="near-label" id="t-hospital">Shifoxona</span>
       </div>
-      <div class="near-card" onclick="near('pharmacy')" role="button">
+      <div class="near-card" onclick="near('pharmacy')">
         <span class="near-icon">💊</span>
-        <span class="near-label">Dorixona</span>
+        <span class="near-label" id="t-pharmacy">Dorixona</span>
       </div>
-      <div class="near-card soon" role="button" aria-disabled="true">
+      <div class="near-card soon">
         <span class="near-icon">🎙</span>
-        <span class="near-label">Yordamchi</span>
+        <span class="near-label" id="t-assistant">Yordamchi</span>
       </div>
     </div>
- 
   </main>
- 
+
   <footer>
     <div class="footer-text">System 2026 · Safe Parkent</div>
   </footer>
- 
-  <!-- TOAST -->
+
   <div class="toast" id="toast"></div>
- 
-  <!-- MODAL -->
+
+  <!-- CONFIRM MODAL -->
   <div class="overlay" id="overlay" onclick="closeModal(event)">
-    <div class="modal" id="modal">
+    <div class="modal">
       <div class="modal-icon" id="modal-icon">🆘</div>
-      <div class="modal-title" id="modal-title">SOS yuborilsinmi?</div>
-      <div class="modal-desc" id="modal-desc">Joylashuvingiz markazga yuboriladi</div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-desc" id="modal-desc"></div>
       <div class="modal-btns">
-        <button class="modal-btn cancel" onclick="closeModal()">Bekor</button>
-        <button class="modal-btn confirm-sos" id="modal-confirm" onclick="confirmAction()">Yuborish</button>
+        <button class="modal-btn cancel" id="modal-cancel" onclick="closeModal()"></button>
+        <button class="modal-btn confirm-sos" id="modal-confirm" onclick="confirmAction()"></button>
       </div>
     </div>
   </div>
- 
+
+  <!-- LANGUAGE PANEL -->
+  <div class="lang-overlay" id="lang-overlay" onclick="closeLang(event)">
+    <div class="lang-panel">
+      <div class="lang-panel-title" id="t-lang-title">Tilni tanlang</div>
+      <div class="lang-grid" id="lang-grid"></div>
+    </div>
+  </div>
+
   <script>
     const API = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
+
+    const LANGS = [
+      { code:'uz', flag:'🇺🇿', name:"O'zbek",  native:"O'zbek tili" },
+      { code:'ru', flag:'🇷🇺', name:"Русский", native:"Русский язык" },
+      { code:'en', flag:'🇬🇧', name:"English", native:"English" },
+      { code:'zh', flag:'🇨🇳', name:"中文",    native:"普通话" },
+      { code:'ar', flag:'🇸🇦', name:"عربي",    native:"اللغة العربية" },
+      { code:'tr', flag:'🇹🇷', name:"Türkçe",  native:"Türkçe" },
+      { code:'kk', flag:'🇰🇿', name:"Қазақша", native:"Қазақ тілі" },
+      { code:'tg', flag:'🇹🇯', name:"Тоҷикӣ", native:"Забони тоҷикӣ" },
+    ];
+
+    const T = {
+      uz:{ tagline:"Parkent Tuman Hokimligi", status:"Tizim faol · Xizmat ko'rsatishga tayyor", sosLabel:"Favqulodda", sosSub:"Markazga signal yuborish", amb:"Tez Yordam", ambSub:"103 raqamiga qo'ng'iroq", loc:"Joylashuv", locSub:"Haritada ko'rish", fuel:"Yoqilg'i", food:"Ovqat", toilet:"Hojatxona", hospital:"Shifoxona", pharmacy:"Dorixona", assistant:"Yordamchi", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent hokimligi markaziga darhol yuboriladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 raqamiga ulanasiz.", toastSos:"✅ Signal markazga yuborildi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering" },
+      ru:{ tagline:"Паркентский районный хокимият", status:"Система активна · Готова к работе", sosLabel:"Экстренно", sosSub:"Отправить сигнал в центр", amb:"Скорая помощь", ambSub:"Звонок на 103", loc:"Моё место", locSub:"Открыть на карте", fuel:"Заправка", food:"Еда", toilet:"Туалет", hospital:"Больница", pharmacy:"Аптека", assistant:"Помощник", langTitle:"Выберите язык", cancel:"Отмена", sosSend:"Отправить", ambCall:"Да, вызвать", modalSosTitle:"Отправить SOS?", modalSosDesc:"Ваше местоположение немедленно отправится в центр Паркента.", modalAmbTitle:"Вызвать скорую?", modalAmbDesc:"Ваше местоположение отправится и произойдёт звонок на 103.", toastSos:"✅ Сигнал отправлен в центр", toastAmb:"🚑 Вызываем скорую...", toastGeo:"⚠️ Разрешите доступ к геолокации" },
+      en:{ tagline:"Parkent District Administration", status:"System active · Ready to serve", sosLabel:"Emergency", sosSub:"Send signal to center", amb:"Ambulance", ambSub:"Call 103", loc:"My location", locSub:"Open on map", fuel:"Fuel", food:"Food", toilet:"Toilet", hospital:"Hospital", pharmacy:"Pharmacy", assistant:"Assistant", langTitle:"Select language", cancel:"Cancel", sosSend:"Send", ambCall:"Yes, call", modalSosTitle:"Send SOS?", modalSosDesc:"Your location will be immediately sent to the Parkent center.", modalAmbTitle:"Call ambulance?", modalAmbDesc:"Your location will be sent and a call to 103 will be placed.", toastSos:"✅ Signal sent to center", toastAmb:"🚑 Calling ambulance...", toastGeo:"⚠️ Please allow location access" },
+      zh:{ tagline:"帕尔肯特区行政管理局", status:"系统运行中 · 随时为您服务", sosLabel:"紧急情况", sosSub:"向中心发送信号", amb:"急救", ambSub:"拨打103", loc:"我的位置", locSub:"在地图上查看", fuel:"加油站", food:"餐厅", toilet:"厕所", hospital:"医院", pharmacy:"药店", assistant:"助手", langTitle:"选择语言", cancel:"取消", sosSend:"发送", ambCall:"是，呼叫", modalSosTitle:"发送SOS？", modalSosDesc:"您的位置将立即发送至帕尔肯特中心。", modalAmbTitle:"呼叫救护车？", modalAmbDesc:"您的位置将被发送，并拨打103。", toastSos:"✅ 信号已发送至中心", toastAmb:"🚑 正在呼叫救护车...", toastGeo:"⚠️ 请允许访问位置" },
+      ar:{ tagline:"إدارة منطقة باركنت", status:"النظام نشط · جاهز للخدمة", sosLabel:"طوارئ", sosSub:"إرسال إشارة إلى المركز", amb:"إسعاف", ambSub:"الاتصال بـ 103", loc:"موقعي", locSub:"عرض على الخريطة", fuel:"وقود", food:"طعام", toilet:"مرحاض", hospital:"مستشفى", pharmacy:"صيدلية", assistant:"مساعد", langTitle:"اختر اللغة", cancel:"إلغاء", sosSend:"إرسال", ambCall:"نعم، اتصل", modalSosTitle:"إرسال SOS؟", modalSosDesc:"سيتم إرسال موقعك فورًا إلى مركز باركنت.", modalAmbTitle:"طلب سيارة إسعاف؟", modalAmbDesc:"سيتم إرسال موقعك والاتصال بـ 103.", toastSos:"✅ تم إرسال الإشارة إلى المركز", toastAmb:"🚑 جارٍ استدعاء الإسعاف...", toastGeo:"⚠️ يرجى السماح بالوصول إلى الموقع" },
+      tr:{ tagline:"Parkent İlçe Yönetimi", status:"Sistem aktif · Hizmet vermeye hazır", sosLabel:"Acil Durum", sosSub:"Merkeze sinyal gönder", amb:"Ambulans", ambSub:"103'ü ara", loc:"Konumum", locSub:"Haritada görüntüle", fuel:"Yakıt", food:"Yemek", toilet:"Tuvalet", hospital:"Hastane", pharmacy:"Eczane", assistant:"Asistan", langTitle:"Dil seçin", cancel:"İptal", sosSend:"Gönder", ambCall:"Evet, ara", modalSosTitle:"SOS gönderilsin mi?", modalSosDesc:"Konumunuz anında Parkent merkezine gönderilecek.", modalAmbTitle:"Ambulans çağrılsın mı?", modalAmbDesc:"Konumunuz gönderilecek ve 103 aranacak.", toastSos:"✅ Sinyal merkeze gönderildi", toastAmb:"🚑 Ambulans çağrılıyor...", toastGeo:"⚠️ Lütfen konum iznine izin verin" },
+      kk:{ tagline:"Паркент аудандық әкімдігі", status:"Жүйе белсенді · Қызмет көрсетуге дайын", sosLabel:"Төтенше жағдай", sosSub:"Орталыққа сигнал жіберу", amb:"Жедел жәрдем", ambSub:"103 нөміріне қоңырау", loc:"Менің орным", locSub:"Картада көру", fuel:"Жанармай", food:"Тамақ", toilet:"Дәретхана", hospital:"Аурухана", pharmacy:"Дәріхана", assistant:"Көмекші", langTitle:"Тілді таңдаңыз", cancel:"Болдырмау", sosSend:"Жіберу", ambCall:"Иә, шақыру", modalSosTitle:"SOS жіберілсін бе?", modalSosDesc:"Орныңыз бірден Паркент орталығына жіберіледі.", modalAmbTitle:"Жедел жәрдем шақырылсын ба?", modalAmbDesc:"Орныңыз жіберіліп, 103 нөміріне қоңырау шалынады.", toastSos:"✅ Сигнал орталыққа жіберілді", toastAmb:"🚑 Жедел жәрдем шақырылуда...", toastGeo:"⚠️ Орынға рұқсат беріңіз" },
+      tg:{ tagline:"Ҳокимияти ноҳияи Паркент", status:"Система фаъол · Барои хидмат омода", sosLabel:"Фавқулода", sosSub:"Ба марказ сигнал фиристодан", amb:"Ёрии таъҷилӣ", ambSub:"Занги 103", loc:"Ҷойгиршавии ман", locSub:"Дар харита дидан", fuel:"Сӯзишворӣ", food:"Хӯрок", toilet:"Ҳоҷатхона", hospital:"Беморхона", pharmacy:"Дорухона", assistant:"Ёрдамчи", langTitle:"Забонро интихоб кунед", cancel:"Бекор кардан", sosSend:"Фиристодан", ambCall:"Бале, даъват кунед", modalSosTitle:"SOS фиристода шавад?", modalSosDesc:"Ҷойгиршавии шумо фавран ба маркази Паркент фиристода мешавад.", modalAmbTitle:"Ёрии таъҷилӣ даъват шавад?", modalAmbDesc:"Ҷойгиршавии шумо фиристода шуда, ба 103 занг зада мешавад.", toastSos:"✅ Сигнал ба марказ фиристода шуд", toastAmb:"🚑 Ёрии таъҷилӣ даъват мешавад...", toastGeo:"⚠️ Лутфан ба ҷойгиршавӣ иҷозат диҳед" },
+    };
+
+    let currentLang = localStorage.getItem('bb_lang') || 'uz';
     let pendingAction = null;
- 
+
+    function applyLang(code) {
+      currentLang = code;
+      localStorage.setItem('bb_lang', code);
+      const l = LANGS.find(x => x.code === code);
+      const t = T[code];
+      document.getElementById('cur-flag').textContent = l.flag;
+      document.getElementById('cur-code').textContent = code.toUpperCase();
+      document.getElementById('t-tagline').textContent = t.tagline;
+      document.getElementById('t-status').textContent = t.status;
+      document.getElementById('t-sos-label').textContent = t.sosLabel;
+      document.getElementById('t-sos-sub').textContent = t.sosSub;
+      document.getElementById('t-amb').textContent = t.amb;
+      document.getElementById('t-amb-sub').textContent = t.ambSub;
+      document.getElementById('t-loc').textContent = t.loc;
+      document.getElementById('t-loc-sub').textContent = t.locSub;
+      document.getElementById('t-fuel').textContent = t.fuel;
+      document.getElementById('t-food').textContent = t.food;
+      document.getElementById('t-toilet').textContent = t.toilet;
+      document.getElementById('t-hospital').textContent = t.hospital;
+      document.getElementById('t-pharmacy').textContent = t.pharmacy;
+      document.getElementById('t-assistant').textContent = t.assistant;
+      document.getElementById('t-lang-title').textContent = t.langTitle;
+      document.body.dir = (code === 'ar') ? 'rtl' : 'ltr';
+      document.querySelectorAll('.lang-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.code === code);
+      });
+    }
+
+    function openLang() {
+      const grid = document.getElementById('lang-grid');
+      grid.innerHTML = '';
+      LANGS.forEach(l => {
+        const div = document.createElement('div');
+        div.className = 'lang-option' + (l.code === currentLang ? ' active' : '');
+        div.dataset.code = l.code;
+        div.innerHTML = `<span class="lang-option-flag">${l.flag}</span><div class="lang-option-info"><span class="lang-option-name">${l.name}</span><span class="lang-option-native">${l.native}</span></div>`;
+        div.onclick = () => { applyLang(l.code); closeLang(); };
+        grid.appendChild(div);
+      });
+      document.getElementById('lang-overlay').classList.add('open');
+    }
+
+    function closeLang(e) {
+      if (e && e.target !== document.getElementById('lang-overlay')) return;
+      document.getElementById('lang-overlay').classList.remove('open');
+    }
+
     function openModal(type) {
       pendingAction = type;
+      const t = T[currentLang];
       const isSOS = type === 'SOS';
       document.getElementById('modal-icon').textContent = isSOS ? '🆘' : '🚑';
-      document.getElementById('modal-title').textContent = isSOS ? 'SOS yuborilsinmi?' : 'Tez yordam chaqirilsinmi?';
-      document.getElementById('modal-desc').textContent = isSOS
-        ? 'Joylashuvingiz Parkent hokimligi markaziga darhol yuboriladi.'
-        : 'Joylashuvingiz yuboriladi va 103 raqamiga ulanasiz.';
+      document.getElementById('modal-title').textContent = isSOS ? t.modalSosTitle : t.modalAmbTitle;
+      document.getElementById('modal-desc').textContent = isSOS ? t.modalSosDesc : t.modalAmbDesc;
+      document.getElementById('modal-cancel').textContent = t.cancel;
       const btn = document.getElementById('modal-confirm');
       btn.className = 'modal-btn ' + (isSOS ? 'confirm-sos' : 'confirm-blue');
-      btn.textContent = isSOS ? 'Ha, yuborish' : 'Ha, chaqirish';
+      btn.textContent = isSOS ? t.sosSend : t.ambCall;
       document.getElementById('overlay').classList.add('open');
     }
- 
+
     function closeModal(e) {
       if (e && e.target !== document.getElementById('overlay')) return;
       document.getElementById('overlay').classList.remove('open');
       pendingAction = null;
     }
- 
+
     function confirmAction() {
       document.getElementById('overlay').classList.remove('open');
-      const type = pendingAction;
-      pendingAction = null;
+      const type = pendingAction; pendingAction = null;
+      const t = T[currentLang];
       navigator.geolocation.getCurrentPosition(p => {
-        const data = {
-          type,
-          lat: p.coords.latitude,
-          lon: p.coords.longitude,
-          time: new Date().toLocaleString('uz-UZ')
-        };
-        fetch(API, { method: 'POST', body: JSON.stringify(data) });
-        showToast(type === 'SOS' ? '✅ Signal markazga yuborildi' : '🚑 Tez yordam chaqirilmoqda...');
+        fetch(API, { method:'POST', body: JSON.stringify({ type, lat: p.coords.latitude, lon: p.coords.longitude, time: new Date().toLocaleString(), lang: currentLang }) });
+        showToast(type === 'SOS' ? t.toastSos : t.toastAmb);
         if (type === 'TEZ_YORDAM') setTimeout(() => { window.location.href = "tel:103"; }, 1200);
-      }, () => showToast('⚠️ Joylashuvga ruxsat bering'));
+      }, () => showToast(t.toastGeo));
     }
- 
+
     function myLoc() {
       navigator.geolocation.getCurrentPosition(p => {
         window.location.href = `https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;
-      }, () => showToast('⚠️ Joylashuvga ruxsat bering'));
+      }, () => showToast(T[currentLang].toastGeo));
     }
- 
+
     function near(q) {
       navigator.geolocation.getCurrentPosition(p => {
         window.location.href = `https://www.google.com/maps/search/${q}/@${p.coords.latitude},${p.coords.longitude},15z`;
-      }, () => showToast('⚠️ Joylashuvga ruxsat bering'));
+      }, () => showToast(T[currentLang].toastGeo));
     }
- 
+
     function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3000);
     }
- 
-    // Clock
+
     function updateClock() {
-      const now = new Date();
-      document.getElementById('clock').textContent =
-        now.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString('uz-UZ', { hour:'2-digit', minute:'2-digit' });
     }
-    updateClock();
-    setInterval(updateClock, 1000);
- 
-    // Weather
+    updateClock(); setInterval(updateClock, 1000);
+
     async function getWeather() {
       try {
-        const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
-        const data = await res.json();
-        document.getElementById('w-temp').textContent = Math.round(data.current_weather.temperature) + '°C';
-      } catch (e) {}
+        const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=41.29&longitude=69.83&current_weather=true");
+        const d = await r.json();
+        document.getElementById('w-temp').textContent = Math.round(d.current_weather.temperature) + '°C';
+      } catch(e){}
     }
     getWeather();
+
+    applyLang(currentLang);
   </script>
 </body>
 </html>
