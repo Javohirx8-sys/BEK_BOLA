@@ -15,7 +15,7 @@
       --radius:22px; --shadow:0 1px 12px rgba(0,0,0,0.06);
     }
     .dark { --bg:#0c0c0c; --surface:#181818; --surface2:#242424; --border:rgba(255,255,255,0.07); --text:#f0f0f0; --text-muted:#5a5a5a; --shadow:0 1px 16px rgba(0,0,0,0.5); }
-    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100dvh; display:flex; flex-direction:column; max-width:430px; margin:0 auto; transition:background .3s,color .3s; -webkit-tap-highlight-color:transparent; user-select:none; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100dvh; display:flex; flex-direction:column; max-width:430px; margin:0 auto; transition:background .15s; -webkit-tap-highlight-color:transparent; user-select:none; }
 
     /* TOPBAR */
     .topbar { display:flex; justify-content:space-between; align-items:center; padding:14px 18px; gap:8px; }
@@ -45,7 +45,7 @@
       background:linear-gradient(135deg,var(--accent2),var(--purple));
       border:none; display:flex; align-items:center; justify-content:center;
       font-size:24px; cursor:pointer; box-shadow:0 4px 16px rgba(124,58,237,0.35);
-      transition:transform .12s; flex-shrink:0; position:relative;
+      transition:transform .12s; flex-shrink:0; position:relative; will-change:transform;
     }
     .mic-btn:active { transform:scale(0.9); }
     .mic-btn.on { background:linear-gradient(135deg,var(--accent),#ff6b6b); box-shadow:0 4px 24px rgba(230,57,70,0.5); animation:mic-pulse 1s infinite; }
@@ -93,7 +93,7 @@
 
     /* EMERGENCY */
     .emergency-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .sos-btn { background:var(--accent); border-radius:var(--radius); padding:24px 16px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; position:relative; overflow:hidden; transition:transform .12s,box-shadow .12s; box-shadow:0 6px 28px rgba(230,57,70,.4); min-height:160px; }
+    .sos-btn { background:var(--accent); border-radius:var(--radius); padding:24px 16px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; position:relative; overflow:hidden; transition:transform .12s,box-shadow .12s; box-shadow:0 4px 20px rgba(230,57,70,.35); min-height:160px; }
     .sos-btn::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.18),transparent 55%); pointer-events:none; }
     .sos-btn:active { transform:scale(.97); }
     .sos-btn.tracking::after { content:''; position:absolute; inset:-3px; border-radius:calc(var(--radius)+3px); border:2px solid rgba(255,100,100,.6); animation:ring-p 1.2s infinite; }
@@ -154,7 +154,7 @@
     .toast.show { transform:translateX(-50%) translateY(0); }
 
     /* MODAL */
-    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(5px); z-index:100; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(3px); z-index:100; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .25s; }
     .overlay.open { opacity:1; pointer-events:all; }
     .modal { background:var(--surface); border-radius:26px 26px 0 0; padding:26px 22px 38px; width:100%; transform:translateY(100%); transition:transform .3s cubic-bezier(.34,1.2,.64,1); }
     .overlay.open .modal { transform:translateY(0); }
@@ -177,7 +177,7 @@
     .stop-btn { background:rgba(255,255,255,.2); border:none; border-radius:12px; padding:9px 16px; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; font-family:'Inter',sans-serif; }
 
     /* LANG PANEL */
-    .lang-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .25s; }
+    .lang-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); backdrop-filter:blur(2px); z-index:200; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .25s; }
     .lang-overlay.open { opacity:1; pointer-events:all; }
     .lang-panel { background:var(--surface); border-radius:26px 26px 0 0; padding:20px 20px 40px; width:100%; transform:translateY(100%); transition:transform .3s cubic-bezier(.34,1.2,.64,1); }
     .lang-overlay.open .lang-panel { transform:translateY(0); }
@@ -259,7 +259,7 @@
         </div>
       </div>
       <div class="amb-btn" onclick="openModal('TEZ_YORDAM')">
-        <div class="amb-top"><span class="amb-label" id="t-amb-label">Acil</span><span class="amb-emoji">🚑</span></div>
+        <div class="amb-top"><span class="amb-label" id="t-amb-label">Shoshilinch</span><span class="amb-emoji">🚑</span></div>
         <div><div class="amb-title" id="t-amb">Tez Yordam</div><div class="amb-sub" id="t-amb-sub">103 raqam</div></div>
         <div class="amb-arrow">↗</div>
       </div>
@@ -428,7 +428,7 @@ const VOICE_CMDS = {
 };
 
 const T = {
-  uz:{ tagline:"Parkent Tuman Hokimligi", statusOnline:"Tizim faol · Xizmat ko'rsatishga tayyor", statusOffline:"Internet yo'q · Offline rejim", statusNoGps:"GPS o'chirilgan · Joylashuv yo'q", sosLabel:"Favqulodda", sosSub:"Signal yuborish", live:"JONLI", ambLabel:"Acil", amb:"Tez Yordam", ambSub:"103 raqam", loc:"Joylashuvim", locSub:"Haritada ko'rish", taxi:"Taxi", taxiSub:"1054 ga qo'ng'iroq", eco:"Eko Turizm", ecoSub:"Marshrut ko'rish", fuel:"Yoqilg'i", food:"Ovqat", hospital:"Shifoxona", pharmacy:"Dorixona", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent markaziga darhol yuboriladi. Bekor qilmaguncha jonli uzatiladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 ga ulanasiz.", toastSos:"✅ SOS jonli uzatish boshlandi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering", toastStopped:"⛔ SOS to'xtatildi", stopTitle:"SOS jonli uzatilmoqda", stopSub:"Har 10 soniyada yangilanadi", stopBtn:"To'xtatish", voiceLabel:"Tinglamoqda", hintTitle:"Ovozli buyruqlar", micLang:'uz-UZ' },
+  uz:{ tagline:"Parkent Tuman Hokimligi", statusOnline:"Tizim faol · Xizmat ko'rsatishga tayyor", statusOffline:"Internet yo'q · Offline rejim", statusNoGps:"GPS o'chirilgan · Joylashuv yo'q", sosLabel:"Favqulodda", sosSub:"Signal yuborish", live:"JONLI", ambLabel:"Shoshilinch", amb:"Tez Yordam", ambSub:"103 raqam", loc:"Joylashuvim", locSub:"Haritada ko'rish", taxi:"Taxi", taxiSub:"1054 ga qo'ng'iroq", eco:"Eko Turizm", ecoSub:"Marshrut ko'rish", fuel:"Yoqilg'i", food:"Ovqat", hospital:"Shifoxona", pharmacy:"Dorixona", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent markaziga darhol yuboriladi. Bekor qilmaguncha jonli uzatiladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 ga ulanasiz.", toastSos:"✅ SOS jonli uzatish boshlandi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering", toastStopped:"⛔ SOS to'xtatildi", stopTitle:"SOS jonli uzatilmoqda", stopSub:"Har 10 soniyada yangilanadi", stopBtn:"To'xtatish", voiceLabel:"Tinglamoqda", hintTitle:"Ovozli buyruqlar", micLang:'uz-UZ' },
   ru:{ tagline:"Паркентский районный хокимият", statusOnline:"Система активна · Готова к работе", statusOffline:"Нет интернета · Офлайн", statusNoGps:"GPS выключен · Нет геолокации", sosLabel:"Экстренно", sosSub:"Отправить сигнал", live:"ПРЯМОЙ", ambLabel:"Срочно", amb:"Скорая", ambSub:"103", loc:"Моё место", locSub:"Открыть карту", taxi:"Такси", taxiSub:"Звонок 1054", eco:"Эко Туризм", ecoSub:"Маршрут", fuel:"Заправка", food:"Еда", hospital:"Больница", pharmacy:"Аптека", langTitle:"Выберите язык", cancel:"Отмена", sosSend:"Отправить", ambCall:"Вызвать", modalSosTitle:"Отправить SOS?", modalSosDesc:"Ваше местоположение отправится в центр Паркента. Прямая трансляция до отмены.", modalAmbTitle:"Вызвать скорую?", modalAmbDesc:"Местоположение отправится и будет звонок на 103.", toastSos:"✅ SOS трансляция началась", toastAmb:"🚑 Вызываем скорую...", toastGeo:"⚠️ Дайте доступ к геолокации", toastStopped:"⛔ SOS остановлен", stopTitle:"SOS трансляция активна", stopSub:"Обновление каждые 10 сек", stopBtn:"Остановить", voiceLabel:"Слушаю", hintTitle:"Голосовые команды", micLang:'ru-RU' },
   en:{ tagline:"Parkent District Administration", statusOnline:"System active · Ready to serve", statusOffline:"No internet · Offline", statusNoGps:"GPS off · No location", sosLabel:"Emergency", sosSub:"Send signal", live:"LIVE", ambLabel:"Urgent", amb:"Ambulance", ambSub:"Call 103", loc:"My location", locSub:"Open on map", taxi:"Taxi", taxiSub:"Call 1054", eco:"Eco Tourism", ecoSub:"Get directions", fuel:"Fuel", food:"Food", hospital:"Hospital", pharmacy:"Pharmacy", langTitle:"Select language", cancel:"Cancel", sosSend:"Send", ambCall:"Yes, call", modalSosTitle:"Send SOS?", modalSosDesc:"Your location will be sent to Parkent center. Live tracking until you stop.", modalAmbTitle:"Call ambulance?", modalAmbDesc:"Location sent and call to 103 placed.", toastSos:"✅ SOS live started", toastAmb:"🚑 Calling ambulance...", toastGeo:"⚠️ Allow location access", toastStopped:"⛔ SOS stopped", stopTitle:"SOS live tracking active", stopSub:"Updates every 10 seconds", stopBtn:"Stop", voiceLabel:"Listening", hintTitle:"Voice commands", micLang:'en-US' },
   zh:{ tagline:"帕尔肯特区行政管理局", statusOnline:"系统运行中", statusOffline:"无网络·离线", statusNoGps:"GPS关闭", sosLabel:"紧急", sosSub:"发送信号", live:"直播", ambLabel:"紧急", amb:"急救", ambSub:"103", loc:"我的位置", locSub:"打开地图", taxi:"出租车", taxiSub:"1054", eco:"生态旅游", ecoSub:"路线", fuel:"加油站", food:"餐厅", hospital:"医院", pharmacy:"药店", langTitle:"选择语言", cancel:"取消", sosSend:"发送", ambCall:"呼叫", modalSosTitle:"发送SOS？", modalSosDesc:"位置将发送到帕尔肯特中心。", modalAmbTitle:"呼叫救护车？", modalAmbDesc:"将发送位置并拨打103。", toastSos:"✅ SOS开始", toastAmb:"🚑 呼叫中...", toastGeo:"⚠️ 请允许位置", toastStopped:"⛔ SOS停止", stopTitle:"SOS直播中", stopSub:"每10秒更新", stopBtn:"停止", voiceLabel:"聆听中", hintTitle:"语音命令", micLang:'zh-CN' },
