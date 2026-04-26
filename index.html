@@ -302,6 +302,19 @@
     </div>
   </div>
 
+  <!-- SUGGEST MODAL -->
+  <div class="overlay" id="suggest-overlay" onclick="closeSuggest(event)">
+    <div class="modal">
+      <div class="modal-icon">🤔</div>
+      <div class="modal-title" id="suggest-title">Shuni aytmoqchi edingizmi?</div>
+      <div class="modal-desc" id="suggest-desc">—</div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" onclick="closeSuggest()">Yo'q</button>
+        <button class="modal-btn camb" id="suggest-confirm" onclick="confirmSuggest()">Ha</button>
+      </div>
+    </div>
+  </div>
+
   <!-- STOP BAR -->
   <div class="stop-bar" id="stop-bar">
     <div class="stop-bar-info">
@@ -446,6 +459,105 @@ let hasGps = true;
 let recognition = null;
 let voiceOn = false;
 let actionTimeout = null;
+let suggestAction = null;
+
+// ── GREETINGS per lang ─────────────────────────────────────
+const GREETINGS = {
+  uz: "Assalomu alaykum! Qanday yordam kerak?",
+  ru: "Здравствуйте! Чем могу помочь?",
+  en: "Hello! How can I help you?",
+  zh: "您好！有什么需要帮助的吗？",
+  ar: "السلام عليكم! كيف يمكنني مساعدتك؟",
+  tr: "Merhaba! Nasıl yardımcı olabilirim?",
+  kk: "Сәлеметсіз бе! Қалай көмектесе аламын?",
+  tg: "Ассалому алайкум! Чӣ гуна ёрдам карда метавонам?",
+};
+
+// ── SUGGEST labels per lang ────────────────────────────────
+const SUGGEST_LABELS = {
+  uz: { title:"Shuni aytmoqchi edingizmi?", yes:"Ha", no:"Yo'q" },
+  ru: { title:"Вы имели в виду?",            yes:"Да", no:"Нет" },
+  en: { title:"Did you mean?",               yes:"Yes", no:"No" },
+  zh: { title:"您是指？",                      yes:"是", no:"否" },
+  ar: { title:"هل تقصد؟",                     yes:"نعم", no:"لا" },
+  tr: { title:"Bunu mu dediniz?",             yes:"Evet", no:"Hayır" },
+  kk: { title:"Сіз мұны айтқыңыз келді ме?", yes:"Иә", no:"Жоқ" },
+  tg: { title:"Оё шумо инро гуфтан хостед?", yes:"Бале", no:"Не" },
+};
+
+// ── ACTION display names per lang ─────────────────────────
+const ACTION_NAMES = {
+  uz: { SOS:"SOS signal yuborish", TEZ_YORDAM:"Tez yordam (103)", TAXI:"Taxi (1054)", ECO:"Eko turizm marshrutini ko'rish", LOCATION:"Joylashuvimni ko'rsatish", FUEL:"Yaqin yoqilg'i stansiyasi", FOOD:"Yaqin restoran", HOSPITAL:"Yaqin shifoxona", PHARMACY:"Yaqin dorixona" },
+  ru: { SOS:"Отправить SOS сигнал", TEZ_YORDAM:"Скорая помощь (103)", TAXI:"Такси (1054)", ECO:"Маршрут эко туризма", LOCATION:"Показать моё местоположение", FUEL:"Ближайшая заправка", FOOD:"Ближайший ресторан", HOSPITAL:"Ближайшая больница", PHARMACY:"Ближайшая аптека" },
+  en: { SOS:"Send SOS signal", TEZ_YORDAM:"Call ambulance (103)", TAXI:"Call taxi (1054)", ECO:"Show eco tourism route", LOCATION:"Show my location", FUEL:"Nearest fuel station", FOOD:"Nearest restaurant", HOSPITAL:"Nearest hospital", PHARMACY:"Nearest pharmacy" },
+  zh: { SOS:"发送SOS信号", TEZ_YORDAM:"呼叫救护车(103)", TAXI:"叫出租车(1054)", ECO:"查看生态旅游路线", LOCATION:"显示我的位置", FUEL:"最近的加油站", FOOD:"最近的餐厅", HOSPITAL:"最近的医院", PHARMACY:"最近的药店" },
+  ar: { SOS:"إرسال إشارة SOS", TEZ_YORDAM:"استدعاء الإسعاف (103)", TAXI:"تاكسي (1054)", ECO:"مسار السياحة البيئية", LOCATION:"إظهار موقعي", FUEL:"أقرب محطة وقود", FOOD:"أقرب مطعم", HOSPITAL:"أقرب مستشفى", PHARMACY:"أقرب صيدلية" },
+  tr: { SOS:"SOS sinyali gönder", TEZ_YORDAM:"Ambulans çağır (103)", TAXI:"Taksi (1054)", ECO:"Eko turizm rotası", LOCATION:"Konumumu göster", FUEL:"En yakın yakıt istasyonu", FOOD:"En yakın restoran", HOSPITAL:"En yakın hastane", PHARMACY:"En yakın eczane" },
+  kk: { SOS:"SOS сигнал жіберу", TEZ_YORDAM:"Жедел жәрдем (103)", TAXI:"Такси (1054)", ECO:"Эко туризм бағыты", LOCATION:"Менің орнымды көрсету", FUEL:"Жақын жанармай", FOOD:"Жақын мейрамхана", HOSPITAL:"Жақын аурухана", PHARMACY:"Жақын дәріхана" },
+  tg: { SOS:"Фиристодани сигнали SOS", TEZ_YORDAM:"Ёрии таъҷилӣ (103)", TAXI:"Такси (1054)", ECO:"Роҳи экотуризм", LOCATION:"Нишон додани ҷойгиршавиам", FUEL:"Наздиктарин стансияи сӯзишворӣ", FOOD:"Наздиктарин тарабхона", HOSPITAL:"Наздиктарин беморхона", PHARMACY:"Наздиктарин дорухона" },
+};
+
+// ── FUZZY MATCH ────────────────────────────────────────────
+// Levenshtein distance — tolerates typos like "zprafka" → "zapravka"
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length:m+1}, (_,i) => Array.from({length:n+1}, (_,j) => i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function fuzzyMatch(heard, wordList) {
+  const heardWords = heard.toLowerCase().split(/\s+/);
+  for(const w of wordList) {
+    const wLow = w.toLowerCase();
+    // exact substring
+    if(heard.includes(wLow)) return { score: 0, word: w };
+    // fuzzy: check each heard word against each trigger word
+    for(const hw of heardWords) {
+      if(hw.length < 3) continue;
+      const maxLen = Math.max(hw.length, wLow.length);
+      const dist = levenshtein(hw, wLow);
+      // allow 1 typo per 4 chars
+      const threshold = Math.floor(maxLen / 4) + 1;
+      if(dist <= threshold) return { score: dist, word: w };
+    }
+  }
+  return null;
+}
+
+function findBestMatch(heard) {
+  const cmds = VOICE_CMDS[currentLang] || VOICE_CMDS['uz'];
+  let best = null, bestScore = 999, bestCmd = null;
+  for(const cmd of cmds) {
+    const m = fuzzyMatch(heard, cmd.words);
+    if(m && m.score < bestScore) { best = m; bestScore = m.score; bestCmd = cmd; }
+  }
+  if(!bestCmd) return null;
+  return { cmd: bestCmd, exact: bestScore === 0 };
+}
+
+// ── SUGGEST MODAL ──────────────────────────────────────────
+function showSuggest(cmd) {
+  suggestAction = cmd.action;
+  const sl = SUGGEST_LABELS[currentLang] || SUGGEST_LABELS['uz'];
+  const an = ACTION_NAMES[currentLang] || ACTION_NAMES['uz'];
+  document.getElementById('suggest-title').textContent = sl.title;
+  document.getElementById('suggest-desc').textContent  = an[cmd.action] || cmd.label;
+  document.getElementById('suggest-confirm').textContent = sl.yes;
+  document.querySelector('#suggest-overlay .modal-btn.cancel').textContent = sl.no;
+  document.getElementById('suggest-overlay').classList.add('open');
+}
+function closeSuggest(e) {
+  if(e && e.target !== document.getElementById('suggest-overlay')) return;
+  document.getElementById('suggest-overlay').classList.remove('open');
+  suggestAction = null;
+}
+function confirmSuggest() {
+  document.getElementById('suggest-overlay').classList.remove('open');
+  const a = suggestAction; suggestAction = null;
+  if(a) triggerVoiceAction(a);
+}
 
 // ── STATUS ─────────────────────────────────────────────────
 function updateStatus() {
@@ -477,34 +589,53 @@ function startVoice(){
   document.getElementById('t-voice-label').textContent = T[currentLang].voiceLabel;
   buildHintCmds();
 
+  // 🔊 Greet user in current language
+  const greeting = GREETINGS[currentLang] || GREETINGS['uz'];
+  document.getElementById('voice-text').textContent = greeting;
+  speak(greeting);
+
   recognition = new SR();
   recognition.continuous = true;
   recognition.interimResults = true;
   recognition.lang = T[currentLang].micLang;
 
+  let lastFinalHeard = '';
+
   recognition.onresult = (e) => {
     let interim = '', final = '';
     for(let i=e.resultIndex;i<e.results.length;i++){
-      const txt = e.results[i][0].transcript.toLowerCase();
+      const txt = e.results[i][0].transcript.toLowerCase().trim();
       e.results[i].isFinal ? final+=txt : interim+=txt;
     }
-    const heard = (final||interim).trim();
-    document.getElementById('voice-text').textContent = heard || '...';
+    const heard = (final || interim).trim();
+    if(!heard) return;
+    document.getElementById('voice-text').textContent = heard;
 
-    // Check commands
-    const cmds = VOICE_CMDS[currentLang] || VOICE_CMDS['uz'];
-    for(const cmd of cmds){
-      if(cmd.words.some(w => heard.includes(w))){
-        clearTimeout(actionTimeout);
-        actionTimeout = setTimeout(()=>{
-          triggerVoiceAction(cmd.action);
-        }, final ? 200 : 600);
-        break;
+    // Avoid re-triggering same phrase
+    if(final && final === lastFinalHeard) return;
+    if(final) lastFinalHeard = final;
+
+    const match = findBestMatch(heard);
+    if(!match) return;
+
+    clearTimeout(actionTimeout);
+    actionTimeout = setTimeout(() => {
+      if(match.exact) {
+        // Exact match → trigger immediately
+        stopVoice();
+        triggerVoiceAction(match.cmd.action);
+      } else {
+        // Fuzzy match → ask user to confirm
+        stopVoice();
+        showSuggest(match.cmd);
       }
-    }
+    }, final ? 300 : 700);
   };
 
-  recognition.onerror = (e) => { if(e.error==='not-allowed') showToast('⚠️ Mikrofon ruxsati berilmagan'); stopVoice(); };
+  recognition.onerror = (e) => {
+    if(e.error==='not-allowed') showToast('⚠️ Mikrofon ruxsati berilmagan');
+    stopVoice();
+  };
   recognition.onend = () => { if(voiceOn) try{ recognition.start(); }catch(e){} };
   recognition.start();
 }
@@ -517,6 +648,81 @@ function stopVoice(){
   document.getElementById('voice-bar').classList.remove('show');
   document.getElementById('voice-hint').classList.remove('show');
   document.getElementById('voice-text').textContent = '...';
+}
+
+// ── TTS — smart voice picker ───────────────────────────────
+// Priority lists: prefer Google/Microsoft neural voices, avoid "compact" ones
+const VOICE_PREFS = {
+  'uz-UZ': ['Google','Microsoft'],
+  'ru-RU': ['Google русский','Microsoft Irina','Google','Microsoft'],
+  'en-US': ['Google US English','Microsoft Aria','Microsoft Jenny','Google','Microsoft'],
+  'zh-CN': ['Google 普通话','Microsoft Xiaoxiao','Google','Microsoft'],
+  'ar-SA': ['Google Arabic','Microsoft Naayf','Google','Microsoft'],
+  'tr-TR': ['Google Türkçe','Microsoft Emel','Google','Microsoft'],
+  'kk-KZ': ['Google','Microsoft'],
+  'tg-TJ': ['Google','Microsoft'],
+};
+
+let _voiceCache = {};
+
+function getBestVoice(lang) {
+  if(_voiceCache[lang]) return _voiceCache[lang];
+  const voices = window.speechSynthesis.getVoices();
+  if(!voices.length) return null;
+
+  const prefs = VOICE_PREFS[lang] || ['Google','Microsoft'];
+
+  // 1. Exact lang match with preferred vendor
+  for(const pref of prefs){
+    const v = voices.find(v => v.lang === lang && v.name.includes(pref));
+    if(v){ _voiceCache[lang]=v; return v; }
+  }
+
+  // 2. Lang prefix match (e.g. ru-RU → ru)
+  const prefix = lang.split('-')[0];
+  for(const pref of prefs){
+    const v = voices.find(v => v.lang.startsWith(prefix) && v.name.includes(pref));
+    if(v){ _voiceCache[lang]=v; return v; }
+  }
+
+  // 3. Any lang match, avoid "compact" (lower quality)
+  const v = voices.find(v => v.lang === lang && !v.name.toLowerCase().includes('compact'));
+  if(v){ _voiceCache[lang]=v; return v; }
+
+  // 4. Any lang match
+  const v2 = voices.find(v => v.lang === lang);
+  if(v2){ _voiceCache[lang]=v2; return v2; }
+
+  // 5. Lang prefix fallback
+  return voices.find(v => v.lang.startsWith(prefix)) || null;
+}
+
+function speak(text) {
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  const lang = T[currentLang].micLang;
+  const utt = new SpeechSynthesisUtterance(text.slice(0, 200));
+  utt.lang = lang;
+  utt.rate = 1.0;
+  utt.pitch = 1.0;
+
+  // Voices may not be loaded yet — wait if needed
+  const voices = window.speechSynthesis.getVoices();
+  if(voices.length) {
+    const best = getBestVoice(lang);
+    if(best) utt.voice = best;
+    window.speechSynthesis.speak(utt);
+  } else {
+    // Wait for voices to load (first call on some browsers)
+    window.speechSynthesis.onvoiceschanged = () => {
+      _voiceCache = {}; // reset cache
+      const best = getBestVoice(lang);
+      if(best) utt.voice = best;
+      window.speechSynthesis.speak(utt);
+      window.speechSynthesis.onvoiceschanged = null;
+    };
+  }
 }
 
 function triggerVoiceAction(action){
@@ -603,6 +809,7 @@ function applyLang(code){
   document.getElementById('t-stop-sub').textContent=t.stopSub;
   document.getElementById('t-stop-btn').textContent=t.stopBtn;
   document.body.dir=(code==='ar')?'rtl':'ltr';
+  _voiceCache = {}; // reset TTS voice cache for new lang
   updateStatus();
   // If voice is on, restart with new lang
   if(voiceOn){ stopVoice(); setTimeout(startVoice,300); }
