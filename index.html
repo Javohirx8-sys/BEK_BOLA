@@ -508,19 +508,40 @@ function levenshtein(a, b) {
 }
 
 function fuzzyMatch(heard, wordList) {
-  const heardWords = heard.toLowerCase().split(/\s+/);
+  const heardLow = heard.toLowerCase();
+  const heardWords = heardLow.split(/\s+/);
+
   for(const w of wordList) {
     const wLow = w.toLowerCase();
-    // exact substring
-    if(heard.includes(wLow)) return { score: 0, word: w };
-    // fuzzy: check each heard word against each trigger word
+    const wWords = wLow.split(/\s+/);
+
+    // 1. Exact substring match (highest priority)
+    if(heardLow.includes(wLow)) return { score: 0, word: w };
+
+    // 2. N-gram sliding window — handles "meni mazzam yoq tez yordam kerak"
+    // Build all consecutive n-grams from heard matching trigger word length
+    const n = wWords.length;
+    if(n > 1 && heardWords.length >= n) {
+      for(let i = 0; i <= heardWords.length - n; i++) {
+        const chunk = heardWords.slice(i, i + n).join(' ');
+        if(chunk === wLow) return { score: 0, word: w };
+        // Fuzzy n-gram
+        const dist = levenshtein(chunk, wLow);
+        const threshold = Math.floor(wLow.length / 5) + 1;
+        if(dist <= threshold) return { score: dist, word: w };
+      }
+    }
+
+    // 3. Single-word fuzzy — each heard word vs each trigger word
     for(const hw of heardWords) {
       if(hw.length < 3) continue;
-      const maxLen = Math.max(hw.length, wLow.length);
-      const dist = levenshtein(hw, wLow);
-      // allow 1 typo per 4 chars
-      const threshold = Math.floor(maxLen / 4) + 1;
-      if(dist <= threshold) return { score: dist, word: w };
+      for(const tw of wWords) {
+        if(tw.length < 3) continue;
+        const maxLen = Math.max(hw.length, tw.length);
+        const dist = levenshtein(hw, tw);
+        const threshold = Math.floor(maxLen / 4) + 1;
+        if(dist <= threshold) return { score: dist + 1, word: w }; // +1 penalty vs n-gram
+      }
     }
   }
   return null;
@@ -581,37 +602,44 @@ function toggleVoice(){ voiceOn ? stopVoice() : startVoice(); }
 
 function startVoice(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){ showToast('⚠️ Brauzer mikrofon qo\'llab-quvvatlamaydi'); return; }
-  voiceOn = true;
+  if(!SR){ showToast('Brauzer mikrofon qo\'llab-quvvatlamaydi'); return; }
+
+  // UI yoqiladi — lekin mikrofon hali yonmaydi (salom tugagunicha)
+  voiceOn = false;
   document.getElementById('mic-btn').classList.add('on');
   document.getElementById('voice-bar').classList.add('show');
   document.getElementById('voice-hint').classList.add('show');
   document.getElementById('t-voice-label').textContent = T[currentLang].voiceLabel;
   buildHintCmds();
 
-  // 🔊 Greet user in current language
   const greeting = GREETINGS[currentLang] || GREETINGS['uz'];
   document.getElementById('voice-text').textContent = greeting;
-  speak(greeting);
 
+  // Avval salom aytadi, keyin mikrofon yonadi
+  speakThen(greeting, () => {
+    voiceOn = true;
+    document.getElementById('voice-text').textContent = '...';
+    startRecognition(SR);
+  });
+}
+
+function startRecognition(SR) {
+  if(!voiceOn) return;
   recognition = new SR();
   recognition.continuous = true;
   recognition.interimResults = true;
   recognition.lang = T[currentLang].micLang;
-
   let lastFinalHeard = '';
 
   recognition.onresult = (e) => {
     let interim = '', final = '';
-    for(let i=e.resultIndex;i<e.results.length;i++){
+    for(let i = e.resultIndex; i < e.results.length; i++){
       const txt = e.results[i][0].transcript.toLowerCase().trim();
-      e.results[i].isFinal ? final+=txt : interim+=txt;
+      e.results[i].isFinal ? final += txt : interim += txt;
     }
     const heard = (final || interim).trim();
     if(!heard) return;
     document.getElementById('voice-text').textContent = heard;
-
-    // Avoid re-triggering same phrase
     if(final && final === lastFinalHeard) return;
     if(final) lastFinalHeard = final;
 
@@ -621,11 +649,9 @@ function startVoice(){
     clearTimeout(actionTimeout);
     actionTimeout = setTimeout(() => {
       if(match.exact) {
-        // Exact match → trigger immediately
         stopVoice();
         triggerVoiceAction(match.cmd.action);
       } else {
-        // Fuzzy match → ask user to confirm
         stopVoice();
         showSuggest(match.cmd);
       }
@@ -633,12 +659,13 @@ function startVoice(){
   };
 
   recognition.onerror = (e) => {
-    if(e.error==='not-allowed') showToast('⚠️ Mikrofon ruxsati berilmagan');
+    if(e.error === 'not-allowed') showToast('Mikrofon ruxsati berilmagan');
     stopVoice();
   };
-  recognition.onend = () => { if(voiceOn) try{ recognition.start(); }catch(e){} };
+  recognition.onend = () => { if(voiceOn) try{ recognition.start(); }catch(ex){} };
   recognition.start();
 }
+
 
 function stopVoice(){
   voiceOn = false;
@@ -697,8 +724,12 @@ function getBestVoice(lang) {
   return voices.find(v => v.lang.startsWith(prefix)) || null;
 }
 
-function speak(text) {
-  if(!window.speechSynthesis) return;
+// speak(text) — just say it
+function speak(text) { speakThen(text, null); }
+
+// speakThen(text, callback) — say it, then call callback when done
+function speakThen(text, callback) {
+  if(!window.speechSynthesis) { if(callback) callback(); return; }
   window.speechSynthesis.cancel();
 
   const lang = T[currentLang].micLang;
@@ -707,20 +738,25 @@ function speak(text) {
   utt.rate = 1.0;
   utt.pitch = 1.0;
 
-  // Voices may not be loaded yet — wait if needed
-  const voices = window.speechSynthesis.getVoices();
-  if(voices.length) {
+  if(callback) {
+    utt.onend   = () => setTimeout(callback, 300); // small pause after speech
+    utt.onerror = () => setTimeout(callback, 300); // if TTS fails, still continue
+  }
+
+  const doSpeak = () => {
     const best = getBestVoice(lang);
     if(best) utt.voice = best;
     window.speechSynthesis.speak(utt);
+  };
+
+  const voices = window.speechSynthesis.getVoices();
+  if(voices.length) {
+    doSpeak();
   } else {
-    // Wait for voices to load (first call on some browsers)
     window.speechSynthesis.onvoiceschanged = () => {
-      _voiceCache = {}; // reset cache
-      const best = getBestVoice(lang);
-      if(best) utt.voice = best;
-      window.speechSynthesis.speak(utt);
+      _voiceCache = {};
       window.speechSynthesis.onvoiceschanged = null;
+      doSpeak();
     };
   }
 }
