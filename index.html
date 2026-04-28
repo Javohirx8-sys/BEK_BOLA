@@ -196,7 +196,168 @@
     .voice-hint-title { font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
     .voice-commands { display:flex; flex-wrap:wrap; gap:6px; }
     .voice-cmd { background:var(--surface2); border-radius:20px; padding:4px 10px; font-size:11px; font-weight:600; color:var(--text); }
+
+    /* ── VIRTUAL TOUR CTA ─────────────────────────────────── */
+    .vtour-cta {
+      position:relative; overflow:hidden;
+      background:linear-gradient(135deg,#0f2744,#1a3a5c);
+      border:1px solid rgba(26,110,247,0.3);
+      border-radius:var(--radius);
+      padding:18px 20px;
+      display:flex; align-items:center; justify-content:space-between;
+      cursor:pointer; box-shadow:0 4px 20px rgba(26,110,247,0.2);
+      transition:transform .12s,box-shadow .12s;
+    }
+    .vtour-cta:active { transform:scale(.98); }
+    .vtour-cta:hover { box-shadow:0 6px 28px rgba(26,110,247,0.35); }
+    .vtour-cta-left { display:flex; align-items:center; gap:14px; }
+    .vtour-icon { font-size:30px; animation:globe-spin 8s linear infinite; }
+    @keyframes globe-spin { 0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)} }
+    .vtour-title { font-size:15px; font-weight:700; color:#fff; }
+    .vtour-sub { font-size:11px; color:rgba(255,255,255,0.5); margin-top:2px; }
+    .vtour-arrow { font-size:22px; color:rgba(255,255,255,0.4); }
+    .vtour-pulse {
+      position:absolute; right:60px; top:50%; transform:translateY(-50%);
+      width:40px; height:40px; border-radius:50%;
+      background:rgba(26,110,247,0.15);
+      animation:vtour-p 2s infinite;
+    }
+    @keyframes vtour-p { 0%{transform:translateY(-50%) scale(1);opacity:.6} 100%{transform:translateY(-50%) scale(2.5);opacity:0} }
+
+    /* ── VIRTUAL TOUR FULLSCREEN OVERLAY ─────────────────── */
+    .vtour-overlay {
+      position:fixed; inset:0; z-index:500;
+      background:#0d1117;
+      display:none; flex-direction:column;
+      font-family:'Inter',sans-serif;
+    }
+    .vtour-overlay.open { display:flex; }
+
+    .vtour-topbar {
+      background:rgba(13,17,23,0.95);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      padding:10px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      flex-shrink:0; z-index:10;
+    }
+    .vtour-location { display:flex; align-items:center; gap:10px; min-width:0; }
+    .vtloc-dot { width:7px; height:7px; border-radius:50%; background:#52b788; flex-shrink:0; animation:pdot 2s infinite; }
+    .vtloc-name { font-size:13px; font-weight:700; color:#f0f0f0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .vtloc-coords { font-size:10px; color:#5a5a5a; }
+    .vtour-tbactions { display:flex; gap:6px; flex-shrink:0; }
+    .vt-btn {
+      display:flex; align-items:center; gap:5px;
+      padding:7px 12px; border-radius:8px;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08);
+      color:#888; cursor:pointer; font-size:11px; font-weight:600;
+      font-family:'Inter',sans-serif; transition:all .15s; white-space:nowrap;
+    }
+    .vt-btn:hover { background:rgba(255,255,255,0.1); color:#f0f0f0; }
+    .vt-btn.close { color:#b5451b; }
+    .vt-btn.close:hover { background:rgba(181,69,27,0.15); border-color:rgba(181,69,27,0.3); }
+
+    .vtour-body { display:flex; flex:1; overflow:hidden; }
+
+    /* Sidebar */
+    .vt-sidebar {
+      width:260px; flex-shrink:0;
+      background:rgba(13,17,23,0.98);
+      border-right:1px solid rgba(255,255,255,0.06);
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    .vt-sidebar-hdr { padding:16px 16px 12px; border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0; }
+    .vt-sidebar-logo { font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#e8b84b; }
+    .vt-sidebar-title { font-size:15px; font-weight:700; color:#f0f0f0; margin-top:2px; }
+
+    .vt-nav { flex:1; overflow-y:auto; padding:10px 8px; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.08) transparent; }
+    .vt-nav::-webkit-scrollbar { width:3px; }
+    .vt-nav::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:2px; }
+
+    .vt-group-label { font-size:9px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#5a5a5a; padding:8px 10px 4px; }
+
+    .vt-nav-item {
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:10px; cursor:pointer;
+      transition:background .12s; margin-bottom:2px; position:relative;
+    }
+    .vt-nav-item:hover { background:rgba(255,255,255,0.05); }
+    .vt-nav-item.active { background:rgba(201,149,42,0.1); border:1px solid rgba(201,149,42,0.18); }
+    .vt-nav-item.active::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:55%; background:#e8b84b; border-radius:0 3px 3px 0; }
+    .vt-nav-item.active .vt-nav-name { color:#e8b84b; }
+    .vt-nav-icon { font-size:18px; flex-shrink:0; }
+    .vt-nav-name { font-size:12px; font-weight:600; color:#c0c0c0; display:block; line-height:1.3; }
+    .vt-nav-desc { font-size:10px; color:#5a5a5a; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .vt-nav-badge { font-size:9px; font-weight:700; background:#2d6a4f; color:#fff; padding:2px 6px; border-radius:20px; flex-shrink:0; }
+    .vt-nav-badge.real { background:#1a6ef7; }
+
+    .vt-sub { padding-left:14px; }
+    .vt-sub-item {
+      display:flex; align-items:center; gap:6px;
+      padding:7px 10px; border-radius:8px; cursor:pointer;
+      font-size:11px; color:#5a5a5a; transition:color .12s,background .12s; margin-bottom:1px;
+    }
+    .vt-sub-item:hover { color:#c0c0c0; background:rgba(255,255,255,0.04); }
+    .vt-sub-item.active { color:#52b788; font-weight:600; }
+    .vt-sub-item::before { content:'└'; opacity:.25; font-size:9px; }
+
+    .vt-mode-row { padding:10px 8px; border-top:1px solid rgba(255,255,255,0.05); display:flex; gap:5px; flex-shrink:0; }
+    .vt-mode-btn { flex:1; padding:7px 4px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:#5a5a5a; cursor:pointer; font-family:'Inter',sans-serif; font-size:10px; font-weight:600; transition:all .12s; }
+    .vt-mode-btn.active { background:rgba(201,149,42,0.12); border-color:rgba(201,149,42,0.25); color:#e8b84b; }
+
+    /* Viewer */
+    .vt-viewer { flex:1; position:relative; overflow:hidden; background:#000; }
+    #vt-panorama { width:100%; height:100%; }
+    #vt-streetview { width:100%; height:100%; display:none; }
+    #vt-streetview.active { display:block; }
+    #vt-panorama.active { display:block; }
+
+    .vt-loading { position:absolute; inset:0; background:rgba(13,17,23,0.96); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; z-index:20; transition:opacity .3s; }
+    .vt-loading.hidden { opacity:0; pointer-events:none; }
+    .vt-ring { width:44px; height:44px; border-radius:50%; border:3px solid rgba(255,255,255,0.06); border-top-color:#e8b84b; animation:spin .8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .vt-load-text { font-size:11px; color:#5a5a5a; letter-spacing:.1em; font-weight:600; }
+
+    .vt-info {
+      position:absolute; top:16px; right:16px;
+      background:rgba(0,0,0,0.5); backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:12px; padding:12px 16px; max-width:200px; z-index:10;
+    }
+    .vt-info-title { font-size:11px; font-weight:700; color:#e8b84b; margin-bottom:3px; }
+    .vt-info-desc { font-size:10px; color:rgba(255,255,255,0.6); line-height:1.45; }
+    .vt-info-coords { font-size:9px; color:#5a5a5a; margin-top:6px; font-family:monospace; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px; }
+
+    .vt-controls { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:10; }
+    .vt-ctrl { width:46px; height:46px; border-radius:50%; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s; user-select:none; }
+    .vt-ctrl:hover { background:rgba(255,255,255,0.18); transform:scale(1.08); }
+    .vt-ctrl:active { transform:scale(.94); }
+    .vt-ctrl.fwd { width:52px; height:52px; font-size:20px; background:rgba(201,149,42,0.25); border-color:rgba(201,149,42,0.35); }
+
+    .vt-gmap-ph { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; background:linear-gradient(135deg,#0d1117,#1a2332); padding:24px; }
+    .vt-gmap-icon { font-size:48px; }
+    .vt-gmap-title { font-size:16px; font-weight:700; color:#f0f0f0; text-align:center; }
+    .vt-gmap-desc { font-size:12px; color:#5a5a5a; text-align:center; max-width:320px; line-height:1.6; }
+    .vt-api-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+    .vt-api-input { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 14px; color:#f0f0f0; font-family:'Inter',sans-serif; font-size:12px; outline:none; width:260px; }
+    .vt-api-input:focus { border-color:rgba(201,149,42,0.4); }
+    .vt-api-go { background:#c9952a; color:#0a0a0a; border:none; border-radius:10px; padding:10px 18px; font-family:'Inter',sans-serif; font-weight:700; font-size:12px; cursor:pointer; }
+
+    @media(max-width:600px){
+      .vt-sidebar { width:100%; height:180px; flex-direction:row; border-right:none; border-bottom:1px solid rgba(255,255,255,0.06); }
+      .vt-sidebar-hdr { display:none; }
+      .vt-nav { display:flex; flex-direction:row; gap:6px; padding:10px; white-space:nowrap; overflow-x:auto; overflow-y:hidden; }
+      .vt-group-label { display:none; }
+      .vt-nav-item { flex-direction:column; align-items:center; text-align:center; min-width:80px; padding:8px 6px; flex-shrink:0; }
+      .vt-nav-item::before,.vt-nav-desc { display:none; }
+      .vt-sub,.vt-mode-row { display:none!important; }
+      .vtour-body { flex-direction:column; }
+      .vt-viewer { flex:1; min-height:300px; }
+      .vt-info { display:none; }
+    }
   </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 </head>
 <body>
 
@@ -284,6 +445,20 @@
       <div class="near-card" onclick="near('hospital')"><span class="near-icon">🏥</span><span class="near-label" id="t-hospital">Shifoxona</span></div>
       <div class="near-card" onclick="near('pharmacy')"><span class="near-icon">💊</span><span class="near-label" id="t-pharmacy">Dorixona</span></div>
     </div>
+
+    <!-- VIRTUAL TOUR BUTTON -->
+    <div class="vtour-cta" onclick="openVirtualTour()">
+      <div class="vtour-cta-left">
+        <div class="vtour-icon">🌐</div>
+        <div>
+          <div class="vtour-title" id="t-vtour-title">Virtual Sayohat</div>
+          <div class="vtour-sub" id="t-vtour-sub">360° Parkentni kashf et</div>
+        </div>
+      </div>
+      <div class="vtour-arrow">↗</div>
+      <div class="vtour-pulse"></div>
+    </div>
+
   </main>
 
   <footer><div class="footer-text">System 2026 · Safe Parkent</div></footer>
@@ -322,6 +497,123 @@
       <div class="stop-bar-sub"   id="t-stop-sub">Har 10 soniyada yangilanadi</div>
     </div>
     <button class="stop-btn" id="t-stop-btn" onclick="stopLive()">To'xtatish</button>
+  </div>
+
+
+  <!-- VIRTUAL TOUR OVERLAY -->
+  <div class="vtour-overlay" id="vtour-overlay">
+
+    <!-- Top bar -->
+    <div class="vtour-topbar">
+      <div class="vtour-location">
+        <div class="vtloc-dot"></div>
+        <div>
+          <div class="vtloc-name" id="vt-loc-name">Tuman Kiraverishi — Parkent</div>
+          <div class="vtloc-coords" id="vt-loc-coords">41.2991° N, 69.6826° E</div>
+        </div>
+      </div>
+      <div class="vtour-tbactions">
+        <button class="vt-btn" onclick="vtOpenMaps()">🗺️ Maps</button>
+        <button class="vt-btn" onclick="vtFullscreen()">⛶ To'liq</button>
+        <button class="vt-btn close" onclick="closeVirtualTour()">✕ Yopish</button>
+      </div>
+    </div>
+
+    <div class="vtour-body">
+
+      <!-- Sidebar nav -->
+      <aside class="vt-sidebar">
+        <div class="vt-sidebar-hdr">
+          <div class="vt-sidebar-logo">PARKENT TUMANI</div>
+          <div class="vt-sidebar-title">Virtual Sayohat</div>
+        </div>
+        <nav class="vt-nav">
+
+          <div class="vt-group-label">Kirish</div>
+          <div class="vt-nav-item active" id="vnav-entrance" onclick="vtLoad('entrance')">
+            <span class="vt-nav-icon">🏛️</span>
+            <span><span class="vt-nav-name">Tumanga Xush Kelibsiz</span><span class="vt-nav-desc">Tuman kiraverishi</span></span>
+          </div>
+
+          <div class="vt-group-label">Asosiy</div>
+          <div class="vt-nav-item" id="vnav-center" onclick="vtLoad('center')">
+            <span class="vt-nav-icon">🏙️</span>
+            <span><span class="vt-nav-name">Tuman Markazi</span><span class="vt-nav-desc">Markaziy ko'cha</span></span>
+          </div>
+
+          <div class="vt-group-label">Turizm</div>
+          <div class="vt-nav-item" id="vnav-eco" onclick="vtToggleSub('eco',this)">
+            <span class="vt-nav-icon">🌿</span>
+            <span><span class="vt-nav-name">Eko Turizm</span><span class="vt-nav-desc">Kumushkan, Sukok</span></span>
+            <span class="vt-nav-badge real">📍</span>
+          </div>
+          <div class="vt-sub" id="vsub-eco" style="display:block">
+            <div class="vt-sub-item active" onclick="vtLoad('eco_main')">🗺️ Asosiy Ko'rinish</div>
+            <div class="vt-sub-item" onclick="vtLoad('kumushkan')">🏔️ Kumushkan</div>
+            <div class="vt-sub-item" onclick="vtLoad('sukok')">🌊 Sukok</div>
+          </div>
+
+          <div class="vt-nav-item" id="vnav-gastro" onclick="vtToggleSub('gastro',this)">
+            <span class="vt-nav-icon">🍢</span>
+            <span><span class="vt-nav-name">Gastro Turizm</span><span class="vt-nav-desc">Shaslik, mahalliy taomlar</span></span>
+            <span class="vt-nav-badge">2</span>
+          </div>
+          <div class="vt-sub" id="vsub-gastro" style="display:none">
+            <div class="vt-sub-item" onclick="vtLoad('shaslik')">🔥 Shaslik Rastasi</div>
+            <div class="vt-sub-item" onclick="vtLoad('bozor')">🛒 Mahalliy Bozor</div>
+          </div>
+
+          <div class="vt-nav-item" id="vnav-sights" onclick="vtToggleSub('sights',this)">
+            <span class="vt-nav-icon">🕌</span>
+            <span><span class="vt-nav-name">Ziyoratgohlar</span><span class="vt-nav-desc">Ali Buva va boshq.</span></span>
+            <span class="vt-nav-badge">2</span>
+          </div>
+          <div class="vt-sub" id="vsub-sights" style="display:none">
+            <div class="vt-sub-item" onclick="vtLoad('alibuva')">🕌 Ali Buva</div>
+            <div class="vt-sub-item" onclick="vtLoad('park')">🌳 Sayr Bog'i</div>
+          </div>
+
+        </nav>
+        <div class="vt-mode-row">
+          <button class="vt-mode-btn active" id="vtbtn-pnlm" onclick="vtSetMode('pannellum')">🖼️ 360°</button>
+          <button class="vt-mode-btn" id="vtbtn-sv" onclick="vtSetMode('streetview')">🗺️ Street View</button>
+        </div>
+      </aside>
+
+      <!-- Viewer -->
+      <div class="vt-viewer" id="vt-viewer">
+        <div class="vt-loading" id="vt-loading">
+          <div class="vt-ring"></div>
+          <div class="vt-load-text" id="vt-load-text">YUKLANMOQDA...</div>
+        </div>
+
+        <div class="vt-info" id="vt-info">
+          <div class="vt-info-title" id="vt-info-title">Tuman Kiraverishi</div>
+          <div class="vt-info-desc" id="vt-info-desc">Parkent tumaniga xush kelibsiz!</div>
+          <div class="vt-info-coords" id="vt-info-coords">41.2991, 69.6826</div>
+        </div>
+
+        <div id="vt-panorama" class="active"></div>
+        <div id="vt-streetview"></div>
+
+        <div id="vt-gmap-ph" class="vt-gmap-ph" style="display:none">
+          <div class="vt-gmap-icon">🗺️</div>
+          <div class="vt-gmap-title">Google Street View</div>
+          <div class="vt-gmap-desc">Street View uchun Google Maps API kalitini kiriting. Bepul: <strong>console.cloud.google.com</strong></div>
+          <div class="vt-api-row">
+            <input type="text" class="vt-api-input" id="vt-api-input" placeholder="AIza... (Google Maps API Key)">
+            <button class="vt-api-go" onclick="vtInitGoogleMaps()">Ulash</button>
+          </div>
+        </div>
+
+        <div class="vt-controls">
+          <button class="vt-ctrl" onclick="vtTurnLeft()">◀</button>
+          <button class="vt-ctrl fwd" onclick="vtMoveForward()">▲</button>
+          <button class="vt-ctrl" onclick="vtTurnRight()">▶</button>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- LANG PANEL -->
@@ -919,5 +1211,271 @@ async function getWeather(){
 }
 getWeather(); applyLang(currentLang); checkGps();
 </script>
+
+<!-- ── VIRTUAL TOUR JS ── -->
+<script>
+const VT_SCENES = {
+  entrance: { id:'entrance', navId:'entrance', name:"Tumanga Xush Kelibsiz", nameShort:"Tuman Kiraverishi", desc:"Parkent tumaniga xush kelibsiz! Bu yerdan sayohatingizni boshlang.", lat:41.2991, lng:69.6826, img:null },
+  center:   { id:'center',   navId:'center',   name:"Tuman Markazi",         nameShort:"Markaziy Ko'cha",    desc:"Parkent tuman markazining asosiy ko'chasi va markaziy maydon.",  lat:41.3001, lng:69.6850, img:null },
+  eco_main: { id:'eco_main', navId:'eco',       name:"Eko Turizm Maskani",    nameShort:"Eko Turizm",         desc:"Parkentning go'zal tog' havosi va yashil tabiat qo'ynidagi eko-turizm maskani.", lat:41.277723, lng:69.709866, img:null, real:true },
+  kumushkan:{ id:'kumushkan',navId:'eco',       name:"Kumushkan Tog' Maskani",nameShort:"Kumushkan",          desc:"Tog'lar orasidagi go'zal Kumushkan kurort maskani.",             lat:41.3200, lng:69.7500, img:null },
+  sukok:    { id:'sukok',    navId:'eco',       name:"Sukok Qishlog'i",       nameShort:"Sukok",              desc:"Tog' etaklaridagi tarixiy va go'zal Sukok qishlog'i.",           lat:41.3450, lng:69.7100, img:null },
+  shaslik:  { id:'shaslik',  navId:'gastro',    name:"Shaslik Rastasi",       nameShort:"Gastro — Shaslik",   desc:"Parkentning mashhur shaslik rastasi.",                          lat:41.2985, lng:69.6810, img:null },
+  bozor:    { id:'bozor',    navId:'gastro',    name:"Mahalliy Bozor",        nameShort:"Gastro — Bozor",     desc:"Yangi mevalar, sabzavotlar va mahalliy taomlar bilan to'la bozor.", lat:41.2970, lng:69.6800, img:null },
+  alibuva:  { id:'alibuva',  navId:'sights',    name:"Ali Buva Ziyoratgohi",  nameShort:"Ali Buva",           desc:"Parkentdagi tarixiy ziyoratgoh — Ali Buva maqbarasi.",           lat:41.2950, lng:69.6750, img:null },
+  park:     { id:'park',     navId:'sights',    name:"Markaziy Sayr Bog'i",   nameShort:"Sayr Bog'i",         desc:"Oilalar uchun chiroyli sayr qilish joyi va dam olish bog'i.",    lat:41.3010, lng:69.6840, img:null },
+};
+
+let vtScene = VT_SCENES.eco_main;
+let vtMode  = 'pannellum';
+let vtPnlm  = null;
+let vtGoogleLoaded = false;
+let vtStreetPano   = null;
+
+// ── OPEN / CLOSE ───────────────────────────────────────────
+window.openVirtualTour = function() {
+  document.getElementById('vtour-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => vtLoad('eco_main'), 200);
+};
+
+window.closeVirtualTour = function() {
+  document.getElementById('vtour-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if(vtPnlm){ try{ vtPnlm.destroy(); }catch(e){} vtPnlm=null; }
+};
+
+// ── LOAD SCENE ─────────────────────────────────────────────
+window.vtLoad = function(id) {
+  const s = VT_SCENES[id]; if(!s) return;
+  vtScene = s;
+
+  // Nav highlight
+  document.querySelectorAll('.vt-nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.vt-sub-item').forEach(el => el.classList.remove('active'));
+  const navEl = document.getElementById('vnav-' + s.navId);
+  if(navEl) navEl.classList.add('active');
+  // highlight sub-item
+  document.querySelectorAll('.vt-sub-item').forEach(el => {
+    if(el.textContent.toLowerCase().includes(s.nameShort.toLowerCase().split(' ')[0].toLowerCase()))
+      el.classList.add('active');
+  });
+
+  // Update info bar
+  document.getElementById('vt-loc-name').textContent = s.name + ' — Parkent';
+  document.getElementById('vt-loc-coords').textContent = s.lat.toFixed(4) + '° N, ' + s.lng.toFixed(4) + '° E';
+  document.getElementById('vt-info-title').textContent = s.nameShort;
+  document.getElementById('vt-info-desc').textContent  = s.desc;
+  document.getElementById('vt-info-coords').textContent= s.lat + ', ' + s.lng;
+
+  vtShowLoading(s.name);
+
+  if(vtMode === 'pannellum') vtLoadPannellum(s);
+  else                       vtLoadStreetView(s);
+};
+
+// ── PANNELLUM ──────────────────────────────────────────────
+function vtLoadPannellum(s) {
+  document.getElementById('vt-panorama').classList.add('active');
+  document.getElementById('vt-streetview').classList.remove('active');
+  document.getElementById('vt-gmap-ph').style.display = 'none';
+
+  if(vtPnlm){ try{ vtPnlm.destroy(); }catch(e){} vtPnlm=null; }
+
+  // If image provided
+  if(s.img) {
+    vtPnlm = pannellum.viewer('vt-panorama', {
+      type:'equirectangular', panorama:s.img, autoLoad:true,
+      autoRotate:-2, compass:false, showControls:false,
+      mouseZoom:true, hfov:100, minHfov:50, maxHfov:130, friction:0.15,
+      onLoad: vtHideLoading,
+      onError: () => vtDrawPlaceholder(s),
+    });
+  } else {
+    vtDrawPlaceholder(s);
+  }
+}
+
+function vtDrawPlaceholder(s) {
+  vtHideLoading();
+  const canvas = document.createElement('canvas');
+  canvas.width=2048; canvas.height=1024;
+  const c = canvas.getContext('2d');
+
+  // Sky
+  const skyColors = {
+    eco_main:['#0a2818','#1a5c3a','#2d6a4f'],
+    kumushkan:['#0a1628','#1a3a5c','#2d5a7f'],
+    sukok:['#0d1f2d','#1a4060','#2d7a9f'],
+    entrance:['#1a1200','#3a2a00','#c9952a'],
+    center:['#0a0a1a','#1a1a3a','#2a2a6a'],
+    shaslik:['#1a0a00','#3a1500','#b5451b'],
+    bozor:['#0a1a00','#1a3a00','#2d6a10'],
+    alibuva:['#1a0a2a','#2a1a4a','#4a2a7a'],
+    park:['#0a1a0a','#1a3a1a','#2d6a2d'],
+  };
+  const colors = skyColors[s.id] || ['#0a1628','#1a3a5c','#2d5a8f'];
+  const sky = c.createLinearGradient(0,0,0,700);
+  sky.addColorStop(0, colors[0]);
+  sky.addColorStop(0.5, colors[1]);
+  sky.addColorStop(1, colors[2]);
+  c.fillStyle=sky; c.fillRect(0,0,2048,700);
+
+  // Ground
+  const gnd=c.createLinearGradient(0,700,0,1024);
+  gnd.addColorStop(0,'#111a11'); gnd.addColorStop(1,'#080d08');
+  c.fillStyle=gnd; c.fillRect(0,700,2048,324);
+
+  // Stars
+  for(let i=0;i<180;i++){
+    c.beginPath();
+    c.arc(Math.random()*2048,Math.random()*450,Math.random()*1.2+0.3,0,Math.PI*2);
+    c.fillStyle=`rgba(255,255,255,${Math.random()*.7+.2})`; c.fill();
+  }
+
+  // Mountains
+  c.fillStyle='rgba(0,0,0,0.5)'; c.beginPath(); c.moveTo(0,1024);
+  [0,120,280,420,580,740,900,1060,1200,1360,1520,1700,1900,2048].forEach((x,i)=>{
+    c.lineTo(x, 520+Math.sin(i*0.7)*150+Math.cos(i*1.2)*70);
+  });
+  c.lineTo(2048,1024); c.closePath(); c.fill();
+
+  // Label
+  c.font='bold 52px sans-serif'; c.textAlign='center';
+  c.fillStyle='rgba(255,255,255,0.12)';
+  c.fillText(s.name,1024,490);
+  c.font='22px sans-serif'; c.fillStyle='rgba(255,255,255,0.07)';
+  c.fillText('📍 ' + s.lat + ', ' + s.lng, 1024, 540);
+  c.fillText("360° rasm qo'yish uchun img: panoramaN.jpg", 1024, 580);
+
+  if(s.real){
+    c.font='bold 28px sans-serif'; c.fillStyle='rgba(82,183,136,0.6)';
+    c.fillText('✓ Haqiqiy koordinata', 1024, 630);
+  }
+
+  try{
+    vtPnlm = pannellum.viewer('vt-panorama',{
+      type:'equirectangular', panorama:canvas.toDataURL(),
+      autoLoad:true, autoRotate:-1.5, compass:false, showControls:false,
+      mouseZoom:true, hfov:100,
+    });
+  }catch(e){ vtHideLoading(); }
+}
+
+// ── STREET VIEW ────────────────────────────────────────────
+function vtLoadStreetView(s) {
+  const key = localStorage.getItem('gmaps_api_key')||'';
+  if(!key){
+    document.getElementById('vt-panorama').classList.remove('active');
+    document.getElementById('vt-streetview').classList.remove('active');
+    document.getElementById('vt-gmap-ph').style.display='flex';
+    vtHideLoading(); return;
+  }
+  document.getElementById('vt-panorama').classList.remove('active');
+  document.getElementById('vt-streetview').classList.add('active');
+  document.getElementById('vt-gmap-ph').style.display='none';
+
+  if(!vtGoogleLoaded){
+    const script=document.createElement('script');
+    script.src=`https://maps.googleapis.com/maps/api/js?key=${key}&callback=vtGoogleReady`;
+    script.async=true; document.head.appendChild(script);
+    window.vtGoogleReady=()=>{ vtGoogleLoaded=true; vtInitSV(s); };
+  } else { vtInitSV(s); }
+}
+
+function vtInitSV(s){
+  const pos={lat:s.lat,lng:s.lng};
+  if(vtStreetPano){ vtStreetPano.setPosition(pos); vtHideLoading(); return; }
+  vtStreetPano=new google.maps.StreetViewPanorama(
+    document.getElementById('vt-streetview'),
+    {position:pos,pov:{heading:165,pitch:0},zoom:1,
+     addressControl:false,fullscreenControl:false,enableCloseButton:false}
+  );
+  vtStreetPano.addListener('status_changed',()=>{ vtHideLoading(); });
+}
+
+window.vtInitGoogleMaps = function(){
+  const key=document.getElementById('vt-api-input').value.trim();
+  if(!key||!key.startsWith('AIza')){ return; }
+  localStorage.setItem('gmaps_api_key',key);
+  vtShowLoading('Google Maps ulanmoqda...');
+  vtLoadStreetView(vtScene);
+};
+
+// ── CONTROLS ───────────────────────────────────────────────
+window.vtTurnLeft  = function(){ if(vtPnlm) vtPnlm.setYaw(vtPnlm.getYaw()-30,true); else if(vtStreetPano){const p=vtStreetPano.getPov();vtStreetPano.setPov({heading:p.heading-30,pitch:p.pitch});} };
+window.vtTurnRight = function(){ if(vtPnlm) vtPnlm.setYaw(vtPnlm.getYaw()+30,true); else if(vtStreetPano){const p=vtStreetPano.getPov();vtStreetPano.setPov({heading:p.heading+30,pitch:p.pitch});} };
+window.vtMoveForward = function(){ if(vtPnlm) vtPnlm.setHfov(vtPnlm.getHfov()-8,true); else if(vtStreetPano){const l=vtStreetPano.getLinks();if(l&&l.length)vtStreetPano.setPano(l[0].pano);} };
+
+window.vtSetMode = function(mode){
+  vtMode=mode;
+  document.getElementById('vtbtn-pnlm').classList.toggle('active',mode==='pannellum');
+  document.getElementById('vtbtn-sv').classList.toggle('active',mode==='streetview');
+  vtLoad(vtScene.id);
+};
+
+window.vtToggleSub = function(group,el){
+  el.classList.toggle('expanded');
+  const sub=document.getElementById('vsub-'+group);
+  if(sub) sub.style.display=el.classList.contains('expanded')?'block':'none';
+};
+
+window.vtOpenMaps = function(){
+  window.open('https://www.google.com/maps?q='+vtScene.lat+','+vtScene.lng,'_blank');
+};
+window.vtFullscreen = function(){
+  const v=document.getElementById('vtour-overlay');
+  if(!document.fullscreenElement) v.requestFullscreen?.();
+  else document.exitFullscreen?.();
+};
+
+// ── LOADING ────────────────────────────────────────────────
+function vtShowLoading(txt){
+  const el=document.getElementById('vt-loading');
+  el.classList.remove('hidden');
+  if(txt) document.getElementById('vt-load-text').textContent=txt.toUpperCase().slice(0,30)+'...';
+}
+function vtHideLoading(){
+  setTimeout(()=>document.getElementById('vt-loading').classList.add('hidden'),500);
+}
+
+// add vtour labels to T translations
+const vtLabels={
+  uz:{vtTitle:'Virtual Sayohat',vtSub:"360° Parkentni kashf et"},
+  ru:{vtTitle:'Виртуальный Тур',vtSub:"360° Исследуйте Паркент"},
+  en:{vtTitle:'Virtual Tour',   vtSub:"Explore Parkent in 360°"},
+  zh:{vtTitle:'虚拟游览',        vtSub:"360°探索帕尔肯特"},
+  ar:{vtTitle:'جولة افتراضية',  vtSub:"استكشف باركنت بزاوية 360°"},
+  tr:{vtTitle:'Sanal Tur',      vtSub:"Parkent'i 360° keşfedin"},
+  kk:{vtTitle:'Виртуалды тур',  vtSub:"Паркентті 360° зерттеңіз"},
+  tg:{vtTitle:'Гашти виртуалӣ', vtSub:"Паркентро дар 360° омӯзед"},
+};
+
+// Hook into existing applyLang
+const _origApplyLang = window.applyLang;
+// We patch after DOMContentLoaded when applyLang is defined
+document.addEventListener('DOMContentLoaded', ()=>{
+  const origApply = window.applyLang;
+  if(origApply){
+    window.applyLang = function(code){
+      origApply(code);
+      const lbl = vtLabels[code]||vtLabels['uz'];
+      const t1=document.getElementById('t-vtour-title');
+      const t2=document.getElementById('t-vtour-sub');
+      if(t1) t1.textContent=lbl.vtTitle;
+      if(t2) t2.textContent=lbl.vtSub;
+    };
+    // apply current lang label
+    const cur=localStorage.getItem('bb_lang')||'uz';
+    const lbl=vtLabels[cur]||vtLabels['uz'];
+    const t1=document.getElementById('t-vtour-title');
+    const t2=document.getElementById('t-vtour-sub');
+    if(t1) t1.textContent=lbl.vtTitle;
+    if(t2) t2.textContent=lbl.vtSub;
+  }
+});
+
+</script>
+
 </body>
 </html>
