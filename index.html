@@ -96,7 +96,7 @@
     .sos-btn { background:var(--accent); border-radius:var(--radius); padding:24px 16px; display:flex; flex-direction:column; justify-content:space-between; cursor:pointer; position:relative; overflow:hidden; transition:transform .12s,box-shadow .12s; box-shadow:0 4px 20px rgba(230,57,70,.35); min-height:160px; }
     .sos-btn::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.18),transparent 55%); pointer-events:none; }
     .sos-btn:active { transform:scale(.97); }
-    .sos-btn.tracking::after { content:''; position:absolute; inset:-3px; border-radius:calc(var(--radius)+3px); border:2px solid rgba(255,100,100,.6); animation:ring-p 1.2s infinite; }
+    .sos-mini.tracking::after { content:''; position:absolute; inset:-3px; border-radius:17px; border:2px solid rgba(255,100,100,.6); animation:ring-p 1.2s infinite; }
     @keyframes ring-p { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:scale(1.03)} }
     .sos-top { display:flex; align-items:flex-start; justify-content:space-between; }
     .sos-label { font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.65); }
@@ -721,9 +721,8 @@
     @keyframes plan-p{0%{transform:translateY(-50%) scale(1);opacity:.6}100%{transform:translateY(-50%) scale(2.4);opacity:0}}
 
     /* OVERLAY */
-    .plan-overlay{position:fixed;inset:0;z-index:600;background:#09090f;
-      display:none;flex-direction:column;font-family:'Inter',sans-serif;overflow:hidden;}
-    .plan-overlay.open{display:flex;}
+    
+    
 
     /* TOPBAR */
     .plan-top{background:rgba(9,9,15,0.98);backdrop-filter:blur(12px);
@@ -1369,9 +1368,367 @@
     .adslider-arr.left { left: 8px; }
     .adslider-arr.right { right: 8px; }
     .adslider-arr:active { transform: translateY(-50%) scale(0.9); }
+
+    /* ══ QAYTA LOYIHALANGAN ASOSIY MENYU ════════════════════ */
+
+    /* Virtual Tour hero card */
+    .vt-hero-card {
+      position:relative; overflow:hidden;
+      border-radius:20px; cursor:pointer;
+      height:140px;
+      background:linear-gradient(135deg,#0a1628 0%,#0e2d52 50%,#0a3d6b 100%);
+      border:1px solid rgba(26,110,247,0.25);
+      box-shadow:0 6px 24px rgba(26,110,247,0.2);
+      transition:transform .12s,box-shadow .12s;
+      display:flex; flex-direction:column; justify-content:space-between;
+      padding:16px 18px;
+    }
+    .vt-hero-card:active { transform:scale(.98); }
+    .vt-hero-bg {
+      position:absolute; right:-10px; bottom:-10px;
+      font-size:88px; opacity:0.12; line-height:1;
+      pointer-events:none;
+    }
+    .vt-hero-top { display:flex; align-items:center; justify-content:space-between; }
+    .vt-hero-badge {
+      display:inline-flex; align-items:center; gap:5px;
+      background:rgba(26,110,247,0.25);
+      border:1px solid rgba(26,110,247,0.4);
+      border-radius:50px; padding:4px 10px;
+      font-size:9px; font-weight:800; letter-spacing:.15em;
+      text-transform:uppercase; color:#6bb8f0;
+    }
+    .vt-hero-live {
+      width:5px; height:5px; border-radius:50%;
+      background:#52b788; animation:blink 1.5s infinite;
+    }
+    .vt-hero-arr { font-size:16px; color:rgba(255,255,255,0.3); }
+    .vt-hero-title {
+      font-size:19px; font-weight:800; color:#fff;
+      letter-spacing:-.4px; line-height:1.2;
+    }
+    .vt-hero-title span { color:#6bb8f0; }
+    .vt-hero-sub { font-size:11px; color:rgba(255,255,255,0.45); margin-top:2px; }
+
+    /* Kichik reja card */
+    .plan-mini {
+      background:linear-gradient(135deg,#12082a,#1e1040);
+      border:1px solid rgba(124,58,237,0.2);
+      border-radius:16px; padding:14px 16px;
+      display:flex; align-items:center; gap:12px;
+      cursor:pointer;
+      box-shadow:0 4px 16px rgba(124,58,237,0.15);
+      transition:transform .12s;
+    }
+    .plan-mini:active { transform:scale(.97); }
+    .plan-mini-icon { font-size:24px; flex-shrink:0; }
+    .plan-mini-text { flex:1; }
+    .plan-mini-title { font-size:14px; font-weight:700; color:#fff; }
+    .plan-mini-sub { font-size:10px; color:rgba(255,255,255,0.35); margin-top:1px; }
+    .plan-mini-arr { font-size:16px; color:rgba(255,255,255,0.25); }
+
+    /* 4-qator grid — asosiy funksiyalar */
+    .func-grid {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+    }
+    .func-card {
+      border-radius:16px; padding:12px 6px 10px;
+      display:flex; flex-direction:column;
+      align-items:center; gap:6px;
+      cursor:pointer; transition:transform .12s, box-shadow .12s;
+      position:relative; overflow:hidden;
+      border:1px solid transparent;
+    }
+    .func-card:active { transform:scale(.93); }
+    .func-card-ico { font-size:26px; line-height:1; }
+    .func-card-lbl {
+      font-size:9px; font-weight:700;
+      letter-spacing:.04em; text-transform:uppercase;
+      text-align:center; line-height:1.3;
+    }
+
+    /* Rang temalar */
+    .fc-taxi {
+      background:linear-gradient(145deg,#2a1400,#5a2800);
+      border-color:rgba(244,130,10,0.25);
+    }
+    .fc-taxi .func-card-lbl { color:#f4820a; }
+
+    .fc-eco {
+      background:linear-gradient(145deg,#0a1f0a,#1a4020);
+      border-color:rgba(45,106,79,0.3);
+    }
+    .fc-eco .func-card-lbl { color:#52b788; }
+
+    .fc-choy {
+      background:linear-gradient(145deg,#1a0f00,#3d2200);
+      border-color:rgba(180,120,40,0.25);
+    }
+    .fc-choy .func-card-lbl { color:#c8901a; }
+
+    .fc-fuel {
+      background:linear-gradient(145deg,#0a0a20,#1a1a40);
+      border-color:rgba(100,100,200,0.2);
+    }
+    .fc-fuel .func-card-lbl { color:#8888dd; }
+
+    .fc-food {
+      background:linear-gradient(145deg,#200a0a,#481515);
+      border-color:rgba(200,60,60,0.2);
+    }
+    .fc-food .func-card-lbl { color:#e07070; }
+
+    .fc-loc {
+      background:linear-gradient(145deg,#0a1020,#162040);
+      border-color:rgba(26,110,247,0.2);
+    }
+    .fc-loc .func-card-lbl { color:#6bb8f0; }
+
+    .fc-hosp {
+      background:linear-gradient(145deg,#0a1f10,#0f3020);
+      border-color:rgba(26,180,80,0.2);
+    }
+    .fc-hosp .func-card-lbl { color:#4cbb6a; }
+
+    .fc-pharm {
+      background:linear-gradient(145deg,#1a0a20,#2d1040);
+      border-color:rgba(160,80,220,0.2);
+    }
+    .fc-pharm .func-card-lbl { color:#b070dd; }
+
+    /* Choyxona modal */
+    .choy-overlay {
+      position:fixed; inset:0; z-index:600;
+      background:rgba(0,0,0,0.6); backdrop-filter:blur(6px);
+      display:flex; flex-direction:column; justify-content:flex-end;
+      opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    .choy-overlay.open { opacity:1; pointer-events:all; }
+    .choy-panel {
+      background:var(--bg); border-radius:26px 26px 0 0;
+      max-height:80dvh; display:flex; flex-direction:column;
+      transform:translateY(100%);
+      transition:transform .32s cubic-bezier(.32,1.1,.6,1);
+    }
+    .choy-overlay.open .choy-panel { transform:translateY(0); }
+    .choy-hdr {
+      padding:18px 18px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .choy-hdr-left { display:flex; align-items:center; gap:10px; }
+    .choy-hdr-icon { font-size:22px; }
+    .choy-hdr-title { font-size:16px; font-weight:800; color:var(--text); }
+    .choy-hdr-sub { font-size:11px; color:var(--text-muted); margin-top:1px; }
+    .choy-close { background:var(--surface2); border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; color:var(--text-muted); }
+
+    /* Kategoriya tabs */
+    .choy-tabs { display:flex; gap:7px; padding:14px 18px 0; flex-shrink:0; }
+    .choy-tab {
+      padding:7px 16px; border-radius:50px;
+      border:1.5px solid var(--border);
+      background:transparent; color:var(--text-muted);
+      font-size:12px; font-weight:700; cursor:pointer;
+      font-family:'Inter',sans-serif; transition:all .14s;
+      display:flex; align-items:center; gap:5px;
+    }
+    .choy-tab.active {
+      background:rgba(200,144,26,0.15);
+      border-color:rgba(200,144,26,0.4); color:#c8901a;
+    }
+
+    .choy-list { flex:1; overflow-y:auto; padding:12px 18px 24px; display:flex; flex-direction:column; gap:10px; }
+    .choy-card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:14px;
+      display:flex; align-items:flex-start; gap:12px;
+      cursor:pointer; transition:all .13s;
+    }
+    .choy-card:active { transform:scale(.98); background:var(--surface2); }
+    .choy-card-ico {
+      width:44px; height:44px; border-radius:12px;
+      background:linear-gradient(135deg,#2a1800,#5a3000);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; flex-shrink:0;
+    }
+    .choy-card-body { flex:1; min-width:0; }
+    .choy-card-name { font-size:14px; font-weight:700; color:var(--text); }
+    .choy-card-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+    .choy-tag {
+      font-size:10px; font-weight:600; padding:2px 7px;
+      border-radius:20px; background:var(--surface2); color:var(--text-muted);
+    }
+    .choy-tag.g { background:rgba(45,106,79,0.15); color:#52b788; }
+    .choy-tag.o { background:rgba(200,144,26,0.12); color:#c8901a; }
+    .choy-card-info { display:flex; align-items:center; gap:6px; margin-top:6px; }
+    .choy-card-rating { font-size:11px; font-weight:700; color:#e8b84b; }
+    .choy-card-dist { font-size:10px; color:var(--text-muted); }
+    .choy-card-arr { font-size:16px; color:var(--text-muted); flex-shrink:0; align-self:center; }
+
+    /* SOS/Tez yordam — kichik, pastda */
+    .emergency-mini {
+      display:grid; grid-template-columns:1fr 1fr; gap:8px;
+    }
+    .sos-mini {
+      background:var(--accent);
+      border-radius:14px; padding:12px 14px;
+      display:flex; align-items:center; gap:10px;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:transform .12s;
+      box-shadow:0 4px 16px rgba(230,57,70,.25);
+    }
+    .sos-mini:active { transform:scale(.96); }
+    .sos-mini::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(circle at 20% 50%,rgba(255,255,255,.15),transparent 60%);
+      pointer-events:none;
+    }
+    .sos-mini-icon { font-size:22px; flex-shrink:0; }
+    .sos-mini-text { display:flex; flex-direction:column; gap:1px; }
+    .sos-mini-label { font-size:9px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.6); }
+    .sos-mini-title { font-size:15px; font-weight:900; color:#fff; letter-spacing:-.5px; }
+    .sos-live-badge { display:none; align-items:center; gap:3px; margin-top:2px; background:rgba(255,255,255,.18); border-radius:50px; padding:2px 7px; width:fit-content; }
+    .sos-live-badge.show { display:flex; }
+    .live-dot { width:4px; height:4px; border-radius:50%; background:#fff; animation:pdot .9s infinite; }
+    .live-txt { font-size:8px; font-weight:800; color:#fff; letter-spacing:.1em; text-transform:uppercase; }
+
+    .amb-mini {
+      background:var(--accent2);
+      border-radius:14px; padding:12px 14px;
+      display:flex; align-items:center; gap:10px;
+      cursor:pointer; transition:transform .12s;
+      box-shadow:0 4px 16px rgba(26,110,247,.25);
+    }
+    .amb-mini:active { transform:scale(.96); }
+    .amb-mini-icon { font-size:22px; flex-shrink:0; }
+    .amb-mini-label { font-size:9px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.6); }
+    .amb-mini-title { font-size:14px; font-weight:800; color:#fff; }
+
+    /* ── TOP FEATURE ROW ─────────────────────────────────── */
+    .top-feature-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+    .top-feature {
+      position:relative; overflow:hidden;
+      border-radius:18px; padding:16px 14px;
+      cursor:pointer; min-height:110px;
+      display:flex; flex-direction:column; justify-content:space-between;
+      transition:transform .12s; border:1px solid transparent;
+    }
+    .top-feature:active { transform:scale(.96); }
+
+    .eco-feature {
+      background:linear-gradient(145deg,#061a0c,#0f3520,#1a5c35);
+      border-color:rgba(82,183,136,0.2);
+      box-shadow:0 4px 20px rgba(45,106,79,.25);
+    }
+    .choy-feature {
+      background:linear-gradient(145deg,#1a0d00,#3d2000,#6b3800);
+      border-color:rgba(200,144,26,0.2);
+      box-shadow:0 4px 20px rgba(180,120,40,.2);
+    }
+
+    .top-feat-bg {
+      position:absolute; right:-6px; bottom:-8px;
+      font-size:60px; opacity:0.15; line-height:1; pointer-events:none;
+    }
+    .top-feat-badge {
+      display:inline-block;
+      background:rgba(255,255,255,0.1);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:50px; padding:3px 9px;
+      font-size:9px; font-weight:700; color:rgba(255,255,255,.7);
+      letter-spacing:.06em; margin-bottom:8px; width:fit-content;
+    }
+    .eco-feature .top-feat-badge { background:rgba(82,183,136,0.15); border-color:rgba(82,183,136,0.3); color:#52b788; }
+    .choy-feature .top-feat-badge { background:rgba(200,144,26,0.15); border-color:rgba(200,144,26,0.3); color:#c8901a; }
+
+    .top-feat-content { position:relative; z-index:1; }
+    .top-feat-title { font-size:16px; font-weight:800; color:#fff; letter-spacing:-.3px; }
+    .top-feat-sub { font-size:10px; color:rgba(255,255,255,.45); margin-top:3px; }
+    .top-feat-arr { font-size:15px; color:rgba(255,255,255,.3); align-self:flex-end; position:relative; z-index:1; }
+
+    /* ══ ZAMONAVIY CHOYXONA MODAL ════════════════════════ */
+
+    /* Header */
+    .choy-overlay { position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);display:flex;flex-direction:column;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .25s; }
+    .choy-overlay.open { opacity:1;pointer-events:all; }
+    .choy-panel { background:var(--bg);border-radius:26px 26px 0 0;max-height:92dvh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,1.1,.6,1); }
+    .choy-overlay.open .choy-panel { transform:translateY(0); }
+
+    .choy-hdr { padding:18px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0; }
+    .choy-hdr-left { display:flex;align-items:center;gap:10px; }
+    .choy-hdr-icon { font-size:22px; }
+    .choy-hdr-title { font-size:16px;font-weight:800;color:var(--text); }
+    .choy-hdr-sub { font-size:11px;color:var(--text-muted);margin-top:1px; }
+    .choy-close { background:var(--surface2);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--text-muted); }
+
+    /* Tabs */
+    .choy-tabs { display:flex;gap:7px;padding:12px 18px 0;flex-shrink:0;overflow-x:auto;scrollbar-width:none; }
+    .choy-tabs::-webkit-scrollbar { display:none; }
+    .choy-tab { padding:7px 16px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .14s;display:flex;align-items:center;gap:5px;white-space:nowrap; }
+    .choy-tab.active { background:rgba(200,144,26,0.15);border-color:rgba(200,144,26,0.4);color:#c8901a; }
+
+    /* List */
+    .choy-list { flex:1;overflow-y:auto;padding:12px 18px 24px;display:flex;flex-direction:column;gap:10px; }
+
+    /* Card */
+    .choy-card { background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:all .15s; }
+    .choy-card:active { transform:scale(.98); }
+    .choy-card-top { padding:14px 14px 10px;display:flex;align-items:flex-start;gap:12px; }
+    .choy-card-ico { width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#2a1800,#5a3000);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0; }
+    .choy-card-body { flex:1;min-width:0; }
+    .choy-card-name { font-size:14px;font-weight:700;color:var(--text); }
+    .choy-card-meta { display:flex;align-items:center;gap:8px;margin-top:4px; }
+    .choy-rating { font-size:12px;font-weight:700;color:#e8b84b; }
+    .choy-dist { font-size:11px;color:var(--text-muted); }
+    .choy-cat-badge { font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(200,144,26,0.12);color:#c8901a;letter-spacing:.05em;text-transform:uppercase; }
+    .choy-card-tags { display:flex;flex-wrap:wrap;gap:4px;margin-top:6px; }
+    .choy-tag { font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--surface2);color:var(--text-muted); }
+    .choy-tag.g { background:rgba(45,106,79,0.15);color:#52b788; }
+    .choy-tag.o { background:rgba(200,144,26,0.12);color:#c8901a; }
+    .choy-card-arr { font-size:18px;color:var(--text-muted);flex-shrink:0; }
+
+    /* VIZUAL XARITA — joy rejasi */
+    .choy-map { padding:0 14px 12px; }
+    .choy-map-title { font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+    .choy-layout { background:var(--surface2);border-radius:12px;padding:12px;position:relative;overflow:hidden; }
+    .choy-layout-svg { width:100%;height:auto;display:block; }
+
+    /* Krovat qator */
+    .seats-row { padding:0 14px 14px; }
+    .seats-title { font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+    .seats-grid { display:flex;flex-wrap:wrap;gap:6px; }
+    .seat {
+      width:36px;height:36px;border-radius:8px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:700;cursor:pointer;
+      border:1.5px solid transparent;
+      transition:all .14s;
+    }
+    .seat.free { background:rgba(26,158,82,0.15);border-color:rgba(26,158,82,0.3);color:#52b788; }
+    .seat.free:hover { background:rgba(26,158,82,0.3);transform:scale(1.08); }
+    .seat.taken { background:rgba(244,130,10,0.1);border-color:rgba(244,130,10,0.25);color:#f4820a;cursor:default; }
+    .seat.selected { background:#1a9e52;border-color:#1a9e52;color:#fff;transform:scale(1.1); }
+
+    /* Bron footer */
+    .choy-bron-bar { padding:12px 14px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px; }
+    .choy-bron-info { font-size:12px;color:var(--text-muted); }
+    .choy-bron-info strong { color:var(--text);font-size:13px; }
+    .choy-bron-btn { background:linear-gradient(135deg,#1a9e52,#2d6a4f);border:none;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .1s;white-space:nowrap; }
+    .choy-bron-btn:active { transform:scale(.96); }
+    .choy-bron-btn:disabled { background:var(--surface2);color:var(--text-muted);cursor:default; }
+
+    /* Bron muvaffaqiyat toast */
+    .bron-success { display:none;padding:12px 14px;background:rgba(26,158,82,0.1);border:1px solid rgba(26,158,82,0.2);border-radius:12px;margin:0 14px 14px;font-size:12px;color:#52b788;font-weight:600;text-align:center; }
+    .bron-success.show { display:block; }
+
+    /* Google Maps embed in choy */
+    .choy-gmap { padding:0 14px 0; }
+    .choy-gmap iframe { width:100%;height:160px;border-radius:12px;border:none;display:block; }
+    .choy-gmap-label { font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
   </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
-<script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 </head>
 <body>
 
@@ -1419,7 +1776,7 @@
 
   <div class="status-strip online" id="status-strip">
     <div class="status-dot"></div>
-    <div class="status-text" id="t-status">Tizim faol · Xizmat ko'rsatishga tayyor</div>
+    <div class="status-text" id="t-status">Tizim faol — xizmatga tayyor</div>
     <div class="status-gps" id="status-gps">📍</div>
   </div>
 
@@ -1427,183 +1784,200 @@
 
     <!-- ── REKLAMA BANNERI ── -->
     <div class="adslider-wrap" id="adslider"
-         onmousedown="adDragStart(event)"
-         ontouchstart="adTouchStart(event)"
-         onmouseup="adDragEnd(event)"
-         ontouchend="adTouchEnd(event)"
-         onmousemove="adDragMove(event)"
-         ontouchmove="adTouchMove(event)">
-
+         onmousedown="adDragStart(event)" ontouchstart="adTouchStart(event)"
+         onmouseup="adDragEnd(event)"     ontouchend="adTouchEnd(event)"
+         onmousemove="adDragMove(event)"  ontouchmove="adTouchMove(event)">
       <div class="adslider-track" id="adtrack">
-
-        <!-- Slide 1: Eko Turizm -->
-        <div class="adslide adslide-1">
-          <div class="ad-ad-badge">Reklama</div>
-          <div class="ad-deco">🌿</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>Aksiya · Bahor 2026</div>
-            <div class="ad-title">Kumushkanda<br><em>20% chegirma</em></div>
-            <div class="ad-sub">Oila bilan kelishingizda katta chegirma. Erta bron qilgan — arzon!</div>
-            <div class="ad-bottom">
-              <div class="ad-cta" onclick="goEco()">Marshrut ko'rish →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">Sukok · Kumushkan</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 2: Shaslik -->
-        <div class="adslide adslide-2">
-          <div class="ad-ad-badge">Reklama</div>
-          <div class="ad-deco">🍢</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>Gastronomiya</div>
-            <div class="ad-title">Parkent shashligi —<br><em>haqiqiy ta'm</em></div>
-            <div class="ad-sub">Akbar aka rastasi: 40 yillik an'ana. Hafta oxirida 2 porsiya — 1 narxida!</div>
-            <div class="ad-bottom">
-              <div class="ad-cta" onclick="near('restaurant')">Restoranlar →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">Markaziy bozor yonida</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 3: Virtual Sayohat -->
-        <div class="adslide adslide-3">
-          <div class="ad-ad-badge">Yangilik</div>
-          <div class="ad-deco">🌐</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>360° Virtual Tour</div>
-            <div class="ad-title">Uydan turib<br><em>Parkentni kashf et</em></div>
-            <div class="ad-sub">BEK·BOLA virtual sayohat xizmati ishga tushdi. Panorama va Street View bepul!</div>
-            <div class="ad-bottom">
-              <div class="ad-cta" onclick="openVirtualTour()">Virtual sayohat →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">Bepul · 360°</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 4: Navro'z -->
-        <div class="adslide adslide-4">
-          <div class="ad-ad-badge">Tadbir</div>
-          <div class="ad-deco">🎉</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>21 Mart · Navroz 2026</div>
-            <div class="ad-title">Parkent Navroz<br><em>festivali</em></div>
-            <div class="ad-sub">Milliy o'yinlar, xalq taomlar ko'rgazmasi, kontsert. Oila bilan keling!</div>
-            <div class="ad-bottom">
-              <div class="ad-cta" onclick="openPlan()">Reja tuzish →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">Tuman maydoni</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 5: Taxi 1054 -->
-        <div class="adslide adslide-5">
-          <div class="ad-ad-badge">Xizmat</div>
-          <div class="ad-deco">🚕</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>24/7 · Parkent ichki taxi</div>
-            <div class="ad-title">Taxi <em>1054</em> —<br>tez va qulay</div>
-            <div class="ad-sub">Parkent ichida istalgan joyga. Kishi soniga mos avtomobil. Kecha ham, kunduz ham.</div>
-            <div class="ad-bottom">
-              <div class="ad-cta" onclick="callTaxi()">Qo'ng'iroq qilish →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">1054 raqami</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 6: Reklama joyi -->
-        <div class="adslide adslide-6">
-          <div class="ad-deco">📢</div>
-          <div class="adslide-content">
-            <div class="ad-label"><div class="ad-label-dot"></div>Reklama uchun bo'sh joy</div>
-            <div class="ad-title">Bu joy sizning<br><em>reklamangiz</em> uchun</div>
-            <div class="ad-sub">Parkentdagi biznesingizni 10 000+ foydalanuvchiga tanishtiring. Arzon narxlarda.</div>
-            <div class="ad-bottom">
-              <div class="ad-cta">Bog'lanish →</div>
-              <span style="font-size:11px;color:rgba(255,255,255,0.4)">bekbola@parkent.uz</span>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /adtrack -->
-
-      <!-- Arrow buttons -->
-      <div class="adslider-arr left" onclick="adGo(-1)">‹</div>
-      <div class="adslider-arr right" onclick="adGo(1)">›</div>
-
-    </div><!-- /adslider-wrap -->
-
-    <!-- Dots -->
+        <div class="adslide adslide-1"><div class="ad-ad-badge">Reklama</div><div class="ad-deco">🌿</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Aksiya · Bahor 2026</div><div class="ad-title">Kumushkonda<br><em>20% chegirma</em></div><div class="ad-sub">Oila bilan tashrif buyurishingizda katta chegirma. Erta band qilgan — tejamkor!</div><div class="ad-bottom"><div class="ad-cta" onclick="goEco()">Yo'nalishni ko'rish →</div></div></div></div>
+        <div class="adslide adslide-2"><div class="ad-ad-badge">Reklama</div><div class="ad-deco">🍢</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Gastronomiya</div><div class="ad-title">Parkent shashligi —<br><em>haqiqiy ta'm</em></div><div class="ad-sub">Akbar usta: 30 yillik an'anaviy retsept. Hafta oxirida 2 porsiya — 1 narxida!</div><div class="ad-bottom"><div class="ad-cta" onclick="near('restaurant')">Restoranlar →</div></div></div></div>
+        <div class="adslide adslide-3"><div class="ad-ad-badge">Yangilik</div><div class="ad-deco">🌐</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>360° Virtual Sayohat</div><div class="ad-title">Uydan turib<br><em>Parkentni kashf et</em></div><div class="ad-sub">BEK·BOLA virtual sayohat xizmati ishga tushdi. Bepul!</div><div class="ad-bottom"><div class="ad-cta" onclick="openVirtualTour()">Boshlash →</div></div></div></div>
+        <div class="adslide adslide-4"><div class="ad-ad-badge">Tadbir</div><div class="ad-deco">🎉</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>21 Mart · Navroz 2026</div><div class="ad-title">Parkent Navroz<br><em>festivali</em></div><div class="ad-sub">Milliy o'yinlar, xalq taomlar ko'rgazmasi, konsert. Oila bilan keling!</div><div class="ad-bottom"><div class="ad-cta" onclick="openPlan()">Reja tuzish →</div></div></div></div>
+        <div class="adslide adslide-5"><div class="ad-ad-badge">Xizmat</div><div class="ad-deco">🚕</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>24/7 Parkent taxi</div><div class="ad-title">Taxi <em>1054</em> —<br>tez va qulay</div><div class="ad-sub">Istalgan manzilga. Kishi soniga mos avtomobil. Kecha-kunduz.</div><div class="ad-bottom"><div class="ad-cta" onclick="callTaxi()">Qo'ng'iroq →</div></div></div></div>
+        <div class="adslide adslide-6"><div class="ad-deco">📢</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Reklama joyi</div><div class="ad-title">Bu joy sizning<br><em>reklamangiz</em> uchun</div><div class="ad-sub">Minglab foydalanuvchiga biznesingizni tanishtiring.</div><div class="ad-bottom"><div class="ad-cta">Bog'lanish →</div></div></div></div>
+      </div>
+      <div class="adslider-arr left" onclick="adGo(-1)">&#x2039;</div>
+      <div class="adslider-arr right" onclick="adGo(1)">&#x203a;</div>
+    </div>
     <div class="adslider-dots" id="addots"></div>
 
-
-    <!-- ── 1. KUNLIK REJA (birinchi — eng muhim qaror) ── -->
-    <div class="plan-cta" onclick="openPlan()">
-      <div class="plan-cta-left">
-        <div class="plan-cta-icon">🗓️</div>
-        <div>
-          <div class="plan-cta-title" id="t-plan-title">Kunlik Reja</div>
-          <div class="plan-cta-sub" id="t-plan-sub">BEK·BOLA bilan bugungi sayohatingizni rejalashtiring</div>
+    <!-- ── EKO TURIZM + CHOYXONALAR (yuqorida, alohida) ── -->
+    <div class="top-feature-row">
+      <div class="top-feature eco-feature" onclick="goEco()">
+        <div class="top-feat-bg">🏔️</div>
+        <div class="top-feat-content">
+          <div class="top-feat-badge">📍 41.277723, 69.709866</div>
+          <div class="top-feat-title" id="t-eco">Eko Turizm</div>
+          <div class="top-feat-sub">Kumushkon · So'qoq · Tabiat</div>
         </div>
+        <div class="top-feat-arr">↗</div>
       </div>
-      <div class="plan-cta-arr">↗</div>
-      <div class="plan-cta-pulse"></div>
+      <div class="top-feature choy-feature" onclick="openChoyxona()">
+        <div class="top-feat-bg">🍵</div>
+        <div class="top-feat-content">
+          <div class="top-feat-badge">6 ta choyxona</div>
+          <div class="top-feat-title">Choyxonalar</div>
+          <div class="top-feat-sub">Oila · Ulfatlar</div>
+        </div>
+        <div class="top-feat-arr">↗</div>
+      </div>
     </div>
 
-    <!-- ── 2. VIRTUAL TOUR ── -->
-    <div class="vtour-cta" onclick="openVirtualTour()">
-      <div class="vtour-cta-left">
-        <div class="vtour-icon">🌐</div>
-        <div>
-          <div class="vtour-title" id="t-vtour-title">Virtual Sayohat</div>
-          <div class="vtour-sub" id="t-vtour-sub">360° Parkentni kashf et</div>
-        </div>
+    <!-- ── VIRTUAL SAYOHAT hero ── -->
+    <div class="vt-hero-card" onclick="openVirtualTour()">
+      <div class="vt-hero-bg">🌐</div>
+      <div class="vt-hero-top">
+        <div class="vt-hero-badge"><div class="vt-hero-live"></div>360° Street View</div>
+        <div class="vt-hero-arr">↗</div>
       </div>
-      <div class="vtour-arrow">↗</div>
-      <div class="vtour-pulse"></div>
+      <div>
+        <div class="vt-hero-title" id="t-vtour-title">Virtual Sayohat</div>
+        <div class="vt-hero-sub" id="t-vtour-sub">Parkent kiraverishi — Kumushkon — Hazrati Ali Buva</div>
+      </div>
     </div>
 
-    <!-- ── 3. TAXI + EKO (kunlik ehtiyoj) ── -->
+    <!-- ── KUNLIK REJA ── -->
+    <div class="plan-mini" onclick="openPlan()">
+      <div class="plan-mini-icon">🗓️</div>
+      <div class="plan-mini-text">
+        <div class="plan-mini-title" id="t-plan-title">Kunlik Reja</div>
+        <div class="plan-mini-sub" id="t-plan-sub">BEK·BOLA bilan bugungi sayohatingizni rejalashtiring</div>
+      </div>
+      <div class="plan-mini-arr">↗</div>
+    </div>
+
+    <!-- ── TAXI + LOC ── -->
     <div class="row">
-      <div class="card taxi" onclick="callTaxi()"><div class="card-icon">🚕</div><div class="card-title" id="t-taxi">Taxi</div><div class="card-sub" id="t-taxi-sub">1054 ga qo'ng'iroq</div><div class="card-arrow">↗</div></div>
-      <div class="card eco"  onclick="goEco()"><div class="card-icon">🌿</div><div class="card-title" id="t-eco">Eko Turizm</div><div class="card-sub" id="t-eco-sub">Marshrut ko'rish</div><div class="card-arrow">↗</div></div>
-    </div>
-
-    <!-- ── 4. JOYLASHUV ── -->
-    <div class="loc-btn" onclick="myLoc()">
-      <div class="loc-left">
-        <div class="loc-icon-wrap">📍</div>
-        <div><div class="loc-title" id="t-loc">Joylashuvim</div><div class="loc-sub" id="t-loc-sub">Haritada ko'rish</div></div>
+      <div class="card taxi" onclick="callTaxi()">
+        <div class="card-icon">🚕</div>
+        <div class="card-title" id="t-taxi">Taxi</div>
+        <div class="card-sub" id="t-taxi-sub">1054 raqamiga qo'ng'iroq</div>
+        <div class="card-arrow">↗</div>
       </div>
-      <span style="font-size:18px;color:var(--text-muted)">↗</span>
+      <div class="card" onclick="myLoc()">
+        <div class="card-icon">📍</div>
+        <div class="card-title" id="t-loc">Joylashuvim</div>
+        <div class="card-sub" id="t-loc-sub">Xaritada ko'rish</div>
+        <div class="card-arrow">↗</div>
+      </div>
     </div>
 
-    <!-- ── 5. YAQIN JOYLAR ── -->
+    <!-- ── 4 TA YAQIN JOY ── -->
     <div class="near-grid">
-      <div class="near-card" onclick="near('gas+station')"><span class="near-icon">⛽️</span><span class="near-label" id="t-fuel">Yoqilg'i</span></div>
-      <div class="near-card" onclick="near('restaurant')"><span class="near-icon">🍽</span><span class="near-label" id="t-food">Ovqat</span></div>
-      <div class="near-card" onclick="near('hospital')"><span class="near-icon">🏥</span><span class="near-label" id="t-hospital">Shifoxona</span></div>
-      <div class="near-card" onclick="near('pharmacy')"><span class="near-icon">💊</span><span class="near-label" id="t-pharmacy">Dorixona</span></div>
+      <div class="near-card" onclick="near('gas+station')">
+        <span class="near-icon">⛽</span>
+        <span class="near-label" id="t-fuel">Yoqilg'i</span>
+      </div>
+      <div class="near-card" onclick="near('restaurant')">
+        <span class="near-icon">🍽️</span>
+        <span class="near-label" id="t-food">Ovqat</span>
+      </div>
+      <div class="near-card" onclick="near('hospital')">
+        <span class="near-icon">🏥</span>
+        <span class="near-label" id="t-hospital">Shifoxona</span>
+      </div>
+      <div class="near-card" onclick="near('pharmacy')">
+        <span class="near-icon">💊</span>
+        <span class="near-label" id="t-pharmacy">Dorixona</span>
+      </div>
     </div>
 
-    <!-- ── 6. SOS + TEZ YORDAM (pastda, ko'zga tashlanadi lekin bosim yo'q) ── -->
-    <div class="emergency-row">
-      <div class="sos-btn" id="sos-btn" onclick="openModal('SOS')">
-        <div class="sos-top"><span class="sos-label" id="t-sos-label">Favqulodda</span><span class="sos-emoji">🆘</span></div>
-        <div>
-          <div class="sos-num">SOS</div>
-          <div class="sos-sub" id="t-sos-sub">Signal yuborish</div>
-          <div class="sos-live-badge" id="sos-live-badge"><div class="live-dot"></div><span class="live-txt" id="t-live">JONLI</span></div>
+    <!-- ── SOS + TEZ YORDAM — kichik, pastda ── -->
+    <div class="emergency-mini">
+      <div class="sos-mini" id="sos-btn" onclick="openModal('SOS')">
+        <div class="sos-mini-icon">🆘</div>
+        <div class="sos-mini-text">
+          <div class="sos-mini-label" id="t-sos-label">Favqulodda</div>
+          <div class="sos-mini-title">SOS</div>
+          <div class="sos-live-badge" id="sos-live-badge">
+            <div class="live-dot"></div>
+            <span class="live-txt" id="t-live">JONLI</span>
+          </div>
         </div>
       </div>
-      <div class="amb-btn" onclick="openModal('TEZ_YORDAM')">
-        <div class="amb-top"><span class="amb-label" id="t-amb-label">Shoshilinch</span><span class="amb-emoji">🚑</span></div>
-        <div><div class="amb-title" id="t-amb">Tez Yordam</div><div class="amb-sub" id="t-amb-sub">103 raqam</div></div>
-        <div class="amb-arrow">↗</div>
+      <div class="amb-mini" onclick="openModal('TEZ_YORDAM')">
+        <div class="amb-mini-icon">🚑</div>
+        <div>
+          <div class="amb-mini-label" id="t-amb-label">Shoshilinch</div>
+          <div class="amb-mini-title" id="t-amb">Tez Yordam</div>
+        </div>
       </div>
     </div>
 
   </main>
+
+  <!-- ── CHOYXONA MODAL ── -->
+  <div class="choy-overlay" id="choy-overlay" onclick="closeChoyOutside(event)">
+    <div class="choy-panel">
+
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon">🍵</div>
+          <div>
+            <div class="choy-hdr-title">Parkent Choyxonalari</div>
+            <div class="choy-hdr-sub">Joy band qiling — oila va ulfatlar uchun</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeChoy()">✕</button>
+      </div>
+
+      <div class="choy-tabs">
+        <div class="choy-tab active" onclick="filterChoy('all',this)">🍵 Hammasi</div>
+        <div class="choy-tab" onclick="filterChoy('oila',this)">👨‍👩‍👧 Oila</div>
+        <div class="choy-tab" onclick="filterChoy('ulfat',this)">👫 Ulfatlar</div>
+      </div>
+
+      <!-- Ro'yxat (birinchi ekran) -->
+      <div class="choy-list" id="choy-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+
+      <!-- Choyxona kartasi (ikkinchi ekran) -->
+      <div id="choy-detail" style="display:none;flex:1;overflow-y:auto;padding-bottom:20px;">
+
+        <div style="padding:14px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);">
+          <button onclick="backToList()" style="background:var(--surface2);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;">←</button>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:var(--text)" id="det-name">Choyxona</div>
+            <div style="font-size:11px;color:var(--text-muted)" id="det-meta">⭐ 4.8 · 0.3 km</div>
+          </div>
+        </div>
+
+        <!-- Google Maps embed -->
+        <div class="choy-gmap">
+          <div style="height:8px;"></div>
+          <div class="choy-gmap-label">Aniq manzil — Google Maps</div>
+          <iframe id="det-map" src="" loading="lazy" allowfullscreen></iframe>
+        </div>
+
+        <!-- Vizual joy rejasi (SVG) -->
+        <div class="choy-map" style="margin-top:12px;">
+          <div class="choy-map-title">Choyxona rejasi</div>
+          <div class="choy-layout" id="det-layout">
+            <!-- SVG dinamik render qilinadi -->
+          </div>
+        </div>
+
+        <!-- Xontaxta / krovat tanlash -->
+        <div class="seats-row" style="margin-top:12px;">
+          <div class="seats-title">Bo'sh joylar tanlang</div>
+          <div class="seats-grid" id="seats-grid"></div>
+        </div>
+
+        <!-- Bron muvaffaqiyat xabari -->
+        <div class="bron-success" id="bron-success">✅ Joy muvaffaqiyatli band qilindi! Tasdiqlash SMS yuborildi.</div>
+
+        <!-- Bron paneli -->
+        <div class="choy-bron-bar">
+          <div class="choy-bron-info">
+            Tanlangan: <strong id="sel-count">0 ta joy</strong>
+          </div>
+          <button class="choy-bron-btn" id="bron-btn" onclick="doBronChoy()" disabled>
+            Band qilish
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   <footer><div class="footer-text">System 2026 · Safe Parkent</div></footer>
   <div class="toast" id="toast"></div>
@@ -1744,7 +2118,7 @@
 
           <div class="plan-alert-box">
             <span>⚠️</span>
-            <div class="pab-txt" id="plan-alert">Bugun Kumushkan dam olish zonasida kishi ko'p. Tong soat 7–9 da borish tavsiya etiladi.</div>
+            <div class="pab-txt" id="plan-alert">Bugun Kumushkon dam olish zonasida kishi ko'p. Tong soat 7–9 da borish tavsiya etiladi.</div>
           </div>
 
           <div class="rsec">
@@ -1876,13 +2250,13 @@
           <div class="vt-group-label">Turizm</div>
           <div class="vt-nav-item" id="vnav-eco" onclick="vtToggleSub('eco',this)">
             <span class="vt-nav-icon">🌿</span>
-            <span><span class="vt-nav-name">Eko Turizm</span><span class="vt-nav-desc">Kumushkan, Sukok</span></span>
+            <span><span class="vt-nav-name">Eko Turizm</span><span class="vt-nav-desc">Kumushkon, So'qoq vodiysi</span></span>
             <span class="vt-nav-badge real">📍</span>
           </div>
           <div class="vt-sub" id="vsub-eco" style="display:block">
             <div class="vt-sub-item active" onclick="vtLoad('eco_main')">🗺️ Asosiy Ko'rinish</div>
-            <div class="vt-sub-item" onclick="vtLoad('kumushkan')">🏔️ Kumushkan</div>
-            <div class="vt-sub-item" onclick="vtLoad('sukok')">🌊 Sukok</div>
+            <div class="vt-sub-item" onclick="vtLoad('kumushkon')">🏔️ Kumushkon</div>
+            <div class="vt-sub-item" onclick="vtLoad('soqoq')">🌊 So'qoq</div>
           </div>
 
           <div class="vt-nav-item" id="vnav-gastro" onclick="vtToggleSub('gastro',this)">
@@ -1901,48 +2275,102 @@
             <span class="vt-nav-badge">2</span>
           </div>
           <div class="vt-sub" id="vsub-sights" style="display:none">
-            <div class="vt-sub-item" onclick="vtLoad('alibuva')">🕌 Ali Buva</div>
-            <div class="vt-sub-item" onclick="vtLoad('park')">🌳 Sayr Bog'i</div>
+            <div class="vt-sub-item" onclick="vtLoad('alibuva')">🕌 Hazrati Ali Buva</div>
+            <div class="vt-sub-item" onclick="vtLoad('quyosh')">☀️ Quyosh Instituti</div>
           </div>
 
         </nav>
         <div class="vt-mode-row">
-          <button class="vt-mode-btn active" id="vtbtn-pnlm" onclick="vtSetMode('pannellum')">🖼️ 360°</button>
-          <button class="vt-mode-btn" id="vtbtn-sv" onclick="vtSetMode('streetview')">🗺️ Street View</button>
+          <button class="vt-mode-btn" id="vtbtn-map" onclick="vtSetMode('map')">🗺️ Xarita</button>
+          <button class="vt-mode-btn active" id="vtbtn-sv" onclick="vtSetMode('street')">📸 Street View</button>
         </div>
       </aside>
 
       <!-- Viewer -->
       <div class="vt-viewer" id="vt-viewer">
-        <div class="vt-loading" id="vt-loading">
-          <div class="vt-ring"></div>
-          <div class="vt-load-text" id="vt-load-text">YUKLANMOQDA...</div>
-        </div>
 
-        <div class="vt-info" id="vt-info">
-          <div class="vt-info-title" id="vt-info-title">Tuman Kiraverishi</div>
-          <div class="vt-info-desc" id="vt-info-desc">Parkent tumaniga xush kelibsiz!</div>
-          <div class="vt-info-coords" id="vt-info-coords">41.2991, 69.6826</div>
-        </div>
+        <!-- Haqiqiy Google Street View JS API -->
+        <div id="sv-container" style="width:100%;height:100%;"></div>
 
-        <div id="vt-panorama" class="active"></div>
-        <div id="vt-streetview"></div>
-
-        <div id="vt-gmap-ph" class="vt-gmap-ph" style="display:none">
-          <div class="vt-gmap-icon">🗺️</div>
-          <div class="vt-gmap-title">Google Street View</div>
-          <div class="vt-gmap-desc">Street View uchun Google Maps API kalitini kiriting. Bepul: <strong>console.cloud.google.com</strong></div>
-          <div class="vt-api-row">
-            <input type="text" class="vt-api-input" id="vt-api-input" placeholder="AIza... (Google Maps API Key)">
-            <button class="vt-api-go" onclick="vtInitGoogleMaps()">Ulash</button>
+        <!-- Info overlay -->
+        <div id="vt-info-overlay" style="
+          position:absolute;top:14px;left:14px;
+          background:rgba(0,0,0,0.55);backdrop-filter:blur(12px);
+          border:1px solid rgba(255,255,255,0.12);
+          border-radius:14px;padding:12px 16px;
+          max-width:210px;z-index:10;pointer-events:none;
+        ">
+          <div id="vt-real-badge" style="
+            display:none;align-items:center;gap:5px;
+            background:rgba(26,158,82,0.9);border-radius:50px;
+            padding:3px 10px;width:fit-content;margin-bottom:8px;
+            font-size:10px;font-weight:700;color:#fff;
+          ">
+            <div style="width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 1.5s infinite"></div>
+            Street View
           </div>
+          <div id="vt-card-title" style="font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;">Parkent Kiraverishi</div>
+          <div id="vt-card-coords" style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.4);">41.2939° N, 69.6799° E</div>
         </div>
 
-        <div class="vt-controls">
-          <button class="vt-ctrl" onclick="vtTurnLeft()">◀</button>
-          <button class="vt-ctrl fwd" onclick="vtMoveForward()">▲</button>
-          <button class="vt-ctrl" onclick="vtTurnRight()">▶</button>
+        <!-- Fallback: Google ochilmasa -->
+        <div id="sv-fallback" style="
+          display:none;position:absolute;inset:0;
+          background:#0d1117;
+          flex-direction:column;align-items:center;justify-content:center;
+          gap:16px;padding:24px;
+        ">
+          <div style="font-size:48px;">🗺️</div>
+          <div style="font-size:15px;font-weight:700;color:#f0f0f0;text-align:center;" id="sv-fallback-title">Parkent Kiraverishi</div>
+          <div style="font-size:12px;color:#5a5a5a;text-align:center;max-width:280px;line-height:1.6;" id="sv-fallback-desc">Google Street View ko'rish uchun quyidagi tugmani bosing</div>
+          <button onclick="vtOpenStreetView()" style="
+            display:flex;align-items:center;gap:8px;
+            background:#1a73e8;border:none;border-radius:50px;
+            padding:14px 28px;font-size:14px;font-weight:700;
+            color:#fff;cursor:pointer;font-family:'Inter',sans-serif;
+            box-shadow:0 4px 20px rgba(26,115,232,.45);
+          ">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            Google da Street View ochish
+          </button>
+          <button onclick="vtOpenMaps()" style="
+            background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+            border-radius:50px;padding:10px 22px;
+            font-size:13px;font-weight:600;color:#aaa;
+            cursor:pointer;font-family:'Inter',sans-serif;
+          ">🗺️ Xaritada ko'rish</button>
         </div>
+
+        <!-- Controls -->
+        <div style="
+          position:absolute;bottom:20px;right:16px;
+          display:flex;flex-direction:column;gap:8px;z-index:10;
+        ">
+          <button onclick="vtSetMode('street')" id="vtbtn-sv2" style="
+            width:40px;height:40px;border-radius:50%;
+            background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);
+            border:1px solid rgba(255,255,255,0.15);
+            color:#fff;font-size:16px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+          " title="Street View">📸</button>
+          <button onclick="vtSetMode('map')" id="vtbtn-map2" style="
+            width:40px;height:40px;border-radius:50%;
+            background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);
+            border:1px solid rgba(255,255,255,0.15);
+            color:#fff;font-size:16px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+          " title="Xarita">🗺️</button>
+          <button onclick="vtOpenStreetView()" style="
+            width:40px;height:40px;border-radius:50%;
+            background:#1a73e8;border:none;
+            color:#fff;font-size:16px;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 2px 12px rgba(26,115,232,.4);
+          " title="Googleda ochish">↗</button>
+        </div>
+
       </div>
 
     </div>
@@ -1957,6 +2385,9 @@
   </div>
 
 <script>
+function setText(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function setAttr(id,attr,val){const e=document.getElementById(id);if(e)e[attr]=val;}
+
 const FIREBASE = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
 const ECO_LAT = 41.277723, ECO_LNG = 69.709866;
 
@@ -2065,7 +2496,7 @@ const VOICE_CMDS = {
 };
 
 const T = {
-  uz:{ tagline:"Parkent Tuman Hokimligi", statusOnline:"Tizim faol · Xizmat ko'rsatishga tayyor", statusOffline:"Internet yo'q · Offline rejim", statusNoGps:"GPS o'chirilgan · Joylashuv yo'q", sosLabel:"Favqulodda", sosSub:"Signal yuborish", live:"JONLI", ambLabel:"Shoshilinch", amb:"Tez Yordam", ambSub:"103 raqam", loc:"Joylashuvim", locSub:"Haritada ko'rish", taxi:"Taxi", taxiSub:"1054 ga qo'ng'iroq", eco:"Eko Turizm", ecoSub:"Marshrut ko'rish", fuel:"Yoqilg'i", food:"Ovqat", hospital:"Shifoxona", pharmacy:"Dorixona", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent markaziga darhol yuboriladi. Bekor qilmaguncha jonli uzatiladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 ga ulanasiz.", toastSos:"✅ SOS jonli uzatish boshlandi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering", toastStopped:"⛔ SOS to'xtatildi", stopTitle:"SOS jonli uzatilmoqda", stopSub:"Har 10 soniyada yangilanadi", stopBtn:"To'xtatish", voiceLabel:"Tinglamoqda", hintTitle:"Ovozli buyruqlar", micLang:'uz-UZ' },
+  uz:{ tagline:"Parkent Tuman Hokimligi", statusOnline:"Tizim faol — xizmatga tayyor", statusOffline:"Internet yo'q · Offline rejim", statusNoGps:"GPS o'chirilgan · Joylashuv yo'q", sosLabel:"Favqulodda", sosSub:"Signal yuborish", live:"JONLI", ambLabel:"Shoshilinch", amb:"Tez Yordam", ambSub:"103 raqam", loc:"Joylashuvim", locSub:"Haritada ko'rish", taxi:"Taxi", taxiSub:"1054 ga qo'ng'iroq", eco:"Eko Turizm", ecoSub:"Yo'nalish ko'rish", fuel:"Yoqilg'i", food:"Ovqat", hospital:"Shifoxona", pharmacy:"Dorixona", langTitle:"Tilni tanlang", cancel:"Bekor", sosSend:"Yuborish", ambCall:"Ha, chaqirish", modalSosTitle:"SOS yuborilsinmi?", modalSosDesc:"Joylashuvingiz Parkent hokimiyati markaziga darhol yuboriladi. Siz to'xtatmaguncha jonli kuzatiladi.", modalAmbTitle:"Tez yordam chaqirilsinmi?", modalAmbDesc:"Joylashuvingiz yuboriladi va 103 — tez yordam xizmatiga ulanasiz.", toastSos:"✅ SOS jonli uzatish boshlandi", toastAmb:"🚑 Tez yordam chaqirilmoqda...", toastGeo:"⚠️ Joylashuvga ruxsat bering", toastStopped:"⛔ SOS to'xtatildi", stopTitle:"SOS jonli uzatilmoqda", stopSub:"Har 10 soniyada yangilanadi", stopBtn:"To'xtatish", voiceLabel:"Tinglamoqda", hintTitle:"Ovozli buyruqlar", micLang:'uz-UZ' },
   ru:{ tagline:"Паркентский районный хокимият", statusOnline:"Система активна · Готова к работе", statusOffline:"Нет интернета · Офлайн", statusNoGps:"GPS выключен · Нет геолокации", sosLabel:"Экстренно", sosSub:"Отправить сигнал", live:"ПРЯМОЙ", ambLabel:"Срочно", amb:"Скорая", ambSub:"103", loc:"Моё место", locSub:"Открыть карту", taxi:"Такси", taxiSub:"Звонок 1054", eco:"Эко Туризм", ecoSub:"Маршрут", fuel:"Заправка", food:"Еда", hospital:"Больница", pharmacy:"Аптека", langTitle:"Выберите язык", cancel:"Отмена", sosSend:"Отправить", ambCall:"Вызвать", modalSosTitle:"Отправить SOS?", modalSosDesc:"Ваше местоположение отправится в центр Паркента. Прямая трансляция до отмены.", modalAmbTitle:"Вызвать скорую?", modalAmbDesc:"Местоположение отправится и будет звонок на 103.", toastSos:"✅ SOS трансляция началась", toastAmb:"🚑 Вызываем скорую...", toastGeo:"⚠️ Дайте доступ к геолокации", toastStopped:"⛔ SOS остановлен", stopTitle:"SOS трансляция активна", stopSub:"Обновление каждые 10 сек", stopBtn:"Остановить", voiceLabel:"Слушаю", hintTitle:"Голосовые команды", micLang:'ru-RU' },
   en:{ tagline:"Parkent District Administration", statusOnline:"System active · Ready to serve", statusOffline:"No internet · Offline", statusNoGps:"GPS off · No location", sosLabel:"Emergency", sosSub:"Send signal", live:"LIVE", ambLabel:"Urgent", amb:"Ambulance", ambSub:"Call 103", loc:"My location", locSub:"Open on map", taxi:"Taxi", taxiSub:"Call 1054", eco:"Eco Tourism", ecoSub:"Get directions", fuel:"Fuel", food:"Food", hospital:"Hospital", pharmacy:"Pharmacy", langTitle:"Select language", cancel:"Cancel", sosSend:"Send", ambCall:"Yes, call", modalSosTitle:"Send SOS?", modalSosDesc:"Your location will be sent to Parkent center. Live tracking until you stop.", modalAmbTitle:"Call ambulance?", modalAmbDesc:"Location sent and call to 103 placed.", toastSos:"✅ SOS live started", toastAmb:"🚑 Calling ambulance...", toastGeo:"⚠️ Allow location access", toastStopped:"⛔ SOS stopped", stopTitle:"SOS live tracking active", stopSub:"Updates every 10 seconds", stopBtn:"Stop", voiceLabel:"Listening", hintTitle:"Voice commands", micLang:'en-US' },
   zh:{ tagline:"帕尔肯特区行政管理局", statusOnline:"系统运行中", statusOffline:"无网络·离线", statusNoGps:"GPS关闭", sosLabel:"紧急", sosSub:"发送信号", live:"直播", ambLabel:"紧急", amb:"急救", ambSub:"103", loc:"我的位置", locSub:"打开地图", taxi:"出租车", taxiSub:"1054", eco:"生态旅游", ecoSub:"路线", fuel:"加油站", food:"餐厅", hospital:"医院", pharmacy:"药店", langTitle:"选择语言", cancel:"取消", sosSend:"发送", ambCall:"呼叫", modalSosTitle:"发送SOS？", modalSosDesc:"位置将发送到帕尔肯特中心。", modalAmbTitle:"呼叫救护车？", modalAmbDesc:"将发送位置并拨打103。", toastSos:"✅ SOS开始", toastAmb:"🚑 呼叫中...", toastGeo:"⚠️ 请允许位置", toastStopped:"⛔ SOS停止", stopTitle:"SOS直播中", stopSub:"每10秒更新", stopBtn:"停止", voiceLabel:"聆听中", hintTitle:"语音命令", micLang:'zh-CN' },
@@ -2445,34 +2876,31 @@ function goEco(){
 function applyLang(code){
   currentLang=code; localStorage.setItem('bb_lang',code);
   const l=LANGS.find(x=>x.code===code), t=T[code];
-  document.getElementById('cur-flag').textContent=l.flag;
-  document.getElementById('cur-code').textContent=code.toUpperCase();
-  document.getElementById('t-tagline').textContent=t.tagline;
-  document.getElementById('t-sos-label').textContent=t.sosLabel;
-  document.getElementById('t-sos-sub').textContent=t.sosSub;
-  document.getElementById('t-live').textContent=t.live;
-  document.getElementById('t-amb-label').textContent=t.ambLabel;
-  document.getElementById('t-amb').textContent=t.amb;
-  document.getElementById('t-amb-sub').textContent=t.ambSub;
-  document.getElementById('t-loc').textContent=t.loc;
-  document.getElementById('t-loc-sub').textContent=t.locSub;
-  document.getElementById('t-taxi').textContent=t.taxi;
-  document.getElementById('t-taxi-sub').textContent=t.taxiSub;
-  document.getElementById('t-eco').textContent=t.eco;
-  document.getElementById('t-eco-sub').textContent=t.ecoSub;
-  document.getElementById('t-fuel').textContent=t.fuel;
-  document.getElementById('t-food').textContent=t.food;
-  document.getElementById('t-hospital').textContent=t.hospital;
-  document.getElementById('t-pharmacy').textContent=t.pharmacy;
-  document.getElementById('t-lang-title').textContent=t.langTitle;
-  document.getElementById('t-stop-title').textContent=t.stopTitle;
-  document.getElementById('t-stop-sub').textContent=t.stopSub;
-  document.getElementById('t-stop-btn').textContent=t.stopBtn;
+  if(!l||!t) return;
+  setText('cur-flag',l.flag);
+  setText('cur-code',code.toUpperCase());
+  setText('t-tagline',t.tagline);
+  setText('t-sos-label',t.sosLabel);
+  setText('t-live',t.live);
+  setText('t-amb-label',t.ambLabel);
+  setText('t-amb',t.amb);
+  setText('t-loc',t.loc);
+  setText('t-taxi',t.taxi);
+  setText('t-eco',t.eco);
+  setText('t-fuel',t.fuel);
+  setText('t-food',t.food);
+  setText('t-hospital',t.hospital);
+  setText('t-pharmacy',t.pharmacy);
+  setText('t-lang-title',t.langTitle);
+  setText('t-stop-title',t.stopTitle);
+  setText('t-stop-sub',t.stopSub);
+  setText('t-stop-btn',t.stopBtn);
+  setText('t-plan-title',t.planTitle||'Kunlik Reja');
+  setText('t-plan-sub',t.planSub||'');
   document.body.dir=(code==='ar')?'rtl':'ltr';
-  _voiceCache = {}; // reset TTS voice cache for new lang
+  _voiceCache={};
   updateStatus();
-  // If voice is on, restart with new lang
-  if(voiceOn){ stopVoice(); setTimeout(startVoice,300); }
+  if(voiceOn){stopVoice();setTimeout(startVoice,300);}
   document.querySelectorAll('.lang-option').forEach(el=>el.classList.toggle('active',el.dataset.code===code));
 }
 
@@ -2547,39 +2975,90 @@ getWeather(); applyLang(currentLang); checkGps();
 <!-- ── VIRTUAL TOUR JS ── -->
 <script>
 const VT_SCENES = {
-  entrance: { id:'entrance', navId:'entrance', name:"Tumanga Xush Kelibsiz", nameShort:"Tuman Kiraverishi", desc:"Parkent tumaniga xush kelibsiz! Bu yerdan sayohatingizni boshlang.", lat:41.2991, lng:69.6826, img:null },
-  center:   { id:'center',   navId:'center',   name:"Tuman Markazi",         nameShort:"Markaziy Ko'cha",    desc:"Parkent tuman markazining asosiy ko'chasi va markaziy maydon.",  lat:41.3001, lng:69.6850, img:null },
-  eco_main: { id:'eco_main', navId:'eco',       name:"Eko Turizm Maskani",    nameShort:"Eko Turizm",         desc:"Parkentning go'zal tog' havosi va yashil tabiat qo'ynidagi eko-turizm maskani.", lat:41.277723, lng:69.709866, img:null, real:true },
-  kumushkan:{ id:'kumushkan',navId:'eco',       name:"Kumushkan Tog' Maskani",nameShort:"Kumushkan",          desc:"Tog'lar orasidagi go'zal Kumushkan kurort maskani.",             lat:41.3200, lng:69.7500, img:null },
-  sukok:    { id:'sukok',    navId:'eco',       name:"Sukok Qishlog'i",       nameShort:"Sukok",              desc:"Tog' etaklaridagi tarixiy va go'zal Sukok qishlog'i.",           lat:41.3450, lng:69.7100, img:null },
-  shaslik:  { id:'shaslik',  navId:'gastro',    name:"Shaslik Rastasi",       nameShort:"Gastro — Shaslik",   desc:"Parkentning mashhur shaslik rastasi.",                          lat:41.2985, lng:69.6810, img:null },
-  bozor:    { id:'bozor',    navId:'gastro',    name:"Mahalliy Bozor",        nameShort:"Gastro — Bozor",     desc:"Yangi mevalar, sabzavotlar va mahalliy taomlar bilan to'la bozor.", lat:41.2970, lng:69.6800, img:null },
-  alibuva:  { id:'alibuva',  navId:'sights',    name:"Ali Buva Ziyoratgohi",  nameShort:"Ali Buva",           desc:"Parkentdagi tarixiy ziyoratgoh — Ali Buva maqbarasi.",           lat:41.2950, lng:69.6750, img:null },
-  park:     { id:'park',     navId:'sights',    name:"Markaziy Sayr Bog'i",   nameShort:"Sayr Bog'i",         desc:"Oilalar uchun chiroyli sayr qilish joyi va dam olish bog'i.",    lat:41.3010, lng:69.6840, img:null },
-};
+  entrance: {
+    id:'entrance', navId:'entrance',
+    name:"Tumanga Xush Kelibsiz!", nameShort:"Parkent Kiraverishi",
+    desc:"Toshkent shahridan 40 km sharqda joylashgan Parkent tumani — Chotqol tog\u02bb tizmasi yon bag\u02bbirida. 1926 yil tashkil etilgan. Aholisi 115 ming kishi. Toza havo, mevali bog\u02bblar va eko-turizm bilan mashhur.",
+    lat:41.2939393, lng:69.6799275,
+    svLat:41.3082484, svLng:69.5611148,
+    panoId:'CIHM0ogKEICAgIDP1u--WQ',
+    heading:98.44, pitch:89.81, real:true,
+    directUrl:'https://www.google.com/maps/@41.3082484,69.5611148,3a,75y,98.44h,89.81t/data=!3m6!1sCIHM0ogKEICAgIDP1u--WQ!2e10!3e11'
+  },
+  center: {
+    id:'center', navId:'center',
+    name:"Parkent Shahar Markazi", nameShort:"Tuman Markazi",
+    desc:"Parkent shahrining markaziy ko\u02bbchasi va maydon. Tuman hokimligi, bozor va asosiy infratuzilma shu yerda joylashgan. Aholi 45 ming kishi.",
+    lat:41.2974, lng:69.6796
+  },
+  eco_main: {
+    id:'eco_main', navId:'eco',
+    name:"Eko-Turizm Maskani — Kumushkon", nameShort:"Eko Turizm",
+    desc:"Kumushkon va Chashma qishloqlari 2024 yil rasman Turizm qishlog\u02bbi maqomiga sazovor bo\u02bbldi. Parkent tumaniga yiliga 900 mingdan ortiq mahalliy va 50 mingdan ortiq xorijiy sayyoh tashrif buyuradi.",
+    lat:41.277723, lng:69.709866, real:true
+  },
+  kumushkon: {
+    id:'kumushkon', navId:'eco',
+    name:"Kumushkon Dam Olish Maskani", nameShort:"Kumushkon",
+    desc:"Parkentsoy darasida, 60 gektar maydonda joylashgan dam olish maskani. 450 kishiga mo\u02bbjallangan. Mineral suvli shifobaxsh buloqlari 1400 yildan beri ziyoratgoh hisoblanadi. Ikkita ochiq havza, kottejlar va choyxona mavjud.",
+    lat:41.3089, lng:69.7441
+  },
+  soqoq: {
+    id:'soqoq', navId:'eco',
+    name:"So\u02bboqoq Tog\u02bb Hududi", nameShort:"So\u02bboqoq",
+    desc:"So\u02bboqoqsoy daryosi vodiysi — Chotqol davlat biosfera qo\u02bbriqxonasining bir qismi. Kuylovchi g\u02bbor, Odamtosh qoyatoshi, sharsharalar va zumrad ko\u02bbllar bilan mashhur. Dorivor o\u02bbsimliklar va noyob hayvonot dunyosi uchun muhim hudud.",
+    lat:41.3350, lng:69.7150
+  },
+  shaslik: {
+    id:'shaslik', navId:'gastro',
+    name:"Parkent Shaslik Rastasi", nameShort:"Gastro — Shaslik",
+    desc:"Parkent shashligi butun O\u02bborta Osiyo bo\u02bbylab mashhur. Mahalliy fermer xo\u02bbjaliklaridan ekologik toza go\u02bbsht ishlatiladi. Gastronomik turizm markazlaridan biri sifatida e\u02bbtiborga olingan.",
+    lat:41.2960, lng:69.6780
+  },
+  bozor: {
+    id:'bozor', navId:'gastro',
+    name:"Parkent Dehqon Bozori", nameShort:"Mahalliy Bozor",
+    desc:"Parkent tumani uzum yetishtirish va sifatli sharob ishlab chiqarish markazi. Bozorda mahalliy fermerlardan yangi meva-sabzavot, asal, murabbo va quritilgan mevalar sotiladi.",
+    lat:41.2960, lng:69.6780
+  },
+  alibuva: {
+    id:'alibuva', navId:'sights',
+    name:"Hazrati Ali Buva Ziyoratgohi", nameShort:"Hazrati Ali Buva",
+    desc:"Kumushkon qishlog\u02bbidagi muqaddas ziyoratgoh. Payg\u02bbambarimiz (s.a.v.) kuyovi Hazrati Ali shu yerda namoz o\u02bbqigan deb rivoyat qilinadi. Uning hassasidan o\u02bbsgan chinor daraxt bugun ham yashnab turibdi. 5 ta shifobaxsh buloq bor. 2010 yilda masjid qurilgan.",
+    lat:41.277723, lng:69.709866
+  },
+  quyosh: {
+    id:'quyosh', navId:'sights',
+    name:"Quyosh Fizikasi Instituti", nameShort:"Quyosh Instituti",
+    desc:"Toshkentdan 45 km uzoqlikdagi noyob ilmiy ob\u02bbekt. Dunyoda faqatgina ikkita bunday inshoot mavjud — biri Frantsiyada. Yiliga 280 kun quyoshli bo\u02bbladi. Sayyohlar uchun ekskursiyalar uyushtiriladi.",
+    lat:41.3050, lng:69.7200
+  },
+}
 
 let vtScene = VT_SCENES.eco_main;
-let vtMode  = 'pannellum';
-let vtPnlm  = null;
-let vtGoogleLoaded = false;
-let vtStreetPano   = null;
+let vtMode  = 'map';
 
-// ── OPEN / CLOSE ───────────────────────────────────────────
+// ── OPEN / CLOSE ────────────────────────────────────────────
 window.openVirtualTour = function() {
-  document.getElementById('vtour-overlay').classList.add('open');
+  const overlay = document.getElementById('vtour-overlay');
+  if(!overlay) return;
+  overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  setTimeout(() => vtLoad('eco_main'), 200);
+  setTimeout(() => {
+    vtMode = 'street';
+    vtLoad('entrance'); // Siz bergan pano: CIHM0ogKEICAgIDP1u--WQ
+  }, 300);
 };
 
 window.closeVirtualTour = function() {
   document.getElementById('vtour-overlay').classList.remove('open');
   document.body.style.overflow = '';
-  if(vtPnlm){ try{ vtPnlm.destroy(); }catch(e){} vtPnlm=null; }
 };
 
-// ── LOAD SCENE ─────────────────────────────────────────────
+// ── LOAD SCENE ──────────────────────────────────────────────
 window.vtLoad = function(id) {
-  const s = VT_SCENES[id]; if(!s) return;
+  const s = VT_SCENES[id];
+  if(!s) return;
   vtScene = s;
 
   // Nav highlight
@@ -2587,163 +3066,184 @@ window.vtLoad = function(id) {
   document.querySelectorAll('.vt-sub-item').forEach(el => el.classList.remove('active'));
   const navEl = document.getElementById('vnav-' + s.navId);
   if(navEl) navEl.classList.add('active');
-  // highlight sub-item
-  document.querySelectorAll('.vt-sub-item').forEach(el => {
-    if(el.textContent.toLowerCase().includes(s.nameShort.toLowerCase().split(' ')[0].toLowerCase()))
-      el.classList.add('active');
-  });
 
-  // Update info bar
-  document.getElementById('vt-loc-name').textContent = s.name + ' — Parkent';
-  document.getElementById('vt-loc-coords').textContent = s.lat.toFixed(4) + '° N, ' + s.lng.toFixed(4) + '° E';
-  document.getElementById('vt-info-title').textContent = s.nameShort;
-  document.getElementById('vt-info-desc').textContent  = s.desc;
-  document.getElementById('vt-info-coords').textContent= s.lat + ', ' + s.lng;
+  // Info bar
+  // Topbar info
+  const locName   = document.getElementById('vt-loc-name');
+  const locCoords = document.getElementById('vt-loc-coords');
+  if(locName)   locName.textContent   = s.name + ' — Parkent';
+  if(locCoords) locCoords.textContent = s.lat.toFixed(4) + '° N, ' + s.lng.toFixed(4) + '° E';
 
-  vtShowLoading(s.name);
+  // Side info panel
+  // info panel removed — using card overlay instead
+  const infoTitle  = null;
+  const infoDesc   = document.getElementById('vt-info-desc');
+  const infoCoords = document.getElementById('vt-info-coords');
+  
+  
+  
 
-  if(vtMode === 'pannellum') vtLoadPannellum(s);
-  else                       vtLoadStreetView(s);
+  vtSetIframe(s);
 };
 
-// ── PANNELLUM ──────────────────────────────────────────────
-function vtLoadPannellum(s) {
-  document.getElementById('vt-panorama').classList.add('active');
-  document.getElementById('vt-streetview').classList.remove('active');
-  document.getElementById('vt-gmap-ph').style.display = 'none';
+// ── Google Maps Embed helper ────────────────────────────────
+// ── Google Maps URL builders ───────────────────────────────
+// ── URL helpers ─────────────────────────────────────────────
+function getStreetViewUrl(s) {
+  // directUrl mavjud bo'lsa — to'g'ridan-to'g'ri Google havolasi
+  if(s.directUrl) return s.directUrl;
+  const svLat = s.svLat || s.lat;
+  const svLng = s.svLng || s.lng;
+  const heading = s.heading || 0;
+  const pitch   = s.pitch   || 0;
+  if(s.panoId) {
+    return `https://www.google.com/maps/@?api=1&map_action=pano&pano=${s.panoId}&heading=${heading}&pitch=${pitch}`;
+  }
+  return `https://www.google.com/maps/@${svLat},${svLng},3a,75y,${heading}h,${90+pitch}t/data=!3m1!1e3`;
+}
+function getMapsUrl(s) {
+  return `https://www.google.com/maps?q=${s.lat},${s.lng}&z=16`;
+}
 
-  if(vtPnlm){ try{ vtPnlm.destroy(); }catch(e){} vtPnlm=null; }
+// ── Street View JS API viewer ────────────────────────────────
+let svPanorama = null;
 
-  // If image provided
-  if(s.img) {
-    vtPnlm = pannellum.viewer('vt-panorama', {
-      type:'equirectangular', panorama:s.img, autoLoad:true,
-      autoRotate:-2, compass:false, showControls:false,
-      mouseZoom:true, hfov:100, minHfov:50, maxHfov:130, friction:0.15,
-      onLoad: vtHideLoading,
-      onError: () => vtDrawPlaceholder(s),
-    });
+function vtSetIframe(s) {
+  if(!s) return;
+  // Info overlay — null-safe
+  setText('vt-card-title',  s.name);
+  setText('vt-card-coords', s.lat.toFixed(4) + '\u00b0 N, ' + s.lng.toFixed(4) + '\u00b0 E');
+  const badge = document.getElementById('vt-real-badge');
+  if(badge) badge.style.display = (s.panoId||s.real) ? 'flex' : 'none';
+
+  // Fallback title/desc
+  const ft = document.getElementById('sv-fallback-title');
+  const fd = document.getElementById('sv-fallback-desc');
+  if(ft) ft.textContent = s.name;
+  if(fd) fd.textContent = s.desc || '';
+
+  const container = document.getElementById('sv-container');
+  const fallback  = document.getElementById('sv-fallback');
+
+  if(vtMode === 'street') {
+    // To'g'ridan-to'g'ri Google Maps Street View da ochish
+    window.open(getStreetViewUrl(s), '_blank');
+    // Ilova ichida xarita ko'rsatib turamiz
+    if(container) container.style.display = 'none';
+    if(fallback) {
+      fallback.style.display = 'flex';
+      fallback.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + s.lat + ',' + s.lng + '&z=16&output=embed" width="100%" height="100%" style="border:0;border-radius:0" allowfullscreen loading="lazy"></iframe>';
+    }
+    vtHideLoading();
   } else {
-    vtDrawPlaceholder(s);
+    // Xarita rejimi
+    if(container) container.style.display = 'none';
+    if(fallback) {
+      fallback.style.display = 'flex';
+      fallback.innerHTML = '<iframe src="https://maps.google.com/maps?q=' + s.lat + ',' + s.lng + '&z=15&output=embed" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy"></iframe>';
+    }
+    vtHideLoading();
   }
 }
 
-function vtDrawPlaceholder(s) {
-  vtHideLoading();
-  const canvas = document.createElement('canvas');
-  canvas.width=2048; canvas.height=1024;
-  const c = canvas.getContext('2d');
-
-  // Sky
-  const skyColors = {
-    eco_main:['#0a2818','#1a5c3a','#2d6a4f'],
-    kumushkan:['#0a1628','#1a3a5c','#2d5a7f'],
-    sukok:['#0d1f2d','#1a4060','#2d7a9f'],
-    entrance:['#1a1200','#3a2a00','#c9952a'],
-    center:['#0a0a1a','#1a1a3a','#2a2a6a'],
-    shaslik:['#1a0a00','#3a1500','#b5451b'],
-    bozor:['#0a1a00','#1a3a00','#2d6a10'],
-    alibuva:['#1a0a2a','#2a1a4a','#4a2a7a'],
-    park:['#0a1a0a','#1a3a1a','#2d6a2d'],
-  };
-  const colors = skyColors[s.id] || ['#0a1628','#1a3a5c','#2d5a8f'];
-  const sky = c.createLinearGradient(0,0,0,700);
-  sky.addColorStop(0, colors[0]);
-  sky.addColorStop(0.5, colors[1]);
-  sky.addColorStop(1, colors[2]);
-  c.fillStyle=sky; c.fillRect(0,0,2048,700);
-
-  // Ground
-  const gnd=c.createLinearGradient(0,700,0,1024);
-  gnd.addColorStop(0,'#111a11'); gnd.addColorStop(1,'#080d08');
-  c.fillStyle=gnd; c.fillRect(0,700,2048,324);
-
-  // Stars
-  for(let i=0;i<180;i++){
-    c.beginPath();
-    c.arc(Math.random()*2048,Math.random()*450,Math.random()*1.2+0.3,0,Math.PI*2);
-    c.fillStyle=`rgba(255,255,255,${Math.random()*.7+.2})`; c.fill();
+function initStreetView(s) {
+  if(typeof google === 'undefined' || !google.maps || !google.maps.StreetViewPanorama) {
+    // API yuklanmagan — kutish yoki fallback
+    vtShowFallback(s);
+    return;
   }
+  const container = document.getElementById('sv-container');
+  if(!container) return;
 
-  // Mountains
-  c.fillStyle='rgba(0,0,0,0.5)'; c.beginPath(); c.moveTo(0,1024);
-  [0,120,280,420,580,740,900,1060,1200,1360,1520,1700,1900,2048].forEach((x,i)=>{
-    c.lineTo(x, 520+Math.sin(i*0.7)*150+Math.cos(i*1.2)*70);
-  });
-  c.lineTo(2048,1024); c.closePath(); c.fill();
+  try {
+    const opts = {
+      pov: { heading: s.heading || 94, pitch: s.pitch || 0 },
+      zoom: 1,
+      addressControl: false,
+      fullscreenControl: true,
+      motionTracking: false,
+      motionTrackingControl: false,
+      panControl: true,
+      linksControl: true,
+      showRoadLabels: true,
+      enableCloseButton: false,
+    };
 
-  // Label
-  c.font='bold 52px sans-serif'; c.textAlign='center';
-  c.fillStyle='rgba(255,255,255,0.12)';
-  c.fillText(s.name,1024,490);
-  c.font='22px sans-serif'; c.fillStyle='rgba(255,255,255,0.07)';
-  c.fillText('📍 ' + s.lat + ', ' + s.lng, 1024, 540);
-  c.fillText("360° rasm qo'yish uchun img: panoramaN.jpg", 1024, 580);
+    if(s.panoId) {
+      // Pano ID — to'g'ridan-to'g'ri shu nuqta
+      opts.pano = s.panoId;
+    } else {
+      opts.position = { lat: s.svLat || s.lat, lng: s.svLng || s.lng };
+    }
 
-  if(s.real){
-    c.font='bold 28px sans-serif'; c.fillStyle='rgba(82,183,136,0.6)';
-    c.fillText('✓ Haqiqiy koordinata', 1024, 630);
-  }
+    svPanorama = new google.maps.StreetViewPanorama(container, opts);
 
-  try{
-    vtPnlm = pannellum.viewer('vt-panorama',{
-      type:'equirectangular', panorama:canvas.toDataURL(),
-      autoLoad:true, autoRotate:-1.5, compass:false, showControls:false,
-      mouseZoom:true, hfov:100,
+    svPanorama.addListener('status_changed', () => {
+      if(svPanorama.getStatus() === 'OK') {
+        vtHideLoading();
+      } else {
+        vtShowFallback(s);
+      }
     });
-  }catch(e){ vtHideLoading(); }
-}
 
-// ── STREET VIEW ────────────────────────────────────────────
-function vtLoadStreetView(s) {
-  const key = localStorage.getItem('gmaps_api_key')||'';
-  if(!key){
-    document.getElementById('vt-panorama').classList.remove('active');
-    document.getElementById('vt-streetview').classList.remove('active');
-    document.getElementById('vt-gmap-ph').style.display='flex';
-    vtHideLoading(); return;
+  } catch(e) {
+    vtShowFallback(s);
   }
-  document.getElementById('vt-panorama').classList.remove('active');
-  document.getElementById('vt-streetview').classList.add('active');
-  document.getElementById('vt-gmap-ph').style.display='none';
-
-  if(!vtGoogleLoaded){
-    const script=document.createElement('script');
-    script.src=`https://maps.googleapis.com/maps/api/js?key=${key}&callback=vtGoogleReady`;
-    script.async=true; document.head.appendChild(script);
-    window.vtGoogleReady=()=>{ vtGoogleLoaded=true; vtInitSV(s); };
-  } else { vtInitSV(s); }
 }
 
-function vtInitSV(s){
-  const pos={lat:s.lat,lng:s.lng};
-  if(vtStreetPano){ vtStreetPano.setPosition(pos); vtHideLoading(); return; }
-  vtStreetPano=new google.maps.StreetViewPanorama(
-    document.getElementById('vt-streetview'),
-    {position:pos,pov:{heading:165,pitch:0},zoom:1,
-     addressControl:false,fullscreenControl:false,enableCloseButton:false}
-  );
-  vtStreetPano.addListener('status_changed',()=>{ vtHideLoading(); });
+function vtShowFallback(s) {
+  const container = document.getElementById('sv-container');
+  const fallback  = document.getElementById('sv-fallback');
+  if(container) container.style.display = 'none';
+  if(fallback) {
+    fallback.style.display = 'flex';
+    fallback.innerHTML = `
+      <div style="font-size:44px">🗺️</div>
+      <div style="font-size:15px;font-weight:700;color:#f0f0f0;text-align:center">${s.name}</div>
+      <div style="font-size:12px;color:#5a5a5a;text-align:center;max-width:280px;line-height:1.5">${s.desc}</div>
+      <button onclick="window.open(getStreetViewUrl(vtScene||VT_SCENES.entrance),'_blank')" style="display:flex;align-items:center;gap:8px;background:#1a73e8;border:none;border-radius:50px;padding:13px 26px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 4px 18px rgba(26,115,232,.4)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Google da davom etish
+      </button>
+      <button onclick="vtOpenMaps()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:50px;padding:10px 20px;font-size:13px;color:#aaa;cursor:pointer;font-family:Inter,sans-serif;font-weight:600">🗺️ Xaritada ko'rish</button>`;
+  }
+  vtHideLoading();
 }
 
-window.vtInitGoogleMaps = function(){
-  const key=document.getElementById('vt-api-input').value.trim();
-  if(!key||!key.startsWith('AIza')){ return; }
-  localStorage.setItem('gmaps_api_key',key);
-  vtShowLoading('Google Maps ulanmoqda...');
-  vtLoadStreetView(vtScene);
+// Google Maps API lazy loader
+function loadGoogleMapsAPI(callback) {
+  if(typeof google !== 'undefined' && google.maps && google.maps.StreetViewPanorama) {
+    callback(); return;
+  }
+  if(document.getElementById('gmaps-api')) {
+    // Loading in progress — wait
+    const t = setInterval(() => {
+      if(typeof google !== 'undefined' && google.maps) { clearInterval(t); callback(); }
+    }, 150);
+    return;
+  }
+  window._gmapsCallbacks = window._gmapsCallbacks || [];
+  window._gmapsCallbacks.push(callback);
+  window._gmapsReady = () => { window._gmapsCallbacks.forEach(fn => fn()); window._gmapsCallbacks = []; };
+  const script = document.createElement('script');
+  script.id  = 'gmaps-api';
+  script.src = 'https://maps.googleapis.com/maps/api/js?v=weekly&callback=_gmapsReady';
+  script.async = true;
+  document.head.appendChild(script);
+}
+
+window.vtOpenStreetView = function() {
+  const s = vtScene || VT_SCENES.entrance;
+  window.open(getStreetViewUrl(s), '_blank');
 };
 
-// ── CONTROLS ───────────────────────────────────────────────
-window.vtTurnLeft  = function(){ if(vtPnlm) vtPnlm.setYaw(vtPnlm.getYaw()-30,true); else if(vtStreetPano){const p=vtStreetPano.getPov();vtStreetPano.setPov({heading:p.heading-30,pitch:p.pitch});} };
-window.vtTurnRight = function(){ if(vtPnlm) vtPnlm.setYaw(vtPnlm.getYaw()+30,true); else if(vtStreetPano){const p=vtStreetPano.getPov();vtStreetPano.setPov({heading:p.heading+30,pitch:p.pitch});} };
-window.vtMoveForward = function(){ if(vtPnlm) vtPnlm.setHfov(vtPnlm.getHfov()-8,true); else if(vtStreetPano){const l=vtStreetPano.getLinks();if(l&&l.length)vtStreetPano.setPano(l[0].pano);} };
-
-window.vtSetMode = function(mode){
-  vtMode=mode;
-  document.getElementById('vtbtn-pnlm').classList.toggle('active',mode==='pannellum');
-  document.getElementById('vtbtn-sv').classList.toggle('active',mode==='streetview');
-  vtLoad(vtScene.id);
+window.vtSetMode = function(mode) {
+  vtMode = mode;
+  const btnMap = document.getElementById('vtbtn-map');
+  const btnSv  = document.getElementById('vtbtn-sv');
+  if(btnMap) btnMap.classList.toggle('active', mode === 'map');
+  if(btnSv)  btnSv.classList.toggle('active',  mode === 'street');
+  vtSetIframe(vtScene);
 };
 
 window.vtToggleSub = function(group,el){
@@ -2753,7 +3253,7 @@ window.vtToggleSub = function(group,el){
 };
 
 window.vtOpenMaps = function(){
-  window.open('https://www.google.com/maps?q='+vtScene.lat+','+vtScene.lng,'_blank');
+  window.open(getMapsUrl(vtScene),'_blank');
 };
 window.vtFullscreen = function(){
   const v=document.getElementById('vtour-overlay');
@@ -2764,11 +3264,15 @@ window.vtFullscreen = function(){
 // ── LOADING ────────────────────────────────────────────────
 function vtShowLoading(txt){
   const el=document.getElementById('vt-loading');
-  el.classList.remove('hidden');
-  if(txt) document.getElementById('vt-load-text').textContent=txt.toUpperCase().slice(0,30)+'...';
+  if(el) el.classList.remove('hidden');
+  const lt=document.getElementById('vt-load-text');
+  if(lt&&txt) lt.textContent=txt.toUpperCase().slice(0,30)+'...';
 }
 function vtHideLoading(){
-  setTimeout(()=>document.getElementById('vt-loading').classList.add('hidden'),500);
+  setTimeout(()=>{
+    const el=document.getElementById('vt-loading');
+    if(el) el.classList.add('hidden');
+  },500);
 }
 
 // add vtour labels to T translations
@@ -2800,10 +3304,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     // apply current lang label
     const cur=localStorage.getItem('bb_lang')||'uz';
     const lbl=vtLabels[cur]||vtLabels['uz'];
-    const t1=document.getElementById('t-vtour-title');
-    const t2=document.getElementById('t-vtour-sub');
-    if(t1) t1.textContent=lbl.vtTitle;
-    if(t2) t2.textContent=lbl.vtSub;
+    setText('t-vtour-title', lbl.vtTitle);
+    setText('t-vtour-sub', lbl.vtSub);
   }
 });
 
@@ -2813,313 +3315,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 
-<!-- ── KUNLIK REJA JS ── -->
-<script>
-// ── STATE ──────────────────────────────────────────────────
-const planState = {
-  size: 2,
-  type: 'oila',
-  members: [],
-  prefs: ['eko'],
-  transport: 'shaxsiy',
-  budget: 'tejamkor',
-  wishes: '',
-  step: 1,
-  foodSelected: [],
-  bookings: {},
-};
 
-// ── STATIC DATA — Parkent ──────────────────────────────────
-const PARKENT_PLACES = [
-  { time:'07:30', icon:'🌅', name:'Ertalabki yurish', desc:'Tog\'li Parkent havosida yangilanuv. Sukok yo\'li bo\'ylab 2 km yurish.', tags:['Bepul','Tavsiya etiladi'], tagClass:['green','blue'] },
-  { time:'09:00', icon:'🌿', name:'Eko Turizm Maskani', desc:'Sizning manzilingiz: 41.277723, 69.709866. Kumushkan tabiat qo\'ynida.', tags:['Koordinata bor','Asosiy nuqta'], tagClass:['green','blue'], action:'Yo\'l ko\'rsatish →', lat:41.277723, lng:69.709866 },
-  { time:'11:00', icon:'🏔️', name:'Kumushkan Tog\' Maskani', desc:'Tog\'li manzara, toza havo, sayr yo\'llari. Bolalar uchun ham qulay.', tags:['Oila uchun','Suv bor'], tagClass:['green','blue'] },
-  { time:'12:30', icon:'🍢', name:'Tushlik — Shaslik Rastasi', desc:'Parkentning mashhur shaslik ustasi Akbar aka. Tavsiya: 2 porsiya shaslik + non + choy.', tags:['Gastro','Mashhur'], tagClass:['orange','blue'] },
-  { time:'14:00', icon:'🕌', name:'Ali Buva Ziyoratgohi', desc:'Tarixiy maqbara. Tinch muhit, tarixiy ahamiyat. 30 daqiqa kifoya.', tags:['Tarixiy','Bepul'], tagClass:['blue','green'] },
-  { time:'15:30', icon:'🛒', name:'Mahalliy Bozor', desc:'Yangi meva-sabzavot, mahalliy asal va murabbo. Uyga sovg\'a olish uchun ideal.', tags:['Xarid','Mahalliy'], tagClass:['orange','green'] },
-  { time:'17:00', icon:'🌳', name:'Markaziy Sayr Bog\'i', desc:'Kun oxirida dam olish. Bolalar maydoni, skameykalar, soya daraxtlar.', tags:['Dam olish','Bolalar uchun'], tagClass:['green','blue'] },
-  { time:'19:00', icon:'🌙', name:'Kechki ovqat va qaytish', desc:'Parkent markazida kechki ovqat. Taxminiy qaytish vaqti 20:30.', tags:['Kechki'], tagClass:['blue'] },
-];
-
-const FOOD_MENU = [
-  { icon:'🍢', name:'Shaslik (Qo\'y go\'shti)', portion:'kishi boshiga 2 tayoqcha' },
-  { icon:'🍖', name:'Tandir kabob', portion:'kishi boshiga 1 porsiya' },
-  { icon:'🥗', name:'Achichuk salat', portion:'2 kishiga 1 likop' },
-  { icon:'🍞', name:'Tandirda pishirilgan non', portion:'har 2 kishiga 1 non' },
-  { icon:'🍵', name:'Ko\'k choy', portion:'kishi boshiga 1 choynakcha' },
-  { icon:'🍉', name:'Mavsumiy meva', portion:'kishi boshiga 300g' },
-];
-
-const BOOKING_ITEMS = [
-  { id:'taxi',    icon:'🚕', title:'Taxi Bron',     desc:'Borib-kelish. Kishi soniga mos mashina.',  btn:'1054 ga qo\'ng\'iroq', action: () => window.location.href='tel:1054' },
-  { id:'parking', icon:'🅿️', title:'Parkovka',     desc:'Kumushkan kirishida bepul parkovka (demo).', btn:'Band qilish' },
-  { id:'guide',   icon:'🧭', title:'Mahalliy Gid',  desc:'Ixtiyoriy. Mahalliy gid bilan sayohat.', btn:'So\'rash' },
-  { id:'food',    icon:'🍽️', title:'Ovqat Bron',   desc:'Shaslik rastasiga joy band qilish.', btn:'Bron qilish' },
-];
-
-// ── OPEN / CLOSE ───────────────────────────────────────────
-window.openPlan = function() {
-  document.getElementById('plan-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  buildMembers();
-  goStep(1);
-};
-
-window.closePlan = function() {
-  document.getElementById('plan-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-};
-
-// ── STEP NAVIGATION ────────────────────────────────────────
-window.goStep = function(n) {
-  if(n === 3) buildResult();
-  if(n === 4) buildConfirmed();
-
-  planState.step = n;
-
-  // panels
-  [1,2,3,4].forEach(i => {
-    document.getElementById('pp-'+i).classList.toggle('active', i === n);
-  });
-
-  // step dots
-  [1,2,3,4].forEach(i => {
-    const dot = document.getElementById('psd-'+i);
-    dot.className = 'ps-dot ' + (i < n ? 'done' : i === n ? 'active' : 'pend');
-    dot.textContent = i < n ? '✓' : i;
-  });
-  [1,2,3].forEach(i => {
-    const line = document.getElementById('psl-'+i);
-    line.className = 'ps-line' + (i < n ? ' done' : '');
-  });
-
-  document.getElementById('plan-body').scrollTop = 0;
-};
-
-// ── GROUP SIZE ─────────────────────────────────────────────
-window.changeSize = function(d) {
-  planState.size = Math.max(1, Math.min(12, planState.size + d));
-  document.getElementById('plan-size').textContent = planState.size;
-  buildMembers();
-};
-
-function buildMembers() {
-  const AVATARS = ['👨','👩','👧','👦','👴','👵','🧑','👱','🧒','👶','🧔','👩‍🦱'];
-  const ROLES   = ['Ota','Ona','Qiz bola','O\'g\'il bola','Buvi','Bobo','Do\'st','Do\'st','Bola','Go\'dak','Do\'st','Do\'st'];
-  const list = document.getElementById('members-list');
-  list.innerHTML = '';
-  for(let i = 0; i < planState.size; i++) {
-    const mem = planState.members[i] || { name: ROLES[i] || ('Mehmon '+(i+1)), age: '' };
-    planState.members[i] = mem;
-    const row = document.createElement('div');
-    row.className = 'mem-row';
-    row.innerHTML = `
-      <div class="mem-ava">${AVATARS[i]}</div>
-      <input class="mem-inp" value="${mem.name}" placeholder="Ism" oninput="planState.members[${i}].name=this.value">
-      <input class="mem-age" value="${mem.age}" placeholder="yosh" type="number" min="1" max="100" oninput="planState.members[${i}].age=this.value">
-    `;
-    list.appendChild(row);
-  }
-}
-
-// ── CHIPS & TOGGLES ────────────────────────────────────────
-window.toggleChip = function(el, group) {
-  el.closest('.chips').querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
-  el.classList.add('on');
-  planState[group] = el.dataset.val;
-};
-
-window.togglePref = function(el) {
-  el.classList.toggle('on');
-  const val = el.dataset.val;
-  if(el.classList.contains('on')) {
-    if(!planState.prefs.includes(val)) planState.prefs.push(val);
-  } else {
-    planState.prefs = planState.prefs.filter(p => p !== val);
-  }
-};
-
-window.selectTog = function(el, group) {
-  el.closest('.tog-row').querySelectorAll('.tog').forEach(t => t.classList.remove('on'));
-  el.classList.add('on');
-  planState[group] = el.dataset.val;
-};
-
-// ── BUILD RESULT ───────────────────────────────────────────
-function buildResult() {
-  const s = planState;
-  const wishes = document.getElementById('plan-wishes').value;
-  planState.wishes = wishes;
-
-  // Header
-  const typeLabel = { oila:'Oila', dostlar:"Do'stlar", juftlik:'Juftlik', yolgiz:"Yolg'iz", biznes:'Biznes' };
-  document.getElementById('plan-result-title').textContent = 'Parkent Sayohat Rejasi';
-  document.getElementById('plan-result-sub').textContent =
-    `Bugun · ${s.size} kishi · ${typeLabel[s.type]||s.type}`;
-
-  // Alert — simulate busy check
-  const alerts = [
-    'Bugun Kumushkan dam olish zonasida kishi ko\'p. Tong soat 7-9 yoki kechqurun 17-19 da borish tavsiya etiladi.',
-    'Hozirgi ob-havo sharoiti sayohat uchun qulay. Suv olib boring.',
-    'Hafta oxiri bo\'lgani uchun restoran band bo\'lishi mumkin. Oldindan bron tavsiya etiladi.',
-    'Bugun Parkentda dam olish uchun ideal kun. Hamma joylar bo\'sh.',
-  ];
-  document.getElementById('plan-alert-text').textContent = alerts[Math.floor(Math.random()*alerts.length)];
-
-  // Schedule — filter by prefs + add variety
-  const sched = document.getElementById('plan-schedule');
-  sched.innerHTML = '';
-  
-  // Shuffle slightly for variety
-  const places = [...PARKENT_PLACES].sort(() => Math.random() > 0.7 ? -1 : 1);
-  // Always keep first and last in place
-  const sorted = [PARKENT_PLACES[0], ...places.slice(1,7), PARKENT_PLACES[7]];
-
-  sorted.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'result-item';
-    item.onclick = p.lat ? () => window.location.href=`https://www.google.com/maps?q=${p.lat},${p.lng}` : null;
-    const tagsHtml = (p.tags||[]).map((t,i) => `<span class="ri-tag ${p.tagClass?.[i]||''}">${t}</span>`).join('');
-    const actionHtml = p.action ? `<div class="ri-action">${p.action}</div>` : '';
-    item.innerHTML = `
-      <div class="ri-time">${p.time}</div>
-      <div class="ri-icon">${p.icon}</div>
-      <div class="ri-body">
-        <div class="ri-name">${p.name}</div>
-        <div class="ri-desc">${p.desc}</div>
-        <div class="ri-tags">${tagsHtml}</div>
-        ${actionHtml}
-      </div>`;
-    sched.appendChild(item);
-  });
-
-  // Bookings
-  const bookEl = document.getElementById('plan-bookings');
-  bookEl.innerHTML = '';
-  
-  // Show relevant bookings based on transport
-  const showItems = s.transport === 'taxi'
-    ? BOOKING_ITEMS
-    : BOOKING_ITEMS.filter(b => b.id !== 'taxi');
-
-  showItems.forEach(b => {
-    const card = document.createElement('div');
-    card.className = 'book-card';
-    card.id = 'bcard-' + b.id;
-    card.innerHTML = `
-      <div class="bc-icon">${b.icon}</div>
-      <div class="bc-title">${b.title}</div>
-      <div class="bc-desc">${b.desc}</div>
-      <div class="bc-status pend" id="bst-${b.id}">⏳ Kutilmoqda</div>
-      <button class="bc-btn" onclick="doBron('${b.id}',this,event)">${b.btn}</button>`;
-    bookEl.appendChild(card);
-  });
-
-  // Food
-  const foodEl = document.getElementById('plan-food');
-  foodEl.innerHTML = '';
-  FOOD_MENU.forEach((f,i) => {
-    const item = document.createElement('div');
-    item.className = 'food-item';
-    item.onclick = () => toggleFood(item, i);
-    item.innerHTML = `
-      <div class="fi-ico">${f.icon}</div>
-      <div class="fi-name">${f.name}</div>
-      <div class="fi-portion">${f.portion}</div>
-      <div class="fi-check">○</div>`;
-    foodEl.appendChild(item);
-  });
-}
-
-window.toggleFood = function(el, idx) {
-  el.classList.toggle('selected');
-  const check = el.querySelector('.fi-check');
-  if(el.classList.contains('selected')) {
-    check.textContent = '✓';
-    if(!planState.foodSelected.includes(idx)) planState.foodSelected.push(idx);
-  } else {
-    check.textContent = '○';
-    planState.foodSelected = planState.foodSelected.filter(i => i !== idx);
-  }
-  const cnt = planState.foodSelected.length;
-  const badge = document.getElementById('food-badge');
-  badge.textContent = cnt > 0 ? `${cnt} ta tanlandi` : 'Tanlanmagan';
-  badge.className = 'result-sec-badge' + (cnt > 0 ? ' ' : ' warn');
-};
-
-window.doBron = function(id, btn, e) {
-  e.stopPropagation();
-  const item = BOOKING_ITEMS.find(b => b.id === id);
-  if(item && item.action) { item.action(); return; }
-  btn.textContent = '✓ Bron qilindi';
-  btn.className = 'bc-btn done';
-  const st = document.getElementById('bst-' + id);
-  if(st) { st.textContent = '✅ Tasdiqlandi'; st.className = 'bc-status'; }
-  const card = document.getElementById('bcard-' + id);
-  if(card) card.classList.add('booked');
-  planState.bookings[id] = true;
-};
-
-// ── BUILD CONFIRMED ────────────────────────────────────────
-function buildConfirmed() {
-  const list = document.getElementById('plan-confirmed');
-  list.innerHTML = '';
-
-  const items = [
-    { icon:'👥', name:`${planState.size} kishilik guruh`, desc: planState.members.slice(0,3).map(m=>m.name).join(', ') + (planState.size > 3 ? ' va boshqalar' : '') },
-    { icon:'🌿', name:'Sayohat marshrutia', desc:'8 ta nuqta · Eko + Gastro + Ziyorat' },
-    { icon:'🍢', name:'Ovqat buyurtmasi', desc: planState.foodSelected.length > 0 ? `${planState.foodSelected.length} ta taom tanlandi` : 'Tanlanmagan' },
-    { icon:'🚕', name:'Transport', desc: planState.transport === 'taxi' ? 'Taxi bron qilindi (1054)' : planState.transport === 'shaxsiy' ? 'Shaxsiy avtomobil' : 'Yayov' },
-  ];
-
-  if(planState.bookings.parking) items.push({ icon:'🅿️', name:'Parkovka', desc:'Kumushkan kirishida band qilindi' });
-  if(planState.bookings.guide)   items.push({ icon:'🧭', name:'Mahalliy Gid', desc:"So'rov yuborildi" });
-
-  items.forEach(it => {
-    const div = document.createElement('div');
-    div.className = 'result-item';
-    div.innerHTML = `<div class="ri-icon">${it.icon}</div><div class="ri-body"><div class="ri-name">${it.name}</div><div class="ri-desc">${it.desc}</div></div><div style="font-size:16px;color:#52b788">✓</div>`;
-    list.appendChild(div);
-  });
-
-  document.getElementById('plan-confirm-msg').textContent =
-    `${planState.size} kishilik ${planState.type} uchun bugungi Parkent sayohati rejalashtirildi. Yaxshi dam oling!`;
-}
-
-// Plan translations
-const PLAN_LABELS = {
-  uz:{ title:'Kunlik Reja', sub:'Parkentda sayohatingizni rejalashtiring' },
-  ru:{ title:'Дневной план', sub:'Спланируйте отдых в Паркенте' },
-  en:{ title:'Day Planner', sub:'Plan your Parkent experience' },
-  zh:{ title:'日程计划', sub:'规划帕尔肯特之旅' },
-  ar:{ title:'خطة اليوم', sub:'خطط لرحلتك في باركنت' },
-  tr:{ title:'Günlük Plan', sub:'Parkent deneyiminizi planlayın' },
-  kk:{ title:'Күнделікті жоспар', sub:'Паркент демалысын жоспарлаңыз' },
-  tg:{ title:'Нақшаи рӯз', sub:'Сафари Паркентро нақша кунед' },
-};
-
-// Patch applyLang to also update plan labels
-const _prevApply2 = window.applyLang;
-document.addEventListener('DOMContentLoaded', () => {
-  const prev = window.applyLang;
-  if(prev) {
-    window.applyLang = function(code) {
-      prev(code);
-      const lbl = PLAN_LABELS[code] || PLAN_LABELS['uz'];
-      const t1 = document.getElementById('t-plan-title');
-      const t2 = document.getElementById('t-plan-sub');
-      if(t1) t1.textContent = lbl.title;
-      if(t2) t2.textContent = lbl.sub;
-    };
-    const cur = localStorage.getItem('bb_lang') || 'uz';
-    const lbl = PLAN_LABELS[cur] || PLAN_LABELS['uz'];
-    const t1 = document.getElementById('t-plan-title');
-    const t2 = document.getElementById('t-plan-sub');
-    if(t1) t1.textContent = lbl.title;
-    if(t2) t2.textContent = lbl.sub;
-  }
-});
-</script>
 
 <!-- ── KUNLIK REJA JS ── -->
 <script>
@@ -3131,14 +3327,14 @@ const PS = {
 };
 
 const SCHED_DATA = [
-  {t:'07:30',i:'🌅',n:'Ertalabki sayr',d:'Parkent tog\u02bbli havosida yangilaning. Sukok yoli boylab 2 km.',tags:['Bepul','Tavsiya'],tc:['g','b']},
+  {t:'07:30',i:'🌅',n:'Ertalabki sayr',d:'Parkent tog\u02bbli havosida yangilaning. Soqoq yoʻli boʻylab 2 km.',tags:['Bepul','Tavsiya'],tc:['g','b']},
   {t:'09:00',i:'🌿',n:'Eko Turizm Maskani',d:'Koordinata: 41.277723, 69.709866 — tabiat qo\u02bbynida.',tags:['Haqiqiy manzil','Asosiy'],tc:['g','b'],lat:41.277723,lng:69.709866},
-  {t:'10:30',i:'🏔️',n:'Kumushkan Togi',d:'Tog\u02bb manzarasi, toza havo. Bolalar uchun ham qulay.',tags:['Oila uchun','Suv bor'],tc:['g','b']},
+  {t:'10:30',i:'🏔️',n:'Kumushkon Togʻ Maskani',d:'Tog\u02bb manzarasi, toza havo. Bolalar uchun ham qulay.',tags:['Oila uchun','Suv bor'],tc:['g','b']},
   {t:'12:30',i:'🍢',n:'Tushlik — Shaslik Rastasi',d:'Mashhur Akbar aka. 2 porsiya shaslik + non + choy.',tags:['Gastro','Mashhur'],tc:['o','b']},
-  {t:'14:00',i:'🕌',n:'Ali Buva Ziyoratgohi',d:'Tarixiy maqbara. Tinch muhit. 30 daqiqa yetarli.',tags:['Tarixiy','Bepul'],tc:['b','g']},
+  {t:'14:00',i:'🕌',n:'Ali Buva Ziyoratgohi',d:'Tarixiy maqbara. Tinch va osoyishta muhit. 30 daqiqa koʻrish uchun yetarli.',tags:['Tarixiy','Bepul'],tc:['b','g']},
   {t:'15:30',i:'🛒',n:'Mahalliy Bozor',d:'Yangi meva, asal, murabbo. Uyga sovg\u02bba olish uchun.',tags:['Xarid','Mahalliy'],tc:['o','g']},
-  {t:'17:00',i:'🌳',n:'Markaziy Sayr Bogi',d:'Bolalar maydoni, skameykalar, soya daraxtlar.',tags:['Dam','Bolalar'],tc:['g','b']},
-  {t:'19:00',i:'🌙',n:'Kechki Ovqat va Qaytish',d:'Parkent markazida kechki ovqat. Qaytish ~20:30.',tags:['Kechki'],tc:['b']},
+  {t:'17:00',i:'🌳',n:'Markaziy Sayr Bogi',d:'Bolalar oʻyin maydoni, dam olish oʻrindiqlari va soyali daraxtlar.',tags:['Dam','Bolalar'],tc:['g','b']},
+  {t:'19:00',i:'🌙',n:'Kechki Ovqat va Qaytish',d:'Parkent markazida kechki ovqatlanish. Taxminiy qaytish vaqti — soat 20:30.',tags:['Kechki'],tc:['b']},
 ];
 
 const FOODS = [
@@ -3151,17 +3347,17 @@ const FOODS = [
 ];
 
 const BOOKS = [
-  {id:'taxi', i:'🚕',t:'Taxi Bron',  d:'Borib-kelish, kishi soniga mos'},
-  {id:'park', i:'🅿️',t:'Parkovka',  d:'Kumushkan kirishida joy'},
+  {id:'taxi', i:'🚕',t:'Taxi Bron',  d:'Borib-kelish, kishi soniga mos avtomobil'},
+  {id:'park', i:'🅿️',t:'Parkovka',  d:'Kumushkon kirishida avtoturargoh joyi'},
   {id:'guide',i:'🧭',t:'Mahalliy Gid',d:'Ixtiyoriy gid xizmati'},
   {id:'food', i:'🍽️',t:'Ovqat Bron', d:'Shaslik rastasida joy band'},
 ];
 
 const ALERTS = [
-  "Bugun Kumushkanda kishi ko\u02bbp. Tong 7\u20139 yoki kechqurun 17\u201319 da boring.",
+  "Bugun Kumushkonda kishi ko\u02bbp. Tong 7\u20139 yoki kechqurun 17\u201319 da boring.",
   "Ob-havo qulay. Suv va quloqchin oling.",
-  "Hafta oxiri: restoran band bo\u02bblishi mumkin. Oldindan bron qiling.",
-  "Bugun Parkentda sayohat uchun ideal kun. Hamma joylar bo\u02bbsh!",
+  "Hafta oxiri boʻlgani uchun restoranlar band boʻlishi mumkin. Oldindan joy band qiling.",
+  "Bugun Parkentda sayohat uchun ajoyib kun — hamma joylar boʻsh!",
 ];
 
 // ── OPEN / CLOSE ───────────────────────────────────────────
@@ -3314,11 +3510,11 @@ function buildConfirmed(){
   el.innerHTML='';
   const items=[
     {i:'👥',n:PS.size+' kishilik guruh',d:PS.members.slice(0,3).map(m=>m.name).join(', ')+(PS.size>3?' va boshqalar':'')},
-    {i:'🗺️',n:'Sayohat marshrutia',d:'8 nuqta \xb7 Eko + Gastro + Ziyorat'},
+    {i:'🗺️',n:'Sayohat marshrutlari',d:'8 nuqta — Eko, Gastro va Ziyoratgohlar'},
     {i:'🍽️',n:'Ovqat',d:PS.foodSel.length>0?PS.foodSel.length+' ta taom tanlandi':'Tanlanmagan'},
     {i:'🚗',n:'Transport',d:PS.tr.includes('Taxi')?'Taxi bron (1054)':PS.tr.includes('Shaxsiy')?'Shaxsiy avtomobil':'Yayov'},
   ];
-  if(PS.books.park) items.push({i:'\uD83C\uDD7F\uFE0F',n:'Parkovka',d:'Kumushkan kirishida band'});
+  if(PS.books.park) items.push({i:'\uD83C\uDD7F\uFE0F',n:'Parkovka',d:'Kumushkon kirishida band'});
   if(PS.books.guide) items.push({i:'\u{1F9ED}',n:'Mahalliy Gid',d:"So\u02bbroV yuborildi"});
   items.forEach(it=>{
     const d=document.createElement('div');
@@ -3443,6 +3639,335 @@ function buildConfirmed(){
     resetAuto();
   });
 })();
+</script>
+
+
+<!-- ── CHOYXONA JS ── -->
+<script>
+const CHOYXONALAR = [
+  {
+    id:1, name:"Oq Ko\u02bbprik Choyxonasi", ico:"\u2615", cat:"oila",
+    tags:["Oila uchun","Hovli","O\u02bbtin tandyr"],
+    rating:"4.8", dist:"300 m",
+    lat:41.2963, lng:69.6803,
+    desc:"Parkentsoy bo\u02bbyi\u02bbdagi eng sevimli oilaviy choyxona. Soya daraxtlar ostida xontaxtalar, bolalar o\u02bbyni maydoni.",
+    totalSeats:12, takenSeats:[2,5,8],
+    layout:"oila"
+  },
+  {
+    id:2, name:"Soybon Choyxona", ico:"\ud83e\udd43", cat:"oila",
+    tags:["Oila uchun","Xontaxta","Jim joy"],
+    rating:"4.6", dist:"700 m",
+    lat:41.2975, lng:69.6818,
+    desc:"Tinch va xotirjam muhit. Katta xontaxtalar, pardalar bilan ajratilgan joylar. Bolalar uchun alohida bo\u02bblim.",
+    totalSeats:10, takenSeats:[1,3,6,9],
+    layout:"oila"
+  },
+  {
+    id:3, name:"Ko\u02bbhna Bozor Oshxonasi", ico:"\ud83c\udf72", cat:"oila",
+    tags:["Oilaviy","Milliy taomlar","Arzon"],
+    rating:"4.5", dist:"400 m",
+    lat:41.2957, lng:69.6792,
+    desc:"Milliy o\u02bbbek taomlar. Oshxona va choyxona birga. Tushlik soatlarda juda gavjum.",
+    totalSeats:16, takenSeats:[1,2,4,7,10,13],
+    layout:"katta"
+  },
+  {
+    id:4, name:"Do\u02bbstlar Choyxonasi", ico:"\u2615\ufe0f", cat:"ulfat",
+    tags:["Ulfatlar uchun","Bilyard","Shashka"],
+    rating:"4.7", dist:"500 m",
+    lat:41.2980, lng:69.6812,
+    desc:"Yigitlar uchun zo\u02bbr joy. Bilyard stoli, shashka va domino. Kechgacha ochiq.",
+    totalSeats:8, takenSeats:[3,7],
+    layout:"ulfat"
+  },
+  {
+    id:5, name:"Chinar Ostida", ico:"\ud83c\udf33", cat:"ulfat",
+    tags:["Tashqarida","Soyali","Ulfatlar"],
+    rating:"4.9", dist:"1.2 km",
+    lat:41.2990, lng:69.6831,
+    desc:"200 yillik chinor daraxti soyasida. Ochiq havo, toza tog\u02bb havosi. Eng yaxshi joy.",
+    totalSeats:14, takenSeats:[2,6,11],
+    layout:"bog"
+  },
+  {
+    id:6, name:"Kumushkon Choyxonasi", ico:"\ud83c\udfd4\ufe0f", cat:"ulfat",
+    tags:["Tog\u02bb havosi","Eksklusiv","Dam olish"],
+    rating:"5.0", dist:"8 km",
+    lat:41.3089, lng:69.7441,
+    desc:"Kumushkon tog\u02bb etagi. Shifobaxsh havosi va buloq suvi. Eng toza va go\u02bbzal choyxona.",
+    totalSeats:10, takenSeats:[4],
+    layout:"tog"
+  },
+];
+
+let currentCat = 'all';
+let selectedSeats = [];
+let currentChoy = null;
+
+// ── SVG Layout generator ─────────────────────────────────────
+function buildLayoutSVG(choy) {
+  const taken = choy.takenSeats;
+  const total = choy.totalSeats;
+  const type  = choy.layout;
+
+  const W = 300, H = 180;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px">`;
+
+  // Background
+  const bgColor = '#111a11';
+  svg += `<rect width="${W}" height="${H}" fill="${bgColor}" rx="8"/>`;
+
+  if(type === 'oila' || type === 'katta') {
+    // Kirishni ko'rsat
+    svg += `<rect x="130" y="165" width="40" height="10" rx="3" fill="#1a3a1a"/>`;
+    svg += `<text x="150" y="163" fill="#52b788" font-size="8" text-anchor="middle" font-family="sans-serif">Kirish</text>`;
+
+    // Devorlar
+    svg += `<rect x="10" y="10" width="2" height="${H-20}" fill="#2a4a2a" rx="1"/>`;
+    svg += `<rect x="${W-12}" y="10" width="2" height="${H-20}" fill="#2a4a2a" rx="1"/>`;
+    svg += `<rect x="10" y="10" width="${W-22}" height="2" fill="#2a4a2a" rx="1"/>`;
+
+    // Xontaxtalar (2 qator, 4 tadan)
+    const cols = type === 'katta' ? 4 : 3;
+    const xStart = type === 'katta' ? 28 : 40;
+    const xGap   = type === 'katta' ? 62 : 72;
+
+    for(let row = 0; row < 2; row++) {
+      for(let col = 0; col < cols; col++) {
+        const seatNum = row * cols + col + 1;
+        const cx = xStart + col * xGap;
+        const cy = 40 + row * 80;
+        const isTaken    = taken.includes(seatNum);
+        const isSelected = selectedSeats.includes(seatNum);
+        const color = isSelected ? '#1a9e52' : isTaken ? '#8b4513' : '#1a3a1a';
+        const borderC = isSelected ? '#52b788' : isTaken ? '#cd7f32' : '#2d6a2d';
+
+        // Xontaxta
+        svg += `<rect x="${cx-20}" y="${cy-15}" width="40" height="30" rx="5"
+          fill="${color}" stroke="${borderC}" stroke-width="1.5"
+          style="cursor:${isTaken?'default':'pointer'}"
+          onclick="${isTaken ? '' : `toggleSeat(${seatNum})`}"/>`;
+
+        // Raqam
+        const txtColor = isSelected ? '#fff' : isTaken ? '#cd7f32' : '#52b788';
+        svg += `<text x="${cx}" y="${cy+4}" fill="${txtColor}" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="bold">${seatNum}</text>`;
+
+        // Bo'sh/Band belgisi
+        if(!isTaken && !isSelected) {
+          svg += `<circle cx="${cx+14}" cy="${cy-10}" r="4" fill="#1a9e52" opacity="0.8"/>`;
+        } else if(isTaken) {
+          svg += `<circle cx="${cx+14}" cy="${cy-10}" r="4" fill="#f4820a" opacity="0.8"/>`;
+        }
+      }
+    }
+  } else if(type === 'ulfat') {
+    // Bilyard stoli + xontaxtalar
+    svg += `<rect x="100" y="60" width="100" height="60" rx="6" fill="#0a2a0a" stroke="#1a5a1a" stroke-width="2"/>`;
+    svg += `<text x="150" y="93" fill="#2d6a2d" font-size="9" text-anchor="middle" font-family="sans-serif">Bilyard</text>`;
+    svg += `<text x="150" y="105" fill="#52b788" font-size="8" text-anchor="middle" font-family="sans-serif">stoli</text>`;
+
+    const seatPos = [[30,40],[30,100],[30,150],[80,20],[80,160],[220,20],[220,160],[250,90]];
+    seatPos.forEach(([sx,sy],i) => {
+      const sn = i+1;
+      const isTaken = taken.includes(sn);
+      const isSel   = selectedSeats.includes(sn);
+      const fc = isSel?'#1a9e52':isTaken?'#8b4513':'#1a3a1a';
+      const sc = isSel?'#52b788':isTaken?'#cd7f32':'#2d6a2d';
+      svg += `<rect x="${sx-14}" y="${sy-12}" width="28" height="24" rx="4" fill="${fc}" stroke="${sc}" stroke-width="1.5" style="cursor:${isTaken?'default':'pointer'}" onclick="${isTaken?'':('toggleSeat('+sn+')')}"/>`;
+      svg += `<text x="${sx}" y="${sy+4}" fill="${isSel?'#fff':isTaken?'#cd7f32':'#52b788'}" font-size="9" text-anchor="middle" font-family="sans-serif" font-weight="bold">${sn}</text>`;
+    });
+  } else {
+    // Bog' / Tog' uslubi — doira xontaxtalar
+    const positions = [
+      [60,50],[150,40],[240,50],[40,120],[110,130],[190,125],[260,115],[80,165],[150,160],[220,165],[100,80],[200,85]
+    ];
+    positions.slice(0, total).forEach(([sx,sy],i) => {
+      const sn = i+1;
+      const isTaken = taken.includes(sn);
+      const isSel   = selectedSeats.includes(sn);
+      const fc = isSel?'#1a9e52':isTaken?'#4a2500':'#0d2a0d';
+      const sc = isSel?'#52b788':isTaken?'#cd7f32':'#2d6a2d';
+      svg += `<circle cx="${sx}" cy="${sy}" r="16" fill="${fc}" stroke="${sc}" stroke-width="1.5" style="cursor:${isTaken?'default':'pointer'}" onclick="${isTaken?'':('toggleSeat('+sn+')')}"/>`;
+      svg += `<text x="${sx}" y="${sy+4}" fill="${isSel?'#fff':isTaken?'#cd7f32':'#52b788'}" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="bold">${sn}</text>`;
+    });
+    // Daraxtlar
+    svg += `<text x="20" y="25" font-size="16">🌳</text>`;
+    svg += `<text x="260" y="25" font-size="16">🌳</text>`;
+    svg += `<text x="140" y="15" font-size="14">☘️</text>`;
+  }
+
+  // Izoh
+  svg += `<rect x="10" y="${H-20}" width="8" height="8" rx="2" fill="#1a3a1a" stroke="#2d6a2d" stroke-width="1"/>`;
+  svg += `<text x="22" y="${H-13}" fill="#52b788" font-size="8" font-family="sans-serif">Bo\u02bbsh</text>`;
+  svg += `<rect x="70" y="${H-20}" width="8" height="8" rx="2" fill="#4a2500" stroke="#cd7f32" stroke-width="1"/>`;
+  svg += `<text x="82" y="${H-13}" fill="#f4820a" font-size="8" font-family="sans-serif">Band</text>`;
+  svg += `<rect x="125" y="${H-20}" width="8" height="8" rx="2" fill="#1a9e52" stroke="#52b788" stroke-width="1"/>`;
+  svg += `<text x="137" y="${H-13}" fill="#52b788" font-size="8" font-family="sans-serif">Tanlangan</text>`;
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ── OPEN / CLOSE ─────────────────────────────────────────────
+window.openChoyxona = function() {
+  document.getElementById('choy-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  showChoyList();
+  renderChoy('all');
+};
+window.closeChoy = function() {
+  document.getElementById('choy-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  selectedSeats = [];
+  currentChoy = null;
+};
+window.closeChoyOutside = function(e) {
+  if(e.target === document.getElementById('choy-overlay')) closeChoy();
+};
+
+function showChoyList() {
+  document.getElementById('choy-list').style.display = 'flex';
+  document.getElementById('choy-detail').style.display = 'none';
+  const ct1=document.querySelector('.choy-tabs'); if(ct1) ct1.style.display='flex';
+}
+
+function showChoyDetail(choy) {
+  document.getElementById('choy-list').style.display = 'none';
+  document.getElementById('choy-detail').style.display = 'block';
+  const ct2=document.querySelector('.choy-tabs'); if(ct2) ct2.style.display='none';
+  currentChoy = choy;
+  selectedSeats = [];
+
+  // Header
+  document.getElementById('det-name').textContent = choy.name;
+  document.getElementById('det-meta').textContent = '\u2b50 ' + choy.rating + ' \u00b7 ' + choy.dist + ' \u00b7 ' + choy.desc.slice(0,40) + '...';
+
+  // Google Maps embed
+  const mapSrc = `https://maps.google.com/maps?q=${choy.lat},${choy.lng}&z=17&output=embed`;
+  document.getElementById('det-map').src = mapSrc;
+
+  // Layout SVG
+  document.getElementById('det-layout').innerHTML = buildLayoutSVG(choy);
+
+  // Seat buttons
+  renderSeats(choy);
+  updateBronBtn();
+
+  // Success hide
+  const suc = document.getElementById('bron-success');
+  if(suc) suc.classList.remove('show');
+}
+
+window.backToList = function() {
+  selectedSeats = [];
+  currentChoy = null;
+  showChoyList();
+};
+
+// ── SEAT SELECTION ───────────────────────────────────────────
+window.toggleSeat = function(n) {
+  if(!currentChoy) return;
+  if(currentChoy.takenSeats.includes(n)) return;
+  const idx = selectedSeats.indexOf(n);
+  if(idx === -1) selectedSeats.push(n);
+  else selectedSeats.splice(idx, 1);
+  renderSeats(currentChoy);
+  document.getElementById('det-layout').innerHTML = buildLayoutSVG(currentChoy);
+  updateBronBtn();
+};
+
+function renderSeats(choy) {
+  const grid = document.getElementById('seats-grid');
+  grid.innerHTML = '';
+  for(let i = 1; i <= choy.totalSeats; i++) {
+    const isTaken = choy.takenSeats.includes(i);
+    const isSel   = selectedSeats.includes(i);
+    const btn = document.createElement('div');
+    btn.className = 'seat ' + (isTaken ? 'taken' : isSel ? 'selected' : 'free');
+    btn.textContent = i;
+    btn.title = isTaken ? 'Band' : 'Joy ' + i;
+    if(!isTaken) btn.onclick = () => toggleSeat(i);
+    grid.appendChild(btn);
+  }
+}
+
+function updateBronBtn() {
+  const btn  = document.getElementById('bron-btn');
+  const info = document.getElementById('sel-count');
+  const cnt  = selectedSeats.length;
+  if(info) info.textContent = cnt > 0 ? cnt + ' ta joy' : '0 ta joy';
+  if(btn)  btn.disabled = cnt === 0;
+}
+
+// ── BRON ─────────────────────────────────────────────────────
+window.doBronChoy = function() {
+  if(!currentChoy || selectedSeats.length === 0) return;
+  const btn = document.getElementById('bron-btn');
+  btn.disabled = true;
+  btn.textContent = 'Band qilinmoqda...';
+
+  setTimeout(() => {
+    // Mark seats as taken
+    selectedSeats.forEach(s => {
+      if(!currentChoy.takenSeats.includes(s)) currentChoy.takenSeats.push(s);
+    });
+    selectedSeats = [];
+
+    // Refresh
+    document.getElementById('det-layout').innerHTML = buildLayoutSVG(currentChoy);
+    renderSeats(currentChoy);
+    updateBronBtn();
+    btn.textContent = 'Band qilish';
+
+    // Success message
+    const suc = document.getElementById('bron-success');
+    if(suc) suc.classList.add('show');
+
+    showToast('\u2705 ' + currentChoy.name + ' — joy band qilindi!');
+  }, 800);
+};
+
+// ── FILTER & RENDER ──────────────────────────────────────────
+window.filterChoy = function(cat, el) {
+  currentCat = cat;
+  document.querySelectorAll('.choy-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderChoy(cat);
+};
+
+function renderChoy(cat) {
+  const list = document.getElementById('choy-list');
+  list.innerHTML = '';
+  const filtered = cat === 'all' ? CHOYXONALAR : CHOYXONALAR.filter(c => c.cat === cat);
+  filtered.forEach(c => {
+    const free = c.totalSeats - c.takenSeats.length;
+    const d = document.createElement('div');
+    d.className = 'choy-card';
+    d.onclick = () => showChoyDetail(c);
+    const tags = c.tags.map((t,i) => `<span class="choy-tag ${i===0?'o':'g'}">${t}</span>`).join('');
+    const catLbl = c.cat === 'oila' ? '\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Oila' : '\ud83d\udc6b Ulfatlar';
+    d.innerHTML = `
+      <div class="choy-card-top">
+        <div class="choy-card-ico">${c.ico}</div>
+        <div class="choy-card-body">
+          <div class="choy-card-name">${c.name}</div>
+          <div class="choy-card-meta">
+            <span class="choy-rating">\u2b50 ${c.rating}</span>
+            <span class="choy-dist">${c.dist}</span>
+            <span class="choy-cat-badge">${catLbl}</span>
+          </div>
+          <div class="choy-card-tags">${tags}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+          <span style="font-size:11px;font-weight:700;color:#52b788">${free} bo\u02bbsh</span>
+          <span style="font-size:10px;color:var(--text-muted)">${c.totalSeats} ta joy</span>
+          <span class="choy-card-arr">\u2192</span>
+        </div>
+      </div>`;
+    list.appendChild(d);
+  });
+}
 </script>
 
 </body>
