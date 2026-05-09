@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>BEK_BOLA | Parkent</title>
+  <title>TURIST24 | Parkent</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -948,7 +948,7 @@
     }
     .plan-sheet.open .plan-panel{transform:translateY(0);}
 
-    /* Panel header — BEK·BOLA logosi bilan */
+    /* Panel header — TURIST24 logosi bilan */
     .plan-hdr{
       padding:20px 20px 14px;
       border-bottom:1px solid var(--border);
@@ -1728,6 +1728,30 @@
     .choy-gmap { padding:0 14px 0; }
     .choy-gmap iframe { width:100%;height:160px;border-radius:12px;border:none;display:block; }
     .choy-gmap-label { font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+
+    /* ── KALENDAR ─────────────────────────────────────── */
+    .cal-wrap { padding:0 14px 12px; }
+    .cal-wrap-label { font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px; }
+    .cal-header { display:flex;align-items:center;justify-content:center;margin-bottom:10px; }
+    .cal-month { font-size:13px;font-weight:700;color:var(--text); }
+    .cal-grid { display:grid;grid-template-columns:repeat(7,1fr);gap:4px; }
+    .cal-day-name { font-size:9px;font-weight:700;color:var(--text-muted);text-align:center;padding:2px 0;letter-spacing:.05em; }
+    .cal-day {
+      aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:600;color:var(--text);
+      border-radius:8px;cursor:pointer;transition:all .13s;
+    }
+    .cal-day:hover:not(.past) { background:rgba(26,158,82,0.12); }
+    .cal-day.today { background:rgba(26,110,247,0.15);color:#6bb8f0;font-weight:800; }
+    .cal-day.selected { background:#1a9e52 !important;color:#fff !important;font-weight:800; }
+    .cal-day.past { color:var(--text-muted);opacity:.35;cursor:default; }
+
+    /* Mobil: choy-card nomi siqilmasin */
+    @media(max-width:380px){
+      .choy-card-name { font-size:12px; }
+      .choy-cat-badge { display:none; }
+      .choy-dist { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -1745,7 +1769,7 @@
 
   <div class="header">
     <div class="logo-wrap">
-      <div class="logo"><span class="logo-bek">BEK</span><div class="logo-sep"></div><span class="logo-bola">BOLA</span></div>
+      <div class="logo"><span class="logo-bek">TURIST</span><div class="logo-sep"></div><span class="logo-bola">24</span></div>
       <div class="logo-badge" id="t-tagline">Parkent Tuman Hokimligi</div>
     </div>
     <div class="mic-wrap">
@@ -1790,7 +1814,7 @@
       <div class="adslider-track" id="adtrack">
         <div class="adslide adslide-1"><div class="ad-ad-badge">Reklama</div><div class="ad-deco">🌿</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Aksiya · Bahor 2026</div><div class="ad-title">Kumushkonda<br><em>20% chegirma</em></div><div class="ad-sub">Oila bilan tashrif buyurishingizda katta chegirma. Erta band qilgan — tejamkor!</div><div class="ad-bottom"><div class="ad-cta" onclick="goEco()">Yo'nalishni ko'rish →</div></div></div></div>
         <div class="adslide adslide-2"><div class="ad-ad-badge">Reklama</div><div class="ad-deco">🍢</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Gastronomiya</div><div class="ad-title">Parkent shashligi —<br><em>haqiqiy ta'm</em></div><div class="ad-sub">Akbar usta: 30 yillik an'anaviy retsept. Hafta oxirida 2 porsiya — 1 narxida!</div><div class="ad-bottom"><div class="ad-cta" onclick="near('restaurant')">Restoranlar →</div></div></div></div>
-        <div class="adslide adslide-3"><div class="ad-ad-badge">Yangilik</div><div class="ad-deco">🌐</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>360° Virtual Sayohat</div><div class="ad-title">Uydan turib<br><em>Parkentni kashf et</em></div><div class="ad-sub">BEK·BOLA virtual sayohat xizmati ishga tushdi. Bepul!</div><div class="ad-bottom"><div class="ad-cta" onclick="openVirtualTour()">Boshlash →</div></div></div></div>
+        <div class="adslide adslide-3"><div class="ad-ad-badge">Yangilik</div><div class="ad-deco">🌐</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>360° Virtual Sayohat</div><div class="ad-title">Uydan turib<br><em>Parkentni kashf et</em></div><div class="ad-sub">TURIST24 virtual sayohat xizmati ishga tushdi. Bepul!</div><div class="ad-bottom"><div class="ad-cta" onclick="openVirtualTour()">Boshlash →</div></div></div></div>
         <div class="adslide adslide-4"><div class="ad-ad-badge">Tadbir</div><div class="ad-deco">🎉</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>21 Mart · Navroz 2026</div><div class="ad-title">Parkent Navroz<br><em>festivali</em></div><div class="ad-sub">Milliy o'yinlar, xalq taomlar ko'rgazmasi, konsert. Oila bilan keling!</div><div class="ad-bottom"><div class="ad-cta" onclick="openPlan()">Reja tuzish →</div></div></div></div>
         <div class="adslide adslide-5"><div class="ad-ad-badge">Xizmat</div><div class="ad-deco">🚕</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>24/7 Parkent taxi</div><div class="ad-title">Taxi <em>1054</em> —<br>tez va qulay</div><div class="ad-sub">Istalgan manzilga. Kishi soniga mos avtomobil. Kecha-kunduz.</div><div class="ad-bottom"><div class="ad-cta" onclick="callTaxi()">Qo'ng'iroq →</div></div></div></div>
         <div class="adslide adslide-6"><div class="ad-deco">📢</div><div class="adslide-content"><div class="ad-label"><div class="ad-label-dot"></div>Reklama joyi</div><div class="ad-title">Bu joy sizning<br><em>reklamangiz</em> uchun</div><div class="ad-sub">Minglab foydalanuvchiga biznesingizni tanishtiring.</div><div class="ad-bottom"><div class="ad-cta">Bog'lanish →</div></div></div></div>
@@ -1840,7 +1864,7 @@
       <div class="plan-mini-icon">🗓️</div>
       <div class="plan-mini-text">
         <div class="plan-mini-title" id="t-plan-title">Kunlik Reja</div>
-        <div class="plan-mini-sub" id="t-plan-sub">BEK·BOLA bilan bugungi sayohatingizni rejalashtiring</div>
+        <div class="plan-mini-sub" id="t-plan-sub">TURIST24 bilan bugungi sayohatingizni rejalashtiring</div>
       </div>
       <div class="plan-mini-arr">↗</div>
     </div>
@@ -1947,11 +1971,16 @@
           <iframe id="det-map" src="" loading="lazy" allowfullscreen></iframe>
         </div>
 
+        <!-- Kalendar -->
+        <div class="cal-wrap" style="margin-top:12px;">
+          <div class="cal-wrap-label">Sana tanlang</div>
+          <div id="det-calendar"></div>
+        </div>
+
         <!-- Vizual joy rejasi (SVG) -->
         <div class="choy-map" style="margin-top:12px;">
-          <div class="choy-map-title">Choyxona rejasi</div>
+          <div class="choy-map-title">Choyxona rejasi — joyni bosib tanlang</div>
           <div class="choy-layout" id="det-layout">
-            <!-- SVG dinamik render qilinadi -->
           </div>
         </div>
 
@@ -1979,7 +2008,7 @@
   </div>
 
 
-  <footer><div class="footer-text">System 2026 · Safe Parkent</div></footer>
+  <footer><div class="footer-text">TURIST24 · Parkent Turizm Platformasi</div></footer>
   <div class="toast" id="toast"></div>
 
   <!-- CONFIRM MODAL -->
@@ -2001,14 +2030,14 @@
   <div class="plan-sheet" id="plan-sheet" onclick="closePlanOutside(event)">
     <div class="plan-panel" id="plan-panel">
 
-      <!-- Header: BEK·BOLA logosi -->
+      <!-- Header: TURIST24 logosi -->
       <div class="plan-hdr">
         <div class="plan-hdr-top">
           <div class="plan-logo">
             <div class="plan-logo-mark">
-              <span class="plan-logo-bek">BEK</span>
+              <span class="plan-logo-bek">TURIST</span>
               <div class="plan-logo-dot"></div>
-              <span class="plan-logo-bola">BOLA</span>
+              <span class="plan-logo-bola">24</span>
             </div>
             <div class="plan-logo-sub">Kunlik Reja Yordamchisi</div>
           </div>
@@ -3646,57 +3675,75 @@ function buildConfirmed(){
 <script>
 const CHOYXONALAR = [
   {
-    id:1, name:"Oq Ko\u02bbprik Choyxonasi", ico:"\u2615", cat:"oila",
-    tags:["Oila uchun","Hovli","O\u02bbtin tandyr"],
-    rating:"4.8", dist:"300 m",
+    id:1,
+    name:"Bahor Fasl Choyxonasi",
+    ico:"🌸", cat:"oila",
+    tags:["Oila uchun","Hovli","Bolalar maydoni"],
+    rating:"4.8", dist:"320 m",
     lat:41.2963, lng:69.6803,
-    desc:"Parkentsoy bo\u02bbyi\u02bbdagi eng sevimli oilaviy choyxona. Soya daraxtlar ostida xontaxtalar, bolalar o\u02bbyni maydoni.",
-    totalSeats:12, takenSeats:[2,5,8],
-    layout:"oila"
+    desc:"Parkentsoy bo'yidagi eng sevimli oilaviy choyxona. Soyali bog'da xontaxtalar, bolalar o'yin maydoni va o'tin tandyr.",
+    totalSeats:10,
+    takenSeats:[2,5,8,9],
+    layout:"L"
   },
   {
-    id:2, name:"Soybon Choyxona", ico:"\ud83e\udd43", cat:"oila",
-    tags:["Oila uchun","Xontaxta","Jim joy"],
-    rating:"4.6", dist:"700 m",
+    id:2,
+    name:"Chinor Soyasi",
+    ico:"🌳", cat:"oila",
+    tags:["Oila uchun","200 yillik chinor","Jim muhit"],
+    rating:"4.9", dist:"650 m",
     lat:41.2975, lng:69.6818,
-    desc:"Tinch va xotirjam muhit. Katta xontaxtalar, pardalar bilan ajratilgan joylar. Bolalar uchun alohida bo\u02bblim.",
-    totalSeats:10, takenSeats:[1,3,6,9],
-    layout:"oila"
+    desc:"200 yillik chinor daraxti ostida. Pardalar bilan ajratilgan xontaxtalar, tinch va xotirjam joy.",
+    totalSeats:8,
+    takenSeats:[1,4,6],
+    layout:"U"
   },
   {
-    id:3, name:"Ko\u02bbhna Bozor Oshxonasi", ico:"\ud83c\udf72", cat:"oila",
-    tags:["Oilaviy","Milliy taomlar","Arzon"],
-    rating:"4.5", dist:"400 m",
+    id:3,
+    name:"Zargaron Oshxonasi",
+    ico:"🍲", cat:"oila",
+    tags:["Oilaviy","Milliy taomlar","Arzon narx"],
+    rating:"4.6", dist:"400 m",
     lat:41.2957, lng:69.6792,
-    desc:"Milliy o\u02bbbek taomlar. Oshxona va choyxona birga. Tushlik soatlarda juda gavjum.",
-    totalSeats:16, takenSeats:[1,2,4,7,10,13],
+    desc:"O'zbek milliy taomlar markazi. Oshxona va choyxona birga. Katta zal, 15 ta xontaxta.",
+    totalSeats:15,
+    takenSeats:[1,2,4,7,9,10,13],
     layout:"katta"
   },
   {
-    id:4, name:"Do\u02bbstlar Choyxonasi", ico:"\u2615\ufe0f", cat:"ulfat",
-    tags:["Ulfatlar uchun","Bilyard","Shashka"],
+    id:4,
+    name:"Do'stlik Maskani",
+    ico:"🎱", cat:"ulfat",
+    tags:["Ulfatlar uchun","Bilyard","Shashka","Domino"],
     rating:"4.7", dist:"500 m",
     lat:41.2980, lng:69.6812,
-    desc:"Yigitlar uchun zo\u02bbr joy. Bilyard stoli, shashka va domino. Kechgacha ochiq.",
-    totalSeats:8, takenSeats:[3,7],
-    layout:"ulfat"
+    desc:"Yigitlar uchun zo'r joy. Bilyard stoli, shashka va domino. Kechqurun 23:00 gacha ochiq.",
+    totalSeats:8,
+    takenSeats:[3,7],
+    layout:"bilyard"
   },
   {
-    id:5, name:"Chinar Ostida", ico:"\ud83c\udf33", cat:"ulfat",
-    tags:["Tashqarida","Soyali","Ulfatlar"],
-    rating:"4.9", dist:"1.2 km",
+    id:5,
+    name:"Buloq Boshi",
+    ico:"💧", cat:"ulfat",
+    tags:["Tog' bulog'i","Tashqarida","Sof havo"],
+    rating:"4.9", dist:"1.1 km",
     lat:41.2990, lng:69.6831,
-    desc:"200 yillik chinor daraxti soyasida. Ochiq havo, toza tog\u02bb havosi. Eng yaxshi joy.",
-    totalSeats:14, takenSeats:[2,6,11],
+    desc:"Tog' bulog'i yonida. Ochiq havo, toza suv, soyali daraxtlar. Ulfatlar uchun ideal joy.",
+    totalSeats:12,
+    takenSeats:[2,6,9,11],
     layout:"bog"
   },
   {
-    id:6, name:"Kumushkon Choyxonasi", ico:"\ud83c\udfd4\ufe0f", cat:"ulfat",
-    tags:["Tog\u02bb havosi","Eksklusiv","Dam olish"],
+    id:6,
+    name:"Kumushkon Tog' Choyxonasi",
+    ico:"🏔️", cat:"ulfat",
+    tags:["Tog' havosi","Eksklusiv","Buloq suvi"],
     rating:"5.0", dist:"8 km",
     lat:41.3089, lng:69.7441,
-    desc:"Kumushkon tog\u02bb etagi. Shifobaxsh havosi va buloq suvi. Eng toza va go\u02bbzal choyxona.",
-    totalSeats:10, takenSeats:[4],
+    desc:"Kumushkon tog' etagi. Mineral shifobaxsh buloq suvi, toza havo. Parkentning eng go'zal choyxonasi.",
+    totalSeats:10,
+    takenSeats:[4,8],
     layout:"tog"
   },
 ];
@@ -3704,123 +3751,253 @@ const CHOYXONALAR = [
 let currentCat = 'all';
 let selectedSeats = [];
 let currentChoy = null;
+let selectedDate = null;
+let allDatesSeats = {}; // {dateStr: {choyId: [takenSeats]}}
 
-// ── SVG Layout generator ─────────────────────────────────────
-function buildLayoutSVG(choy) {
-  const taken = choy.takenSeats;
-  const total = choy.totalSeats;
-  const type  = choy.layout;
+// ─── KALENDAR ───────────────────────────────────────────────
+function initCalendar() {
+  const el = document.getElementById('det-calendar');
+  if(!el) return;
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const monthNames = ["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentyabr","Oktyabr","Noyabr","Dekabr"];
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const todayStr = today.toISOString().slice(0,10);
+  if(!selectedDate) selectedDate = todayStr;
 
-  const W = 300, H = 180;
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px">`;
+  let html = `<div class="cal-header">
+    <div class="cal-month">${monthNames[month]} ${year}</div>
+  </div>
+  <div class="cal-grid">
+    <div class="cal-day-name">Du</div><div class="cal-day-name">Se</div>
+    <div class="cal-day-name">Ch</div><div class="cal-day-name">Pa</div>
+    <div class="cal-day-name">Ju</div><div class="cal-day-name">Sh</div>
+    <div class="cal-day-name">Ya</div>`;
 
-  // Background
-  const bgColor = '#111a11';
-  svg += `<rect width="${W}" height="${H}" fill="${bgColor}" rx="8"/>`;
+  // Fix: getDay() — 0=Yak, 1=Du...
+  const startOffset = (firstDay === 0 ? 6 : firstDay - 1);
+  for(let i = 0; i < startOffset; i++) html += '<div></div>';
 
-  if(type === 'oila' || type === 'katta') {
-    // Kirishni ko'rsat
-    svg += `<rect x="130" y="165" width="40" height="10" rx="3" fill="#1a3a1a"/>`;
-    svg += `<text x="150" y="163" fill="#52b788" font-size="8" text-anchor="middle" font-family="sans-serif">Kirish</text>`;
-
-    // Devorlar
-    svg += `<rect x="10" y="10" width="2" height="${H-20}" fill="#2a4a2a" rx="1"/>`;
-    svg += `<rect x="${W-12}" y="10" width="2" height="${H-20}" fill="#2a4a2a" rx="1"/>`;
-    svg += `<rect x="10" y="10" width="${W-22}" height="2" fill="#2a4a2a" rx="1"/>`;
-
-    // Xontaxtalar (2 qator, 4 tadan)
-    const cols = type === 'katta' ? 4 : 3;
-    const xStart = type === 'katta' ? 28 : 40;
-    const xGap   = type === 'katta' ? 62 : 72;
-
-    for(let row = 0; row < 2; row++) {
-      for(let col = 0; col < cols; col++) {
-        const seatNum = row * cols + col + 1;
-        const cx = xStart + col * xGap;
-        const cy = 40 + row * 80;
-        const isTaken    = taken.includes(seatNum);
-        const isSelected = selectedSeats.includes(seatNum);
-        const color = isSelected ? '#1a9e52' : isTaken ? '#8b4513' : '#1a3a1a';
-        const borderC = isSelected ? '#52b788' : isTaken ? '#cd7f32' : '#2d6a2d';
-
-        // Xontaxta
-        svg += `<rect x="${cx-20}" y="${cy-15}" width="40" height="30" rx="5"
-          fill="${color}" stroke="${borderC}" stroke-width="1.5"
-          style="cursor:${isTaken?'default':'pointer'}"
-          onclick="${isTaken ? '' : `toggleSeat(${seatNum})`}"/>`;
-
-        // Raqam
-        const txtColor = isSelected ? '#fff' : isTaken ? '#cd7f32' : '#52b788';
-        svg += `<text x="${cx}" y="${cy+4}" fill="${txtColor}" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="bold">${seatNum}</text>`;
-
-        // Bo'sh/Band belgisi
-        if(!isTaken && !isSelected) {
-          svg += `<circle cx="${cx+14}" cy="${cy-10}" r="4" fill="#1a9e52" opacity="0.8"/>`;
-        } else if(isTaken) {
-          svg += `<circle cx="${cx+14}" cy="${cy-10}" r="4" fill="#f4820a" opacity="0.8"/>`;
-        }
-      }
-    }
-  } else if(type === 'ulfat') {
-    // Bilyard stoli + xontaxtalar
-    svg += `<rect x="100" y="60" width="100" height="60" rx="6" fill="#0a2a0a" stroke="#1a5a1a" stroke-width="2"/>`;
-    svg += `<text x="150" y="93" fill="#2d6a2d" font-size="9" text-anchor="middle" font-family="sans-serif">Bilyard</text>`;
-    svg += `<text x="150" y="105" fill="#52b788" font-size="8" text-anchor="middle" font-family="sans-serif">stoli</text>`;
-
-    const seatPos = [[30,40],[30,100],[30,150],[80,20],[80,160],[220,20],[220,160],[250,90]];
-    seatPos.forEach(([sx,sy],i) => {
-      const sn = i+1;
-      const isTaken = taken.includes(sn);
-      const isSel   = selectedSeats.includes(sn);
-      const fc = isSel?'#1a9e52':isTaken?'#8b4513':'#1a3a1a';
-      const sc = isSel?'#52b788':isTaken?'#cd7f32':'#2d6a2d';
-      svg += `<rect x="${sx-14}" y="${sy-12}" width="28" height="24" rx="4" fill="${fc}" stroke="${sc}" stroke-width="1.5" style="cursor:${isTaken?'default':'pointer'}" onclick="${isTaken?'':('toggleSeat('+sn+')')}"/>`;
-      svg += `<text x="${sx}" y="${sy+4}" fill="${isSel?'#fff':isTaken?'#cd7f32':'#52b788'}" font-size="9" text-anchor="middle" font-family="sans-serif" font-weight="bold">${sn}</text>`;
-    });
-  } else {
-    // Bog' / Tog' uslubi — doira xontaxtalar
-    const positions = [
-      [60,50],[150,40],[240,50],[40,120],[110,130],[190,125],[260,115],[80,165],[150,160],[220,165],[100,80],[200,85]
-    ];
-    positions.slice(0, total).forEach(([sx,sy],i) => {
-      const sn = i+1;
-      const isTaken = taken.includes(sn);
-      const isSel   = selectedSeats.includes(sn);
-      const fc = isSel?'#1a9e52':isTaken?'#4a2500':'#0d2a0d';
-      const sc = isSel?'#52b788':isTaken?'#cd7f32':'#2d6a2d';
-      svg += `<circle cx="${sx}" cy="${sy}" r="16" fill="${fc}" stroke="${sc}" stroke-width="1.5" style="cursor:${isTaken?'default':'pointer'}" onclick="${isTaken?'':('toggleSeat('+sn+')')}"/>`;
-      svg += `<text x="${sx}" y="${sy+4}" fill="${isSel?'#fff':isTaken?'#cd7f32':'#52b788'}" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="bold">${sn}</text>`;
-    });
-    // Daraxtlar
-    svg += `<text x="20" y="25" font-size="16">🌳</text>`;
-    svg += `<text x="260" y="25" font-size="16">🌳</text>`;
-    svg += `<text x="140" y="15" font-size="14">☘️</text>`;
+  for(let d = 1; d <= daysInMonth; d++) {
+    const dateStr = year + '-' + String(month+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = dateStr === todayStr;
+    const isSel   = dateStr === selectedDate;
+    const isPast  = new Date(dateStr) < new Date(todayStr);
+    let cls = 'cal-day';
+    if(isToday) cls += ' today';
+    if(isSel)   cls += ' selected';
+    if(isPast)  cls += ' past';
+    html += `<div class="${cls}" onclick="selectDate('${dateStr}')">${d}</div>`;
   }
-
-  // Izoh
-  svg += `<rect x="10" y="${H-20}" width="8" height="8" rx="2" fill="#1a3a1a" stroke="#2d6a2d" stroke-width="1"/>`;
-  svg += `<text x="22" y="${H-13}" fill="#52b788" font-size="8" font-family="sans-serif">Bo\u02bbsh</text>`;
-  svg += `<rect x="70" y="${H-20}" width="8" height="8" rx="2" fill="#4a2500" stroke="#cd7f32" stroke-width="1"/>`;
-  svg += `<text x="82" y="${H-13}" fill="#f4820a" font-size="8" font-family="sans-serif">Band</text>`;
-  svg += `<rect x="125" y="${H-20}" width="8" height="8" rx="2" fill="#1a9e52" stroke="#52b788" stroke-width="1"/>`;
-  svg += `<text x="137" y="${H-13}" fill="#52b788" font-size="8" font-family="sans-serif">Tanlangan</text>`;
-
-  svg += '</svg>';
-  return svg;
+  html += '</div>';
+  el.innerHTML = html;
 }
 
-// ── OPEN / CLOSE ─────────────────────────────────────────────
+window.selectDate = function(dateStr) {
+  const today = new Date().toISOString().slice(0,10);
+  if(dateStr < today) return;
+  selectedDate = dateStr;
+  selectedSeats = [];
+
+  // Har xil kun — har xil band joylar
+  if(!allDatesSeats[dateStr]) {
+    if(currentChoy) {
+      const base = [...currentChoy.takenSeats];
+      // Tasodifiy qo'shimcha band joylar
+      const extra = Math.floor(Math.random() * 3);
+      for(let i = 0; i < extra; i++) {
+        const n = Math.floor(Math.random() * currentChoy.totalSeats) + 1;
+        if(!base.includes(n)) base.push(n);
+      }
+      allDatesSeats[dateStr] = {};
+      allDatesSeats[dateStr][currentChoy.id] = base;
+    }
+  }
+
+  initCalendar();
+  if(currentChoy) {
+    const taken = getTakenForDate(currentChoy, dateStr);
+    document.getElementById('det-layout').innerHTML = buildLayoutSVG(currentChoy, taken);
+    renderSeats(currentChoy, taken);
+  }
+  updateBronBtn();
+};
+
+function getTakenForDate(choy, dateStr) {
+  if(allDatesSeats[dateStr] && allDatesSeats[dateStr][choy.id]) {
+    return allDatesSeats[dateStr][choy.id];
+  }
+  return choy.takenSeats;
+}
+
+// ─── SVG LAYOUT ─────────────────────────────────────────────
+function seat_rect(x, y, w, h, n, taken, sel) {
+  const fc = sel ? '#1a9e52' : taken ? '#3a1a00' : '#0f2a1a';
+  const sc = sel ? '#52b788' : taken ? '#e8a020' : '#1a5a2a';
+  const tc = sel ? '#fff'    : taken ? '#e8a020' : '#52b788';
+  const cur = taken ? 'default' : 'pointer';
+  const click = taken ? '' : `toggleSeat(${n})`;
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5"
+    fill="${fc}" stroke="${sc}" stroke-width="1.5"
+    style="cursor:${cur}" onclick="${click}"/>
+    <text x="${x+w/2}" y="${y+h/2+4}" fill="${tc}" font-size="10"
+    text-anchor="middle" font-family="sans-serif" font-weight="700">${n}</text>
+    ${!taken && !sel ? `<circle cx="${x+w-4}" cy="${y+4}" r="3" fill="#1a9e52"/>` :
+      taken ? `<circle cx="${x+w-4}" cy="${y+4}" r="3" fill="#e8a020"/>` : ''}`;
+}
+
+function seat_circ(cx, cy, r, n, taken, sel) {
+  const fc = sel ? '#1a9e52' : taken ? '#3a1a00' : '#0f2a1a';
+  const sc = sel ? '#52b788' : taken ? '#e8a020' : '#1a5a2a';
+  const tc = sel ? '#fff'    : taken ? '#e8a020' : '#52b788';
+  const cur = taken ? 'default' : 'pointer';
+  const click = taken ? '' : `toggleSeat(${n})`;
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fc}" stroke="${sc}"
+    stroke-width="1.5" style="cursor:${cur}" onclick="${click}"/>
+    <text x="${cx}" y="${cy+4}" fill="${tc}" font-size="10"
+    text-anchor="middle" font-family="sans-serif" font-weight="700">${n}</text>`;
+}
+
+function buildLayoutSVG(choy, takenOverride) {
+  const taken = takenOverride || choy.takenSeats;
+  const W = 320, H = 200;
+  const bg = {'L':'#080f12','U':'#0a0f0a','katta':'#0a0d0a','bilyard':'#080f0a','bog':'#060d06','tog':'#080a0f'};
+  let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"
+    style="width:100%;border-radius:10px;cursor:default">
+    <rect width="${W}" height="${H}" fill="${bg[choy.layout]||'#0a0d0a'}" rx="10"/>`;
+
+  if(choy.layout === 'L') {
+    // L shaklidagi choyxona — 10 ta xontaxta
+    // Devor
+    s += `<rect x="12" y="12" width="${W-24}" height="2" fill="#1a3a2a"/>
+    <rect x="12" y="12" width="2" height="${H-24}" fill="#1a3a2a"/>
+    <rect x="${W-14}" y="12" width="2" height="120" fill="#1a3a2a"/>
+    <rect x="12" y="${H-24}" width="160" height="2" fill="#1a3a2a"/>
+    <text x="${W/2}" y="${H-8}" fill="#1a5a3a" font-size="9" text-anchor="middle" font-family="sans-serif">🚪 Kirish</text>`;
+    // Xontaxtalar: 6 ta yuqorida, 4 ta chap tomonda
+    [[50,45],[110,45],[170,45],[230,45],[50,120],[110,120]].forEach(([x,y],i) => {
+      const n=i+1; s += seat_rect(x-18,y-16,36,32,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    [[35,155],[80,155],[35,190],[80,190]].forEach(([x,y],i) => {
+      const n=i+7; s += seat_rect(x-16,y-14,32,28,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    // Dekor
+    s += `<text x="275" y="60" font-size="18" opacity=".3">🌿</text>
+    <text x="275" y="120" font-size="18" opacity=".3">🌿</text>`;
+
+  } else if(choy.layout === 'U') {
+    // U shakl — 8 ta
+    s += `<rect x="12" y="12" width="${W-24}" height="2" fill="#1a3a1a"/>
+    <rect x="12" y="12" width="2" height="${H-24}" fill="#1a3a1a"/>
+    <rect x="${W-14}" y="12" width="2" height="${H-24}" fill="#1a3a1a"/>
+    <text x="${W/2}" y="${H-8}" fill="#1a5a2a" font-size="9" text-anchor="middle" font-family="sans-serif">🚪 Kirish</text>`;
+    // Yuqori qator: 4 ta
+    [[60,50],[120,50],[180,50],[240,50]].forEach(([x,y],i)=>{
+      const n=i+1; s+=seat_rect(x-18,y-16,36,32,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    // Chap: 2 ta
+    [[30,110],[30,155]].forEach(([x,y],i)=>{
+      const n=i+5; s+=seat_rect(x-16,y-16,32,30,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    // O'ng: 2 ta
+    [[280,110],[280,155]].forEach(([x,y],i)=>{
+      const n=i+7; s+=seat_rect(x-16,y-16,32,30,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    // Dekor — o'rta
+    s += `<rect x="100" y="90" width="120" height="80" rx="8" fill="rgba(255,255,255,0.03)" stroke="#1a3a1a" stroke-width="1"/>
+    <text x="160" y="135" fill="#1a4a2a" font-size="9" text-anchor="middle" font-family="sans-serif">🌺 Bog' maydoni</text>`;
+
+  } else if(choy.layout === 'katta') {
+    // 15 ta — 3x5 grid, katta zal
+    s += `<rect x="12" y="12" width="${W-24}" height="2" fill="#1a3a1a"/>
+    <rect x="12" y="12" width="2" height="${H-24}" fill="#1a3a1a"/>
+    <rect x="${W-14}" y="12" width="2" height="${H-24}" fill="#1a3a1a"/>
+    <rect x="12" y="${H-14}" width="${W-24}" height="2" fill="#1a3a1a"/>
+    <text x="${W/2}" y="${H-4}" fill="#1a5a2a" font-size="8" text-anchor="middle" font-family="sans-serif">🚪 Kirish</text>`;
+    // 5 ustun x 3 qator
+    for(let row=0;row<3;row++) for(let col=0;col<5;col++){
+      const n=row*5+col+1;
+      const x=30+col*58, y=35+row*55;
+      s+=seat_rect(x-16,y-14,32,28,n,taken.includes(n),selectedSeats.includes(n));
+    }
+    // O'rta yo'lak
+    s += `<line x1="160" y1="15" x2="160" y2="${H-15}" stroke="#1a3a1a" stroke-width="1" stroke-dasharray="3,3"/>`;
+
+  } else if(choy.layout === 'bilyard') {
+    // Bilyard stoli markazda, xontaxtalar atrofida
+    s += `<rect x="90" y="65" width="140" height="80" rx="8" fill="#0a2a0a" stroke="#1a5a1a" stroke-width="2"/>
+    <text x="160" y="100" fill="#1a5a1a" font-size="10" text-anchor="middle" font-family="sans-serif" font-weight="bold">Bilyard</text>
+    <text x="160" y="115" fill="#2d8a2d" font-size="9" text-anchor="middle" font-family="sans-serif">stoli</text>
+    <circle cx="100" cy="75" r="5" fill="#1a5a1a"/>
+    <circle cx="160" cy="68" r="5" fill="#1a5a1a"/>
+    <circle cx="220" cy="75" r="5" fill="#1a5a1a"/>`;
+    // 8 ta o'rindiq atrofida
+    [[35,50],[35,105],[35,155],[160,30],[285,50],[285,105],[285,155],[160,175]].forEach(([x,y],i)=>{
+      const n=i+1; s+=seat_circ(x,y,15,n,taken.includes(n),selectedSeats.includes(n));
+    });
+
+  } else if(choy.layout === 'bog') {
+    // Ochiq bog' — doira o'rindiqlar, daraxtlar
+    s += `<text x="20" y="22" font-size="16">🌳</text>
+    <text x="280" y="22" font-size="16">🌳</text>
+    <text x="148" y="18" font-size="14">☘️</text>
+    <text x="20" y="${H-5}" font-size="14">🌿</text>
+    <text x="280" y="${H-5}" font-size="14">🌿</text>`;
+    // 12 ta — ellips bo'ylab
+    const cx=160, cy=100, rx=120, ry=75;
+    for(let i=0;i<12;i++){
+      const angle = (i/12)*2*Math.PI - Math.PI/2;
+      const x = Math.round(cx + rx*Math.cos(angle));
+      const y = Math.round(cy + ry*Math.sin(angle));
+      const n=i+1; s+=seat_circ(x,y,14,n,taken.includes(n),selectedSeats.includes(n));
+    }
+    // Markaz dekor
+    s += `<circle cx="160" cy="100" r="30" fill="rgba(20,60,20,0.4)" stroke="#1a4a1a" stroke-width="1"/>
+    <text x="160" y="104" fill="#1a5a1a" font-size="10" text-anchor="middle" font-family="sans-serif">🌺</text>`;
+
+  } else if(choy.layout === 'tog') {
+    // Tog' — tabiiy tartibda, 10 ta
+    s += `<text x="10" y="20" font-size="20" opacity=".4">🏔️</text>
+    <text x="270" y="20" font-size="20" opacity=".4">🏔️</text>
+    <text x="138" y="18" font-size="16" opacity=".5">⛰️</text>`;
+    // Buloq
+    s += `<ellipse cx="160" cy="155" rx="25" ry="12" fill="#0a1a2a" stroke="#1a3a5a" stroke-width="1.5"/>
+    <text x="160" y="159" fill="#1a5aaa" font-size="8" text-anchor="middle" font-family="sans-serif">💧 buloq</text>`;
+    // 10 ta — 2 qator kamón shaklida
+    [[50,55],[100,40],[160,35],[220,40],[270,55]].forEach(([x,y],i)=>{
+      const n=i+1; s+=seat_circ(x,y,15,n,taken.includes(n),selectedSeats.includes(n));
+    });
+    [[70,115],[120,100],[160,95],[200,100],[250,115]].forEach(([x,y],i)=>{
+      const n=i+6; s+=seat_circ(x,y,15,n,taken.includes(n),selectedSeats.includes(n));
+    });
+  }
+
+  // Izoh (legend)
+  s += `<rect x="8" y="${H-14}" width="7" height="7" rx="2" fill="#0f2a1a" stroke="#1a5a2a" stroke-width="1"/>
+  <text x="19" y="${H-7}" fill="#52b788" font-size="7" font-family="sans-serif">Bo'sh</text>
+  <rect x="65" y="${H-14}" width="7" height="7" rx="2" fill="#3a1a00" stroke="#e8a020" stroke-width="1"/>
+  <text x="76" y="${H-7}" fill="#e8a020" font-size="7" font-family="sans-serif">Band</text>
+  <rect x="115" y="${H-14}" width="7" height="7" rx="2" fill="#1a9e52" stroke="#52b788" stroke-width="1"/>
+  <text x="126" y="${H-7}" fill="#52b788" font-size="7" font-family="sans-serif">Tanlangan</text>`;
+
+  s += '</svg>';
+  return s;
+}
+
+// ─── OPEN / CLOSE ───────────────────────────────────────────
 window.openChoyxona = function() {
   document.getElementById('choy-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  selectedDate = new Date().toISOString().slice(0,10);
   showChoyList();
   renderChoy('all');
 };
 window.closeChoy = function() {
   document.getElementById('choy-overlay').classList.remove('open');
   document.body.style.overflow = '';
-  selectedSeats = [];
-  currentChoy = null;
+  selectedSeats = []; currentChoy = null;
 };
 window.closeChoyOutside = function(e) {
   if(e.target === document.getElementById('choy-overlay')) closeChoy();
@@ -3829,145 +4006,156 @@ window.closeChoyOutside = function(e) {
 function showChoyList() {
   document.getElementById('choy-list').style.display = 'flex';
   document.getElementById('choy-detail').style.display = 'none';
-  const ct1=document.querySelector('.choy-tabs'); if(ct1) ct1.style.display='flex';
+  const t = document.querySelector('.choy-tabs'); if(t) t.style.display='flex';
 }
 
 function showChoyDetail(choy) {
   document.getElementById('choy-list').style.display = 'none';
   document.getElementById('choy-detail').style.display = 'block';
-  const ct2=document.querySelector('.choy-tabs'); if(ct2) ct2.style.display='none';
+  const t = document.querySelector('.choy-tabs'); if(t) t.style.display='none';
   currentChoy = choy;
   selectedSeats = [];
+  if(!selectedDate) selectedDate = new Date().toISOString().slice(0,10);
 
-  // Header
-  document.getElementById('det-name').textContent = choy.name;
-  document.getElementById('det-meta').textContent = '\u2b50 ' + choy.rating + ' \u00b7 ' + choy.dist + ' \u00b7 ' + choy.desc.slice(0,40) + '...';
+  setText('det-name', choy.name);
+  setText('det-meta', '⭐ '+choy.rating+' · '+choy.dist);
 
-  // Google Maps embed
-  const mapSrc = `https://maps.google.com/maps?q=${choy.lat},${choy.lng}&z=17&output=embed`;
-  document.getElementById('det-map').src = mapSrc;
+  const mapSrc = 'https://maps.google.com/maps?q='+choy.lat+','+choy.lng+'&z=17&output=embed';
+  const mapEl = document.getElementById('det-map');
+  if(mapEl) mapEl.src = mapSrc;
 
-  // Layout SVG
-  document.getElementById('det-layout').innerHTML = buildLayoutSVG(choy);
-
-  // Seat buttons
-  renderSeats(choy);
-  updateBronBtn();
-
-  // Success hide
   const suc = document.getElementById('bron-success');
   if(suc) suc.classList.remove('show');
+
+  initCalendar();
+  const taken = getTakenForDate(choy, selectedDate);
+  const layout = document.getElementById('det-layout');
+  if(layout) layout.innerHTML = buildLayoutSVG(choy, taken);
+  renderSeats(choy, taken);
+  updateBronBtn();
 }
 
 window.backToList = function() {
-  selectedSeats = [];
-  currentChoy = null;
+  selectedSeats = []; currentChoy = null;
   showChoyList();
 };
 
-// ── SEAT SELECTION ───────────────────────────────────────────
+// ─── SEATS ──────────────────────────────────────────────────
 window.toggleSeat = function(n) {
   if(!currentChoy) return;
-  if(currentChoy.takenSeats.includes(n)) return;
+  const taken = getTakenForDate(currentChoy, selectedDate);
+  if(taken.includes(n)) return;
   const idx = selectedSeats.indexOf(n);
   if(idx === -1) selectedSeats.push(n);
   else selectedSeats.splice(idx, 1);
-  renderSeats(currentChoy);
-  document.getElementById('det-layout').innerHTML = buildLayoutSVG(currentChoy);
+  const layout = document.getElementById('det-layout');
+  if(layout) layout.innerHTML = buildLayoutSVG(currentChoy, taken);
+  renderSeats(currentChoy, taken);
   updateBronBtn();
 };
 
-function renderSeats(choy) {
+function renderSeats(choy, takenOverride) {
+  const taken = takenOverride || choy.takenSeats;
   const grid = document.getElementById('seats-grid');
+  if(!grid) return;
   grid.innerHTML = '';
-  for(let i = 1; i <= choy.totalSeats; i++) {
-    const isTaken = choy.takenSeats.includes(i);
+  const dateLabel = document.createElement('div');
+  dateLabel.style.cssText = 'width:100%;font-size:10px;font-weight:700;color:var(--text-muted);margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase;';
+  dateLabel.textContent = selectedDate ? formatDate(selectedDate)+' uchun joylar:' : 'Joylar:';
+  grid.appendChild(dateLabel);
+  for(let i=1; i<=choy.totalSeats; i++) {
+    const isTaken = taken.includes(i);
     const isSel   = selectedSeats.includes(i);
     const btn = document.createElement('div');
-    btn.className = 'seat ' + (isTaken ? 'taken' : isSel ? 'selected' : 'free');
+    btn.className = 'seat '+(isTaken?'taken':isSel?'selected':'free');
     btn.textContent = i;
-    btn.title = isTaken ? 'Band' : 'Joy ' + i;
+    btn.title = isTaken ? 'Band' : 'Joy '+i;
     if(!isTaken) btn.onclick = () => toggleSeat(i);
     grid.appendChild(btn);
   }
 }
 
-function updateBronBtn() {
-  const btn  = document.getElementById('bron-btn');
-  const info = document.getElementById('sel-count');
-  const cnt  = selectedSeats.length;
-  if(info) info.textContent = cnt > 0 ? cnt + ' ta joy' : '0 ta joy';
-  if(btn)  btn.disabled = cnt === 0;
+function formatDate(str) {
+  if(!str) return '';
+  const d = new Date(str);
+  const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
+  return d.getDate()+' '+months[d.getMonth()];
 }
 
-// ── BRON ─────────────────────────────────────────────────────
+function updateBronBtn() {
+  const btn = document.getElementById('bron-btn');
+  const info = document.getElementById('sel-count');
+  const cnt = selectedSeats.length;
+  if(info) info.textContent = cnt>0 ? cnt+' ta joy · '+formatDate(selectedDate) : '0 ta joy tanlangan';
+  if(btn)  btn.disabled = cnt===0;
+}
+
+// ─── BRON ───────────────────────────────────────────────────
 window.doBronChoy = function() {
-  if(!currentChoy || selectedSeats.length === 0) return;
+  if(!currentChoy || selectedSeats.length===0) return;
   const btn = document.getElementById('bron-btn');
   btn.disabled = true;
   btn.textContent = 'Band qilinmoqda...';
-
   setTimeout(() => {
-    // Mark seats as taken
-    selectedSeats.forEach(s => {
-      if(!currentChoy.takenSeats.includes(s)) currentChoy.takenSeats.push(s);
-    });
+    if(!allDatesSeats[selectedDate]) allDatesSeats[selectedDate] = {};
+    const cur = allDatesSeats[selectedDate][currentChoy.id] || [...currentChoy.takenSeats];
+    selectedSeats.forEach(s => { if(!cur.includes(s)) cur.push(s); });
+    allDatesSeats[selectedDate][currentChoy.id] = cur;
     selectedSeats = [];
-
-    // Refresh
-    document.getElementById('det-layout').innerHTML = buildLayoutSVG(currentChoy);
-    renderSeats(currentChoy);
+    const taken = getTakenForDate(currentChoy, selectedDate);
+    const layout = document.getElementById('det-layout');
+    if(layout) layout.innerHTML = buildLayoutSVG(currentChoy, taken);
+    renderSeats(currentChoy, taken);
     updateBronBtn();
     btn.textContent = 'Band qilish';
-
-    // Success message
     const suc = document.getElementById('bron-success');
-    if(suc) suc.classList.add('show');
-
-    showToast('\u2705 ' + currentChoy.name + ' — joy band qilindi!');
-  }, 800);
+    if(suc) { suc.textContent = '✅ '+currentChoy.name+' · '+formatDate(selectedDate)+' · joy band qilindi!'; suc.classList.add('show'); }
+    showToast('✅ '+currentChoy.name+' — '+formatDate(selectedDate)+' band!');
+  }, 600);
 };
 
-// ── FILTER & RENDER ──────────────────────────────────────────
+// ─── FILTER ─────────────────────────────────────────────────
 window.filterChoy = function(cat, el) {
   currentCat = cat;
-  document.querySelectorAll('.choy-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.choy-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   renderChoy(cat);
 };
 
 function renderChoy(cat) {
   const list = document.getElementById('choy-list');
+  if(!list) return;
   list.innerHTML = '';
-  const filtered = cat === 'all' ? CHOYXONALAR : CHOYXONALAR.filter(c => c.cat === cat);
+  const filtered = cat==='all' ? CHOYXONALAR : CHOYXONALAR.filter(c=>c.cat===cat);
   filtered.forEach(c => {
     const free = c.totalSeats - c.takenSeats.length;
     const d = document.createElement('div');
     d.className = 'choy-card';
     d.onclick = () => showChoyDetail(c);
-    const tags = c.tags.map((t,i) => `<span class="choy-tag ${i===0?'o':'g'}">${t}</span>`).join('');
-    const catLbl = c.cat === 'oila' ? '\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Oila' : '\ud83d\udc6b Ulfatlar';
+    const catLbl = c.cat==='oila' ? '👨‍👩‍👧 Oila' : '👫 Ulfatlar';
+    const tags = c.tags.slice(0,2).map((t,i)=>`<span class="choy-tag ${i===0?'o':'g'}">${t}</span>`).join('');
     d.innerHTML = `
       <div class="choy-card-top">
         <div class="choy-card-ico">${c.ico}</div>
         <div class="choy-card-body">
           <div class="choy-card-name">${c.name}</div>
           <div class="choy-card-meta">
-            <span class="choy-rating">\u2b50 ${c.rating}</span>
+            <span class="choy-rating">⭐ ${c.rating}</span>
             <span class="choy-dist">${c.dist}</span>
             <span class="choy-cat-badge">${catLbl}</span>
           </div>
           <div class="choy-card-tags">${tags}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-          <span style="font-size:11px;font-weight:700;color:#52b788">${free} bo\u02bbsh</span>
-          <span style="font-size:10px;color:var(--text-muted)">${c.totalSeats} ta joy</span>
-          <span class="choy-card-arr">\u2192</span>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:52px">
+          <span style="font-size:12px;font-weight:800;color:#52b788">${free} bo'sh</span>
+          <span style="font-size:10px;color:var(--text-muted)">${c.totalSeats} joy</span>
+          <span style="font-size:16px;color:var(--text-muted)">→</span>
         </div>
       </div>`;
     list.appendChild(d);
   });
 }
+
 </script>
 
 </body>
