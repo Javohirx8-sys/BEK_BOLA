@@ -183,7 +183,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 /* ── SERVICE GRID (4 col) ────────────────────── */
 .section{padding:0 16px;}
 .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.section-title{font-size:16px;font-weight:800;color:var(--text);}
+.section-title{font-size:16px;font-weight:800;color:var(--text);display:block;}
 .see-all{font-size:12px;font-weight:700;color:var(--green);cursor:pointer;}
 
 .svc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
@@ -208,7 +208,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 .si-food{background:linear-gradient(135deg,#fef2f2,#fecaca);}
 .si-hosp{background:linear-gradient(135deg,#ecfdf5,#a7f3d0);}
 .si-pharm{background:linear-gradient(135deg,#f5f3ff,#ddd6fe);}
-.svc-name{font-size:11px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;}
+.svc-name{font-size:11px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;margin-top:4px;}
 .svc-desc{font-size:9px;color:var(--muted);text-align:center;line-height:1.3;}
 
 /* ── FEATURE CARDS ───────────────────────────── */
@@ -249,7 +249,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 }
 .extra-item:active{transform:scale(.93);}
 .ei-ico{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;}
-.ei-name{font-size:10px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;}
+.ei-name{font-size:10px;font-weight:700;color:var(--text);text-align:center;line-height:1.3;margin-top:2px;}
 
 /* ── SOS ROW (2 cards, no grid) ─────────────── */
 .sos-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -299,15 +299,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   min-width:100%;height:100%;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;justify-content:flex-end;
-  padding:16px 18px 18px;border-radius:var(--r);
+  padding:18px 18px 20px;border-radius:var(--r);
 }
 .adslide::before{content:'';position:absolute;inset:0;z-index:0;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;}
-.adslide-1::before{background:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.36)),url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80") center/cover no-repeat;}
-.adslide-2::before{background:linear-gradient(rgba(0,0,0,.58),rgba(0,0,0,.42)),url("https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80") center/cover no-repeat;}
-.adslide-3::before{background:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.36)),url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80") center/cover no-repeat;}
-.adslide-4::before{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.38)),url("https://images.unsplash.com/photo-1490750967868-88df5691cc8a?w=800&q=80") center/cover no-repeat;}
-.adslide-5::before{background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.40)),url("https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80") center/cover no-repeat;}
-.adslide-6::before{background:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.36)),url("https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80") center/cover no-repeat;}
+.adslide-1::before{content:"";position:absolute;inset:0;z-index:0;background:url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80") center/cover no-repeat;}
+.adslide-2::before{content:"";position:absolute;inset:0;z-index:0;background:url("https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80") center/cover no-repeat;}
+.adslide-3::before{content:"";position:absolute;inset:0;z-index:0;background:url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80") center/cover no-repeat;}
+
+.adslide-4::before{content:"";position:absolute;inset:0;z-index:0;background:url("https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80") center/cover no-repeat;}
+.adslide-5::before{content:"";position:absolute;inset:0;z-index:0;background:url("https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80") center/cover no-repeat;}
 .vt-load-text{font-size:11px;color:#4a4a5a;letter-spacing:.1em;font-weight:600;}
 .sv-preview-wrap{width:100%;height:100%;position:relative;overflow:hidden;background:#111;}
 .sv-preview-wrap iframe{width:100%;height:100%;border:0;}
@@ -537,20 +537,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   }
   .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;}
   .bottom-nav{
-    position:sticky;bottom:0;
-    left:0;right:0;
-    transform:none !important;
-    width:100% !important;
-    max-width:100% !important;
-    border-radius:0 0 44px 44px;
-  }
-  .topbar{position:sticky;top:0;z-index:50;}
-  .vtour-overlay,.plan-sheet,.choy-overlay,.lang-overlay,.overlay{
-    max-width:430px;left:50%;transform:translateX(-50%);
-  }
-  .stop-bar{max-width:430px;left:50%;transform:translateX(-50%) translateY(100%);}
-  .stop-bar.show{transform:translateX(-50%) translateY(0);}
-  .toast{max-width:380px;}
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  max-width:430px;
+  background:var(--white);
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:stretch;
+  min-height:64px;
+  z-index:40;
+  box-shadow:0 -2px 20px rgba(0,0,0,.10);
 }
 
 
@@ -617,6 +616,23 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 
 .vtour-overlay{position:fixed;inset:0;z-index:500;background:#0d1117;display:none;flex-direction:column;}
 .vtour-overlay.open{display:flex;}
+
+
+/* ── DARK MODE TEXT FIX ─────────────────────── */
+.dark .ei-name,
+.dark .svc-name,
+.dark .section-title,
+.dark .bn-lbl,
+.dark .bn-lbl-center,
+.dark .fc-title,
+.dark .fc-sub { color: var(--text) !important; }
+.dark .ei-name[style*="color:#dc2626"] { color: #ff6b6b !important; }
+.dark .ei-name[style*="color:#2563eb"] { color: #6b9fff !important; }
+
+
+.bozor-cat-btn.active{background:var(--green-l) !important;border-color:var(--green) !important;color:var(--green) !important;}
+#bozor-overlay.open{display:flex !important;}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 </style>
 </head>
@@ -704,7 +720,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 </div>
 
 <!-- SCROLL AREA -->
-<div class="scroll-area">
+<div class="scroll-area" style="padding-bottom:80px;">
 
   <!-- REKLAMA SLAYDER -->
   <div class="hero-section" style="margin-bottom:16px;">
@@ -748,17 +764,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         </div>
 
         <div class="adslide adslide-4">
-          <div class="ad-tag">Tadbir</div>
-          <div class="ad-deco">🎉</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>21 Mart · Navroz 2026</div>
-            <div class="ad-ttl">Parkent Navroz<br><em>festivali</em></div>
-            <div class="ad-sub-txt">Milliy o'yinlar, taomlar va konsert. Oila bilan keling!</div>
-            <div class="ad-cta" onclick="openPlan();event.stopPropagation()">Reja tuzish →</div>
-          </div>
-        </div>
-
-        <div class="adslide adslide-5">
           <div class="ad-tag">Xizmat</div>
           <div class="ad-deco">🚕</div>
           <div class="ad-cnt">
@@ -769,7 +774,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
           </div>
         </div>
 
-        <div class="adslide adslide-6">
+        <div class="adslide adslide-5">
           <div class="ad-deco">📢</div>
           <div class="ad-cnt">
             <div class="ad-lbl"><div class="ad-lbl-dot"></div>Reklama joyi</div>
@@ -866,9 +871,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         <div class="ei-ico" style="background:#dbeafe;border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🚑</div>
         <div class="ei-name" style="color:#2563eb;font-weight:800" id="t-amb">Tez yordam</div>
       </div>
-      <div class="extra-item" onclick="callTaxi()">
-        <div class="ei-ico si-taxi">🚕</div>
-        <div class="ei-name">1054</div>
+      <div class="extra-item" onclick="openBozor()">
+        <div class="ei-ico" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:14px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:26px;">🛒</div>
+        <div class="ei-name">Bozor</div>
       </div>
     </div>
   </div>
@@ -907,6 +912,53 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   </div>
 </div>
 
+
+
+  <!-- ── BOZOR MODAL ── -->
+  <div id="bozor-overlay" onclick="closeBozorOutside(event)"
+    style="position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);display:none;flex-direction:column;justify-content:flex-end;">
+    <div style="background:var(--white);border-radius:24px 24px 0 0;max-height:88dvh;display:flex;flex-direction:column;transform:translateY(0);">
+      
+      <!-- Header -->
+      <div style="padding:16px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:22px;">🛒</span>
+          <div>
+            <div style="font-size:16px;font-weight:800;color:var(--text);">Parkent Bozori</div>
+            <div style="font-size:11px;color:var(--muted);">Mahalliy tabiiy mahsulotlar</div>
+          </div>
+        </div>
+        <button onclick="closeBozor()" style="background:var(--s2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center;">✕</button>
+      </div>
+
+      <!-- Kategoriyalar -->
+      <div style="display:flex;gap:8px;padding:12px 16px 0;overflow-x:auto;scrollbar-width:none;flex-shrink:0;">
+        <button class="bozor-cat-btn active" onclick="selectBozorCat('sut',this)"
+          style="padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .13s;">
+          🥛 Sut mahsulotlari
+        </button>
+        <button class="bozor-cat-btn" onclick="selectBozorCat('gosht',this)"
+          style="padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .13s;">
+          🥩 Go'sht
+        </button>
+        <button class="bozor-cat-btn" onclick="selectBozorCat('sabzavot',this)"
+          style="padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .13s;">
+          🥬 Meva-sabzavot
+        </button>
+        <button class="bozor-cat-btn" onclick="selectBozorCat('non',this)"
+          style="padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .13s;">
+          🍞 Non
+        </button>
+        <button class="bozor-cat-btn" onclick="selectBozorCat('asal',this)"
+          style="padding:8px 14px;border-radius:50px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all .13s;">
+          🍯 Asal
+        </button>
+      </div>
+
+      <!-- Mahsulotlar -->
+      <div id="bozor-items" style="flex:1;overflow-y:auto;"></div>
+    </div>
+  </div>
 
   <!-- ── CHOYXONA MODAL ── -->
   <div class="choy-overlay" id="choy-overlay" onclick="closeChoyOutside(event)">
@@ -987,8 +1039,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   </div>
 
 
-  <footer><div class="footer-text">turist24 · Parkent Turizm Platformasi</div></footer>
-  <div class="toast" id="toast"></div>
+  <!-- footer olib tashlandi -->
+
 
   <!-- CONFIRM MODAL -->
   <div class="overlay" id="overlay" onclick="closeModal(event)">
@@ -2541,7 +2593,7 @@ function buildConfirmed(){
 <!-- ── AD SLIDER JS ── -->
 <script>
 (function(){
-  const TOTAL = 6;
+  const TOTAL = 5;
   let cur = 0;
   let autoTimer = null;
   let dragStartX = 0;
@@ -3233,6 +3285,236 @@ document.addEventListener('click', function(e) {
 }, true);
 </script>
 
+<div class="toast" id="toast"></div>
 </div><!-- /app-shell -->
+<!-- ── BOZOR VA FOYDALANUVCHI JS ── -->
+<script>
+// ═══════════════════════════════════════════════════════
+// FOYDALANUVCHI PROFIL TIZIMI
+// ═══════════════════════════════════════════════════════
+const USER_KEY = 't24_user';
+
+function generateUserId() {
+  return 'T24-' + Date.now().toString(36).toUpperCase() + 
+         '-' + Math.random().toString(36).substr(2,4).toUpperCase();
+}
+
+function getUser() {
+  try {
+    const raw = localStorage.getItem(USER_KEY);
+    if(raw) return JSON.parse(raw);
+  } catch(e) {}
+  // Yangi foydalanuvchi
+  const user = {
+    id: generateUserId(),
+    name: '',
+    createdAt: new Date().toISOString(),
+    family: [],        // oila a'zolari
+    history: [],       // borgan joylar
+    purchases: [],     // haridlar
+    favorites: [],     // sevimlilar
+    prefs: []          // afzalliklar
+  };
+  saveUser(user);
+  return user;
+}
+
+function saveUser(user) {
+  try { localStorage.setItem(USER_KEY, JSON.stringify(user)); } catch(e) {}
+}
+
+function addToHistory(item) {
+  const user = getUser();
+  user.history.unshift({ ...item, time: new Date().toISOString() });
+  if(user.history.length > 50) user.history = user.history.slice(0,50);
+  saveUser(user);
+}
+
+function addPurchase(item) {
+  const user = getUser();
+  user.purchases.unshift({ ...item, time: new Date().toISOString() });
+  saveUser(user);
+}
+
+// Init user on load
+const currentUser = getUser();
+if(!currentUser.name) {
+  // Ism so'rash — birinchi kirishda
+  setTimeout(() => {
+    if(!localStorage.getItem('t24_greeted')) {
+      showUserWelcome();
+    }
+  }, 2000);
+}
+
+function showUserWelcome() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:700;display:flex;align-items:flex-end;';
+  overlay.innerHTML = `
+    <div style="background:var(--white);border-radius:24px 24px 0 0;padding:28px 20px 40px;width:100%;animation:slideUp .3s ease;">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:48px;margin-bottom:8px;">👋</div>
+        <div style="font-size:20px;font-weight:800;color:var(--text)">Xush kelibsiz!</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;">turist24.uz — Parkent turizm platformasi</div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Ismingiz (ixtiyoriy)</div>
+        <input id="welcome-name" type="text" placeholder="Masalan: Alisher"
+          style="width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:14px;
+          font-size:15px;font-family:'Inter',sans-serif;outline:none;background:var(--s2);color:var(--text);"
+          maxlength="30">
+      </div>
+      <div style="background:var(--s2);border-radius:14px;padding:14px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px;">🎯 Nima uchun?</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5;">
+          Sizning ID raqamingiz: <strong style="color:var(--green);font-family:'DM Mono',monospace;">${currentUser.id}</strong><br>
+          Bu orqali borganlarni, haridlarni va oila a'zolaringizni eslab qolamiz.
+        </div>
+      </div>
+      <button onclick="saveWelcome()" 
+        style="width:100%;padding:15px;border-radius:14px;background:var(--green);border:none;
+        color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">
+        Boshlash →
+      </button>
+    </div>`;
+  document.body.appendChild(overlay);
+  window._welcomeOverlay = overlay;
+}
+
+window.saveWelcome = function() {
+  const inp = document.getElementById('welcome-name');
+  const name = inp ? inp.value.trim() : '';
+  const user = getUser();
+  if(name) user.name = name;
+  saveUser(user);
+  localStorage.setItem('t24_greeted', '1');
+  if(window._welcomeOverlay) window._welcomeOverlay.remove();
+  if(name) showToast('Xush kelibsiz, ' + name + '! 👋');
+  else showToast('Xush kelibsiz! ID: ' + user.id);
+};
+
+// ═══════════════════════════════════════════════════════
+// BOZOR MODAL
+// ═══════════════════════════════════════════════════════
+const BOZOR_DATA = {
+  sut: {
+    icon:'🥛', name:"Sut Mahsulotlari", color:"#3b82f6",
+    items:[
+      { n:"Sigir suti",   ico:"🥛", unit:"litr",  price:"8 000", fresh:true,  info:"Kunlik yangi, fermadan" },
+      { n:"Qatiq",        ico:"🍶", unit:"kg",    price:"12 000",fresh:true,  info:"An'anaviy uslubda" },
+      { n:"Tvorog",       ico:"🧀", unit:"kg",    price:"25 000",fresh:true,  info:"Uyda tayyorlangan" },
+      { n:"Sariyog'",     ico:"🧈", unit:"kg",    price:"80 000",fresh:true,  info:"Tabiiy, fermadan" },
+      { n:"Qaymoq",       ico:"🥣", unit:"kg",    price:"30 000",fresh:true,  info:"Qaymog'i qalin" },
+      { n:"Pishloq",      ico:"🧀", unit:"kg",    price:"60 000",fresh:false, info:"Mahalliy ishlab chiqarish" },
+    ]
+  },
+  gosht: {
+    icon:'🥩', name:"Go'sht Mahsulotlari", color:"#ef4444",
+    items:[
+      { n:"Mol go'shti",  ico:"🥩", unit:"kg",    price:"90 000", fresh:true, info:"Bugun so'yilgan" },
+      { n:"Qo'y go'shti", ico:"🍖", unit:"kg",    price:"110 000",fresh:true, info:"Tog' qo'ylari" },
+      { n:"Tovuq",        ico:"🍗", unit:"kg",    price:"45 000", fresh:true, info:"Boqilgan tovuq" },
+      { n:"Baliq",        ico:"🐟", unit:"kg",    price:"50 000", fresh:true, info:"Daryo baliqlari" },
+      { n:"Suxta",        ico:"🌭", unit:"kg",    price:"70 000", fresh:true, info:"Milliy taom" },
+      { n:"Jigar",        ico:"🫀", unit:"kg",    price:"55 000", fresh:true, info:"Yangi" },
+    ]
+  },
+  sabzavot: {
+    icon:'🥬', name:"Meva-Sabzavot", color:"#22c55e",
+    items:[
+      { n:"Pomidor",      ico:"🍅", unit:"kg",    price:"8 000",  fresh:true, info:"Bog' pomiodori" },
+      { n:"Bodring",      ico:"🥒", unit:"kg",    price:"5 000",  fresh:true, info:"Yangi terilgan" },
+      { n:"Kartoshka",    ico:"🥔", unit:"kg",    price:"4 000",  fresh:true, info:"Mahalliy" },
+      { n:"Piyoz",        ico:"🧅", unit:"kg",    price:"3 000",  fresh:true, info:"Sariq piyoz" },
+      { n:"Sabzi",        ico:"🥕", unit:"kg",    price:"4 000",  fresh:true, info:"Parkent bog'laridan" },
+      { n:"Olma",         ico:"🍎", unit:"kg",    price:"10 000", fresh:true, info:"Tog' olmasi" },
+      { n:"O'rik",        ico:"🍑", unit:"kg",    price:"15 000", fresh:true, info:"Mavsumiy" },
+      { n:"Uzum",         ico:"🍇", unit:"kg",    price:"20 000", fresh:true, info:"Parkent uzumi" },
+    ]
+  },
+  non: {
+    icon:'🍞', name:"Non va Unli Mahsulotlar", color:"#f59e0b",
+    items:[
+      { n:"Tandirda non",  ico:"🫓", unit:"dona",  price:"3 000",  fresh:true, info:"Issiq-issiq" },
+      { n:"Patir",         ico:"🫓", unit:"dona",  price:"5 000",  fresh:true, info:"Tandirda pishirilgan" },
+      { n:"Lavaş",         ico:"🫓", unit:"dona",  price:"2 000",  fresh:true, info:"Yupqa" },
+      { n:"Un (1 kg)",     ico:"🌾", unit:"kg",    price:"6 000",  fresh:false, info:"Birinchi nav" },
+      { n:"Guruch",        ico:"🍚", unit:"kg",    price:"12 000", fresh:false, info:"Devzira" },
+    ]
+  },
+  asal: {
+    icon:'🍯', name:"Asal va Quritilgan Mevalar", color:"#d97706",
+    items:[
+      { n:"Tog' asali",   ico:"🍯", unit:"kg",    price:"120 000",fresh:false, info:"Kumushkon asali" },
+      { n:"Quritilgan o'rik", ico:"🧡", unit:"kg", price:"35 000",fresh:false, info:"Tabiiy quritilgan" },
+      { n:"Mayiz",        ico:"🫐", unit:"kg",    price:"40 000", fresh:false, info:"Parkent uzumidan" },
+      { n:"Yong'oq",      ico:"🌰", unit:"kg",    price:"80 000", fresh:false, info:"Mahalliy" },
+    ]
+  },
+};
+
+window.openBozor = function() {
+  const overlay = document.getElementById('bozor-overlay');
+  if(overlay) {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    renderBozorCats();
+    addToHistory({ type:'bozor', name:'Parkent Bozori' });
+  }
+};
+
+window.closeBozor = function() {
+  const overlay = document.getElementById('bozor-overlay');
+  if(overlay) { overlay.classList.remove('open'); document.body.style.overflow = ''; }
+};
+
+window.closeBozorOutside = function(e) {
+  if(e.target === document.getElementById('bozor-overlay')) closeBozor();
+};
+
+let bozorCat = 'sut';
+
+window.selectBozorCat = function(cat, el) {
+  bozorCat = cat;
+  document.querySelectorAll('.bozor-cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderBozorItems();
+};
+
+function renderBozorCats() {
+  renderBozorItems();
+}
+
+function renderBozorItems() {
+  const list = document.getElementById('bozor-items');
+  if(!list) return;
+  const cat = BOZOR_DATA[bozorCat];
+  if(!cat) return;
+  list.innerHTML = '';
+  cat.items.forEach(item => {
+    const d = document.createElement('div');
+    d.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;';
+    d.onmouseenter = () => d.style.background = 'var(--s2)';
+    d.onmouseleave = () => d.style.background = '';
+    d.onclick = () => {
+      addPurchase({ name: item.n, price: item.price, cat: bozorCat });
+      showToast('🛒 ' + item.n + ' — ' + item.price + " so'm");
+    };
+    d.innerHTML = `
+      <div style="width:44px;height:44px;border-radius:12px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${item.ico}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);">${item.n}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">${item.info}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:800;color:var(--green);">${item.price}</div>
+        <div style="font-size:10px;color:var(--muted);">${item.unit}</div>
+        ${item.fresh ? '<div style="font-size:9px;color:var(--green);font-weight:700;margin-top:2px;">● YANGI</div>' : ''}
+      </div>`;
+    list.appendChild(d);
+  });
+}
+</script>
+
 </body>
 </html>
