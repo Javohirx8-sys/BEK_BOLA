@@ -537,20 +537,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   }
   .scroll-area{flex:1;overflow-y:auto;overflow-x:hidden;}
   .bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:100%;
-  max-width:430px;
-  background:var(--white);
-  border-top:1px solid var(--border);
-  display:flex;
-  align-items:stretch;
-  min-height:64px;
-  z-index:40;
-  box-shadow:0 -2px 20px rgba(0,0,0,.10);
-}
+    border-radius:0 0 44px 44px;
+  }
 
 
 /* ── BOTTOM NAV (base) ──────────────────────── */
@@ -569,10 +557,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   z-index:40;
   box-shadow:0 -4px 20px rgba(0,0,0,.08);
 }
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 0;cursor:pointer;transition:all .12s;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:10px 4px 0;cursor:pointer;transition:all .12s;min-width:0;}
 .bn-item:active{transform:scale(.9);}
-.bn-ico{font-size:22px;line-height:1;}
-.bn-lbl{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.02em;}
+.bn-ico{font-size:21px;line-height:1;}
+.bn-lbl{font-size:9px;font-weight:600;color:var(--muted);letter-spacing:.01em;text-align:center;white-space:nowrap;}
 .bn-item.active .bn-lbl{color:var(--green);}
 .bn-center{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;cursor:pointer;position:relative;top:-16px;}
 .bn-center-btn{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--green),#059669);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 16px rgba(22,163,74,.4);transition:transform .12s;}
@@ -635,6 +623,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 @keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 </style>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
 <div class="app-shell">
@@ -1709,8 +1699,32 @@ window.addEventListener('online', ()=>{isOnline=true;updateStatus();});
 window.addEventListener('offline',()=>{isOnline=false;updateStatus();});
 function checkGps(){
   if(!navigator.geolocation){hasGps=false;updateStatus();return;}
-  navigator.geolocation.getCurrentPosition(()=>{hasGps=true;updateStatus();},(e)=>{if(e.code!==e.TIMEOUT){hasGps=false;updateStatus();}},{timeout:5000});
+  navigator.geolocation.getCurrentPosition(
+    (p)=>{
+      hasGps=true;updateStatus();
+      // Haqiqiy joylashuvni Firebasega yuborish (admin xaritada koʻrishi uchun)
+      if(typeof updateLocationFirebase === 'function' && typeof currentUser !== 'undefined') {
+        updateLocationFirebase(currentUser, p.coords.latitude, p.coords.longitude);
+      }
+    },
+    (e)=>{if(e.code!==e.TIMEOUT){hasGps=false;updateStatus();}},
+    {timeout:5000}
+  );
 }
+
+// Har 2 daqiqada joylashuvni yangilash (foydalanuvchi ruxsat bergan boʻlsa)
+setInterval(() => {
+  if(!navigator.geolocation || !hasGps) return;
+  navigator.geolocation.getCurrentPosition(
+    (p) => {
+      if(typeof updateLocationFirebase === 'function' && typeof currentUser !== 'undefined') {
+        updateLocationFirebase(currentUser, p.coords.latitude, p.coords.longitude);
+      }
+    },
+    () => {},
+    {timeout:5000}
+  );
+}, 120000);
 
 // ── VOICE ──────────────────────────────────────────────────
 function toggleVoice(){ voiceOn ? stopVoice() : startVoice(); }
@@ -3336,10 +3350,76 @@ function addPurchase(item) {
   saveUser(user);
 }
 
+// ── Firebase ulanishi ─────────────────────────────────
+const FB_CONFIG = {
+  databaseURL: "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app"
+};
+let fbDb = null;
+try {
+  if(typeof firebase !== 'undefined') {
+    try { firebase.initializeApp(FB_CONFIG); } catch(e) {}
+    fbDb = firebase.database();
+  }
+} catch(e) {}
+
+// Foydalanuvchini Firebasega yozish
+function syncUserToFirebase(user) {
+  if(!fbDb) return;
+  const userData = {
+    id:        user.id,
+    name:      user.name || 'Noma\u02bblum',
+    online:    true,
+    lastSeen:  Date.now(),
+    device:    navigator.userAgent.includes('iPhone') ? 'iPhone' : 
+               navigator.userAgent.includes('Android') ? 'Android' : 'Desktop',
+    createdAt: user.createdAt,
+  };
+  fbDb.ref('users/' + user.id.replace(/-/g,'_')).set(userData)
+    .catch(e => console.log('Firebase sync:', e));
+}
+
+// Offline bo'lganda belgilash
+function setUserOffline(user) {
+  if(!fbDb) return;
+  fbDb.ref('users/' + user.id.replace(/-/g,'_') + '/online').set(false);
+  fbDb.ref('users/' + user.id.replace(/-/g,'_') + '/lastSeen').set(Date.now());
+}
+
+// SOS signalni Firebasega yuborish
+function sendSosToFirebase(user, lat, lng) {
+  if(!fbDb) return;
+  fbDb.ref('murojaatlar/' + user.id.replace(/-/g,'_')).set({
+    userId: user.id,
+    name:   user.name || 'Noma\u02bblum',
+    lat:    lat,
+    lng:    lng,
+    time:   Date.now(),
+    active: true,
+  }).catch(e => {});
+}
+
+// Joylashuvni Firebasega yuborish (SOS vaqtida)
+function updateLocationFirebase(user, lat, lng) {
+  if(!fbDb) return;
+  fbDb.ref('users/' + user.id.replace(/-/g,'_') + '/location').set({
+    lat: lat, lng: lng, time: Date.now()
+  }).catch(e => {});
+}
+
 // Init user on load
 const currentUser = getUser();
+
+// Firebase ga ulanish
+setTimeout(() => syncUserToFirebase(currentUser), 1000);
+
+// Sahifadan chiqishda offline
+window.addEventListener('beforeunload', () => setUserOffline(currentUser));
+window.addEventListener('pagehide', () => setUserOffline(currentUser));
+
+// Har 60 soniyada online holatini yangilash (heartbeat)
+setInterval(() => syncUserToFirebase(currentUser), 60000);
+
 if(!currentUser.name) {
-  // Ism so'rash — birinchi kirishda
   setTimeout(() => {
     if(!localStorage.getItem('t24_greeted')) {
       showUserWelcome();
@@ -3514,6 +3594,40 @@ function renderBozorItems() {
     list.appendChild(d);
   });
 }
+</script>
+
+
+<!-- ── FIREBASE REALTIME READ ── -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // fbDb tayyor bo'lguncha kut
+  setTimeout(() => {
+    if(!fbDb) return;
+
+    // Status o'qish
+    fbDb.ref('config/status').on('value', snap => {
+      const s = snap.val();
+      if(!s) return;
+      const strip = document.getElementById('status-strip');
+      const stxt  = document.getElementById('t-status');
+      if(strip && s.color) {
+        strip.className = 'status-strip ' + s.color;
+      }
+      if(stxt && s.text) stxt.textContent = s.text;
+    });
+
+    // Admin yuborgan bildirishnomalar
+    fbDb.ref('notifications').limitToLast(1).on('child_added', snap => {
+      const n = snap.val();
+      if(!n) return;
+      // 5 daqiqa ichida yuborilgan bo'lsa ko'rsat
+      if(Date.now() - n.time < 300000) {
+        showToast('🔔 ' + (n.title || '') + ': ' + (n.body || ''));
+      }
+    });
+
+  }, 2000);
+});
 </script>
 
 </body>
