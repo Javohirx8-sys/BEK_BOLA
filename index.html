@@ -719,61 +719,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
          onmouseup="adDragEnd(event)"     ontouchend="adTouchEnd(event)"
          onmousemove="adDragMove(event)"  ontouchmove="adTouchMove(event)">
       <div class="ad-track" id="adtrack">
-
-        <div class="adslide adslide-1">
-          <div class="ad-tag">Yangilik</div>
-          <div class="ad-deco">🌿</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>Aksiya · Bahor 2026</div>
-            <div class="ad-ttl">Kumushkonda<br><em>20% chegirma</em></div>
-            <div class="ad-sub-txt">Oila bilan tashrif buyurishingizda katta chegirma!</div>
-            <div class="ad-cta" onclick="goEco();event.stopPropagation()">Yo'nalishni ko'rish →</div>
-          </div>
-        </div>
-
-        <div class="adslide adslide-2">
-          <div class="ad-tag">Reklama</div>
-          <div class="ad-deco">🍢</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>Gastronomiya</div>
-            <div class="ad-ttl">Parkent shashligi —<br><em>haqiqiy ta'm</em></div>
-            <div class="ad-sub-txt">30 yillik an'anaviy retsept. Hafta oxirida 2 porsiya — 1 narxida!</div>
-            <div class="ad-cta" onclick="near('restaurant');event.stopPropagation()">Restoranlar →</div>
-          </div>
-        </div>
-
-        <div class="adslide adslide-3">
-          <div class="ad-tag">Yangi</div>
-          <div class="ad-deco">🌐</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>360° Virtual Sayohat</div>
-            <div class="ad-ttl">Parkentni uydan<br><em>kashf eting</em></div>
-            <div class="ad-sub-txt">Bepul panorama ko'rinishlari va yo'nalishlar!</div>
-            <div class="ad-cta" onclick="openVirtualTour();event.stopPropagation()">Boshlash →</div>
-          </div>
-        </div>
-
-        <div class="adslide adslide-4">
-          <div class="ad-tag">Xizmat</div>
-          <div class="ad-deco">🚕</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>24/7 Parkent taxi</div>
-            <div class="ad-ttl">Taxi <em>1054</em> —<br>tez va qulay</div>
-            <div class="ad-sub-txt">Istalgan manzilga. Kecha-kunduz ishlaymiz.</div>
-            <div class="ad-cta" onclick="callTaxi();event.stopPropagation()">Qo'ng'iroq →</div>
-          </div>
-        </div>
-
-        <div class="adslide adslide-5">
-          <div class="ad-deco">📢</div>
-          <div class="ad-cnt">
-            <div class="ad-lbl"><div class="ad-lbl-dot"></div>Reklama joyi</div>
-            <div class="ad-ttl">Bu joy sizning<br><em>reklamangiz</em> uchun</div>
-            <div class="ad-sub-txt">Minglab foydalanuvchiga biznesingizni tanishtiring.</div>
-            <div class="ad-cta">Bog'lanish →</div>
-          </div>
-        </div>
-
+        <!-- Slaydlar JS orqali Firebase'dan dinamik qo'yiladi -->
       </div>
       <div class="ad-arr left" onclick="adGo(-1)">‹</div>
       <div class="ad-arr right" onclick="adGo(1)">›</div>
@@ -787,12 +733,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
       <div class="svc-item" onclick="callTaxi()">
         <div class="svc-img si-taxi">🚕</div>
         <div class="svc-name" id="t-taxi">Taxi</div>
-        <div class="svc-desc">Tez va qulay taksi xizmati</div>
+        <div class="svc-desc" id="t-taxi-desc">Tez va qulay taksi xizmati</div>
       </div>
       <div class="svc-item" onclick="goEco()">
         <div class="svc-img si-eco">🌿</div>
         <div class="svc-name" id="t-eco">Eko turizm</div>
-        <div class="svc-desc">Tabiat qo'ynida dam oling</div>
+        <div class="svc-desc" id="t-eco-desc">Tabiat qo'ynida dam oling</div>
       </div>
       <div class="svc-item" onclick="openChoyxona()">
         <div class="svc-img si-choy">🍵</div>
@@ -1439,7 +1385,7 @@ function setText(id,val){const e=document.getElementById(id);if(e)e.textContent=
 function setAttr(id,attr,val){const e=document.getElementById(id);if(e)e[attr]=val;}
 
 const FIREBASE = "https://bek-bola-default-rtdb.europe-west1.firebasedatabase.app/murojaatlar.json";
-const ECO_LAT = 41.277723, ECO_LNG = 69.709866;
+let ECO_LAT = 41.277723, ECO_LNG = 69.709866;
 
 const LANGS = [
   {code:'uz',flag:'🇺🇿',name:"O'zbek",  native:"O'zbek tili"},
@@ -1686,11 +1632,23 @@ function confirmSuggest() {
 }
 
 // ── STATUS ─────────────────────────────────────────────────
+let adminStatusOverride = null; // admin panel\u02bbdan kelgan custom status
+
 function updateStatus() {
   const strip=document.getElementById('status-strip');
   const txt=document.getElementById('t-status');
   const gps=document.getElementById('status-gps');
   const t=T[currentLang];
+
+  // Agar admin custom status o\u02bbrnatgan bo\u02blsa va internet/GPS muammosi bo\u02blmasa \u2014 admin xabarini ko\u02brsatamiz
+  if(adminStatusOverride && isOnline){
+    strip.className = 'status-strip ' + (adminStatusOverride.color || 'online');
+    txt.textContent = adminStatusOverride.text;
+    gps.textContent = '📍';
+    gps.style.opacity = '.8';
+    return;
+  }
+
   if(!isOnline){strip.className='status-strip offline';txt.textContent=t.statusOffline;gps.textContent='📵';}
   else if(!hasGps){strip.className='status-strip no-gps';txt.textContent=t.statusNoGps;gps.textContent='📍';gps.style.opacity='.35';}
   else{strip.className='status-strip online';txt.textContent=t.statusOnline;gps.textContent='📍';gps.style.opacity='.8';}
@@ -2028,7 +1986,8 @@ function confirmAction(){
   }
 }
 
-function callTaxi(){ window.location.href="tel:1054"; }
+let TAXI_PHONE = "1054";
+function callTaxi(){ window.location.href="tel:" + TAXI_PHONE; }
 function myLoc(){
   navigator.geolocation.getCurrentPosition(p=>{hasGps=true;updateStatus();window.location.href=`https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`;},()=>{hasGps=false;updateStatus();showToast(T[currentLang].toastGeo);});
 }
@@ -2604,10 +2563,10 @@ function buildConfirmed(){
 }
 </script>
 
-<!-- ── AD SLIDER JS ── -->
+<!-- ── AD SLIDER JS (Firebase-driven) ── -->
 <script>
 (function(){
-  const TOTAL = 5;
+  let TOTAL = 0;
   let cur = 0;
   let autoTimer = null;
   let dragStartX = 0;
@@ -2615,13 +2574,111 @@ function buildConfirmed(){
   let dragging   = false;
   const THRESHOLD = 50;
 
+  // Fallback (Firebase ulanmasa yoki bo\u02bbsh bo\u02bblsa ishlatiladi)
+  const FALLBACK_SLIDES = [
+    { tag:"Yangilik", deco:"\ud83c\udf3f", badge:"Aksiya \u00b7 Bahor 2026",
+      title:"Kumushkonda", titleEm:"20% chegirma",
+      desc:"Oila bilan tashrif buyurishingizda katta chegirma!",
+      cta:"Yo\u02bbnalishni ko\u02bbrish \u2192", ctaAction:"goEco()",
+      img:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" },
+    { tag:"Reklama", deco:"\ud83c\udf62", badge:"Gastronomiya",
+      title:"Parkent shashligi \u2014", titleEm:"haqiqiy ta\u02bbm",
+      desc:"30 yillik an\u02bbanaviy retsept. Hafta oxirida 2 porsiya \u2014 1 narxida!",
+      cta:"Restoranlar \u2192", ctaAction:"near('restaurant')",
+      img:"https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" },
+    { tag:"Yangi", deco:"\ud83c\udf10", badge:"360\u00b0 Virtual Sayohat",
+      title:"Parkentni uydan", titleEm:"kashf eting",
+      desc:"Bepul panorama ko\u02bbrinishlari va yo\u02bbnalishlar!",
+      cta:"Boshlash \u2192", ctaAction:"openVirtualTour()",
+      img:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80" },
+    { tag:"Xizmat", deco:"\ud83d\ude95", badge:"24/7 Parkent taxi",
+      title:"Taxi 1054 \u2014", titleEm:"tez va qulay",
+      desc:"Istalgan manzilga. Kecha-kunduz ishlaymiz.",
+      cta:"Qo\u02bbng\u02bbiroq \u2192", ctaAction:"callTaxi()",
+      img:"https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800&q=80" },
+    { tag:"", deco:"\ud83d\udce2", badge:"Reklama joyi",
+      title:"Bu joy sizning", titleEm:"reklamangiz uchun",
+      desc:"Minglab foydalanuvchiga biznesingizni tanishtiring.",
+      cta:"Bog\u02bblanish \u2192", ctaAction:"",
+      img:"https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80" },
+  ];
+
+  let SLIDES = [];
+
+  function slideHTML(s, idx) {
+    const action = s.ctaAction ? `onclick="${s.ctaAction};event.stopPropagation()"` : '';
+    const tagHTML = s.tag ? `<div class="ad-tag">${escapeHtml(s.tag)}</div>` : '';
+    return `
+      <div class="adslide" style="background-image:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.65)),url('${escapeHtml(s.img)}');background-size:cover;background-position:center;">
+        ${tagHTML}
+        <div class="ad-deco">${s.deco||''}</div>
+        <div class="ad-cnt">
+          <div class="ad-lbl"><div class="ad-lbl-dot"></div>${escapeHtml(s.badge||'')}</div>
+          <div class="ad-ttl">${escapeHtml(s.title||'')}<br><em>${escapeHtml(s.titleEm||'')}</em></div>
+          <div class="ad-sub-txt">${escapeHtml(s.desc||'')}</div>
+          <div class="ad-cta" ${action}>${escapeHtml(s.cta||'')}</div>
+        </div>
+      </div>`;
+  }
+
+  function escapeHtml(str) {
+    if(!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function renderSlides() {
+    const track = document.getElementById('adtrack');
+    if(!track) return;
+    track.innerHTML = SLIDES.map((s,i) => slideHTML(s,i)).join('');
+    TOTAL = SLIDES.length;
+    cur = Math.min(cur, TOTAL - 1);
+    buildDots();
+    render(false);
+  }
+
+  function loadSlides() {
+    // Avval fallback bilan darhol ko\u02bbrsatamiz (foydalanuvchi kutmasin)
+    SLIDES = FALLBACK_SLIDES;
+    renderSlides();
+    resetAuto();
+
+    // Keyin Firebase\u02bbdan haqiqiy bannerlarni o\u02bbqishga harakat qilamiz
+    if(typeof fbDb !== 'undefined' && fbDb) {
+      fbDb.ref('banners').on('value', snap => {
+        const data = snap.val();
+        if(data && Object.keys(data).length > 0) {
+          // Object\u02bbni tartib bilan array\u02bbga o\u02bbgiramiz (slide_1, slide_2, ...)
+          const keys = Object.keys(data).sort();
+          const fromAdmin = keys.map(k => {
+            const d = data[k];
+            return {
+              tag: d.badge || '',
+              deco: d.deco || '\ud83d\udcf0',
+              badge: d.badge || '',
+              title: d.title || '',
+              titleEm: d.titleEm || '',
+              desc: d.desc || '',
+              cta: d.cta || '',
+              ctaAction: d.ctaAction || '',
+              img: d.img || FALLBACK_SLIDES[0].img,
+            };
+          }).filter(s => s.title || s.img);
+          if(fromAdmin.length > 0) {
+            SLIDES = fromAdmin;
+            cur = 0;
+            renderSlides();
+          }
+        }
+      });
+    }
+  }
+
   function render(animate) {
     const track = document.getElementById('adtrack');
     if(!track) return;
     if(!animate) track.style.transition = 'none';
     track.style.transform = 'translateX(-' + (cur * 100) + '%)';
     if(!animate) setTimeout(() => track.style.transition = '', 20);
-    // dots
     const dots = document.getElementById('addots');
     if(dots && dots.children.length === TOTAL) {
       Array.from(dots.children).forEach((d,i) => d.classList.toggle('active', i === cur));
@@ -2641,6 +2698,7 @@ function buildConfirmed(){
   }
 
   window.adGo = function(dir) {
+    if(TOTAL === 0) return;
     cur = (cur + dir + TOTAL) % TOTAL;
     render(true);
     resetAuto();
@@ -2649,6 +2707,7 @@ function buildConfirmed(){
   function resetAuto() {
     clearInterval(autoTimer);
     autoTimer = setInterval(() => {
+      if(TOTAL === 0) return;
       cur = (cur + 1) % TOTAL;
       render(true);
     }, 5000);
@@ -2708,9 +2767,7 @@ function buildConfirmed(){
 
   // Init
   document.addEventListener('DOMContentLoaded', () => {
-    buildDots();
-    render(false);
-    resetAuto();
+    setTimeout(loadSlides, 800); // fbDb ulanishini biroz kutamiz
   });
 })();
 </script>
@@ -3594,6 +3651,24 @@ function renderBozorItems() {
     list.appendChild(d);
   });
 }
+
+// Admin\u02bbdan kelgan narxlarni BOZOR_DATA ga qo\u02bblash
+function applyBozorPrices(liveData) {
+  Object.keys(liveData).forEach(catKey => {
+    const cat = BOZOR_DATA[catKey];
+    if(!cat) return;
+    const prices = liveData[catKey].prices || {};
+    cat.items.forEach(item => {
+      const key = item.n.replace(/\s/g, '_');
+      if(prices[key]) item.price = prices[key];
+    });
+  });
+  // Agar bozor modal hozir ochiq bo\u02bblsa \u2014 qayta chizamiz
+  const overlay = document.getElementById('bozor-overlay');
+  if(overlay && overlay.classList.contains('open')) {
+    renderBozorItems();
+  }
+}
 </script>
 
 
@@ -3604,16 +3679,15 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     if(!fbDb) return;
 
-    // Status o'qish
+    // Status o'qish \u2014 admin yuborgan xabar ustun bo'lsin
     fbDb.ref('config/status').on('value', snap => {
       const s = snap.val();
-      if(!s) return;
-      const strip = document.getElementById('status-strip');
-      const stxt  = document.getElementById('t-status');
-      if(strip && s.color) {
-        strip.className = 'status-strip ' + s.color;
+      if(s && s.text) {
+        adminStatusOverride = s;
+      } else {
+        adminStatusOverride = null;
       }
-      if(stxt && s.text) stxt.textContent = s.text;
+      if(typeof updateStatus === 'function') updateStatus();
     });
 
     // Admin yuborgan bildirishnomalar
@@ -3624,6 +3698,47 @@ document.addEventListener('DOMContentLoaded', () => {
       if(Date.now() - n.time < 300000) {
         showToast('🔔 ' + (n.title || '') + ': ' + (n.body || ''));
       }
+    });
+
+    // Xizmatlar (Taxi, Eko, Shifoxona) ma\u02bblumotlari
+    fbDb.ref('services/taxi').on('value', snap => {
+      const d = snap.val();
+      if(!d) return;
+      if(d.name)  setText('t-taxi', d.name);
+      if(d.desc)  setText('t-taxi-desc', d.desc);
+      if(d.phone) TAXI_PHONE = d.phone;
+    });
+
+    fbDb.ref('services/eco').on('value', snap => {
+      const d = snap.val();
+      if(!d) return;
+      if(d.name) setText('t-eco', d.name);
+      if(d.desc) setText('t-eco-desc', d.desc);
+      if(d.coord) {
+        const parts = d.coord.split(',');
+        if(parts.length === 2) { ECO_LAT = parseFloat(parts[0]); ECO_LNG = parseFloat(parts[1]); }
+      }
+    });
+
+    fbDb.ref('services/hosp').on('value', snap => {
+      const d = snap.val();
+      if(!d) return;
+      window.HOSPITAL_INFO = d;
+    });
+
+    // Bozor narxlari
+    fbDb.ref('bozor').on('value', snap => {
+      const d = snap.val();
+      if(!d) return;
+      window.BOZOR_PRICES_LIVE = d;
+      if(typeof applyBozorPrices === 'function') applyBozorPrices(d);
+    });
+
+    // Sayt sozlamalari (tagline, nom)
+    fbDb.ref('config/site').on('value', snap => {
+      const d = snap.val();
+      if(!d) return;
+      if(d.tagline) setText('t-tagline', d.tagline);
     });
 
   }, 2000);
