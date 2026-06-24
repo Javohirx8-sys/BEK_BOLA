@@ -2927,33 +2927,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(typeof updateStatus === 'function') updateStatus();
     });
 
-    // Admin yuborgan bildirishnomalar — to'g'ri ishlashi uchun
-    let lastSeenNotifTime = Date.now(); // Sahifa ochilgan vaqt
-    const notifList = []; // Barcha kelgan bildirishnomalar
-
-    fbDb.ref('notifications').limitToLast(10).on('value', snap => {
-      const data = snap.val();
-      if(!data) return;
-
-      const items = Object.values(data).sort((a,b) => (b.time||0) - (a.time||0));
-      notifList.length = 0;
-      notifList.push(...items);
-
-      // Faqat yangi (sahifa ochilgandan keyin yuborilgan) larni toast qil
-      const newOnes = items.filter(n => n.time && n.time > lastSeenNotifTime);
-      newOnes.forEach(n => {
-        showToast('🔔 ' + (n.title||'') + (n.body ? ': ' + n.body : ''));
-      });
-
-      // O'qilmagan soni hisoblash (oxirgi 24 soat ichidagi)
-      const since24h = Date.now() - 86400000;
-      const unread = items.filter(n => n.time && n.time > since24h).length;
-      updateNotifBadge(unread);
-
-      // Panel ochiq bo'lsa qayta render
-      const panel = document.getElementById('notif-panel');
-      if(panel && panel.style.display !== 'none') renderNotifPanel(notifList);
-    });
+    // Bildirishnomalar initNotifRealtime() da boshqariladi
 
     // Xizmatlar (Taxi, Eko, Shifoxona) ma\u02bblumotlari
     fbDb.ref('services/taxi').on('value', snap => {
@@ -3082,6 +3056,171 @@ function renderNotifPanel(items) {
       </div>
     </div>`).join('');
 }
+</script>
+
+
+<!-- ── SOT, OB-HAVO, BILDIRISHNOMA REAL-TIME ── -->
+<script>
+// ─── SOAT (har soniyada) ─────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const clockEl  = document.getElementById('clock');
+  const dateEl   = document.getElementById('tb-date');
+  if(clockEl) {
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    clockEl.textContent = h + ':' + m + ':' + s;
+  }
+  if(dateEl) {
+    const days   = ['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+    const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
+    dateEl.textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()];
+  }
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// ─── OB-HAVO (Open-Meteo, bepul, API key shart emas) ─────
+function fetchWeather() {
+  // Parkent koordinatalari
+  const lat = 41.2939, lon = 69.6799;
+  const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat +
+              '&longitude=' + lon +
+              '&current=temperature_2m,weathercode&timezone=Asia%2FTashkent';
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      const temp = Math.round(data.current.temperature_2m);
+      const code = data.current.weathercode;
+      const tempEl = document.getElementById('w-temp');
+      const icoEl  = document.querySelector('.tb-weather-icon');
+      if(tempEl) tempEl.textContent = temp + '°C';
+      if(icoEl)  icoEl.textContent  = weatherIcon(code);
+    })
+    .catch(() => {
+      const tempEl = document.getElementById('w-temp');
+      if(tempEl) tempEl.textContent = '--°C';
+    });
+}
+
+function weatherIcon(code) {
+  if(code === 0)              return '☀️';
+  if(code <= 2)               return '⛅';
+  if(code === 3)              return '☁️';
+  if(code >= 45 && code<=48)  return '🌫️';
+  if(code >= 51 && code<=57)  return '🌦️';
+  if(code >= 61 && code<=67)  return '🌧️';
+  if(code >= 71 && code<=77)  return '❄️';
+  if(code >= 80 && code<=82)  return '🌦️';
+  if(code >= 95)              return '⛈️';
+  return '🌤️';
+}
+
+fetchWeather();
+setInterval(fetchWeather, 10 * 60 * 1000); // har 10 daqiqada
+
+// ─── BILDIRISHNOMA REAL-TIME (polling + Firebase) ────────
+let _notifItems = [];
+let _notifLastTime = Date.now();
+
+function initNotifRealtime() {
+  if(typeof fbDb === 'undefined' || !fbDb) return;
+
+  fbDb.ref('notifications').limitToLast(20).on('value', snap => {
+    const data = snap.val() || {};
+    const items = Object.entries(data)
+      .map(([key, val]) => ({ ...val, key }))
+      .sort((a,b) => (b.time||0) - (a.time||0));
+
+    _notifItems = items;
+
+    // Yangi xabarlarni toast bilan ko'rsat (sahifa ochilgandan keyin kelganlar)
+    const newOnes = items.filter(n => n.time && n.time > _notifLastTime);
+    newOnes.forEach(n => {
+      showToast('🔔 ' + (n.title||'') + (n.body ? ': ' + n.body : ''));
+    });
+    if(newOnes.length) _notifLastTime = Date.now();
+
+    // O'qilmagan soni (oxirgi 24 soat)
+    const since = Date.now() - 86400000;
+    const unread = items.filter(n => n.time && n.time > since).length;
+    updateNotifBadge(unread);
+
+    // Panel ochiq bo'lsa qayta render
+    const overlay = document.getElementById('notif-overlay');
+    if(overlay && overlay.style.display !== 'none') {
+      renderNotifPanel(_notifItems);
+    }
+  });
+}
+
+// Badge yangilash
+function updateNotifBadge(count) {
+  const badge = document.getElementById('notif-badge');
+  if(!badge) return;
+  if(count > 0) {
+    badge.style.display = 'flex';
+    badge.textContent = count > 9 ? '9+' : String(count);
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// Panel ochish
+window.openNotifPanel = function() {
+  const overlay = document.getElementById('notif-overlay');
+  const panel   = document.getElementById('notif-panel');
+  if(!overlay || !panel) return;
+  overlay.style.display = 'flex';
+  setTimeout(() => panel.style.transform = 'translateY(0)', 10);
+  renderNotifPanel(_notifItems);
+  updateNotifBadge(0); // O'qildi
+};
+
+// Panel yopish
+window.closeNotifPanel = function() {
+  const overlay = document.getElementById('notif-overlay');
+  const panel   = document.getElementById('notif-panel');
+  if(!panel) return;
+  panel.style.transform = 'translateY(100%)';
+  setTimeout(() => { if(overlay) overlay.style.display = 'none'; }, 320);
+};
+
+// Panel render
+function renderNotifPanel(items) {
+  const list     = document.getElementById('notif-list');
+  const countTxt = document.getElementById('notif-count-txt');
+  if(!list) return;
+  if(countTxt) countTxt.textContent = items.length + ' ta bildirishnoma';
+  if(!items.length) {
+    list.innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--muted);">
+      <div style="font-size:36px;margin-bottom:8px;">🔔</div>
+      <div style="font-size:13px;">Hali bildirishnoma yoʻoq</div></div>`;
+    return;
+  }
+  function ago(ts) {
+    const d = Math.floor((Date.now()-ts)/1000);
+    if(d < 60)    return 'Hozirgina';
+    if(d < 3600)  return Math.floor(d/60) + ' daqiqa oldin';
+    if(d < 86400) return Math.floor(d/3600) + ' soat oldin';
+    return Math.floor(d/86400) + ' kun oldin';
+  }
+  list.innerHTML = items.map(n => `
+    <div class="notif-item">
+      <div class="notif-item-ico">📢</div>
+      <div style="flex:1;min-width:0">
+        <div class="notif-item-title">${n.title || 'Bildirishnoma'}</div>
+        <div class="notif-item-body">${n.body || ''}</div>
+        <div class="notif-item-time">${n.time ? ago(n.time) : ''}</div>
+      </div>
+    </div>`).join('');
+}
+
+// Firebase tayyor bo'lganda ishga tushiramiz
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initNotifRealtime, 2500);
+});
 </script>
 
 </body>
