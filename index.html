@@ -3223,5 +3223,208 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<!-- ── AI OVOZLI YORDAMCHI (Gemini) ── -->
+<script>
+const GEMINI_API_KEY = 'AIzaSyAQ.Ab8RN6Jhe8kZ3PAxOcpyZnSKdsPBtnatAUfqprsiRI-0hwYSRA';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
+
+let voiceOn     = false;
+let recognition = null;
+let isSpeaking  = false;
+let voiceHistory = [];
+
+const SYSTEM_PROMPT = `Sen turist24.uz — Parkent tuman turizm platformasining AI yordamchisisiz.
+Foydalanuvchi o'zbek tilida gaplashadi, sen ham O'ZBEK TILIDA javob berasan.
+
+Quyidagi buyruqlarni bajarа olasan. Agar foydalanuvchi quyidagilarni so'rasa, javob oxirida yangi qatorda JSON yoz:
+- Choyxona ko'rsat / bron qil → {"action":"openChoyxona"}
+- Taxi chaqir / taksi → {"action":"callTaxi"}
+- Eko turizm / Kumushkon → {"action":"goEco"}
+- Virtual sayohat → {"action":"openVirtualTour"}
+- Kunlik reja / reja tuz → {"action":"openPlan"}
+- Bozor / narxlar → {"action":"openBozor"}
+- Joylashuvim / qayerdaman → {"action":"myLoc"}
+- Bildirishnoma → {"action":"openNotifPanel"}
+
+Qisqa (2-3 jumla), do'stona, O'zbek tilida javob ber.
+Parkent tumani: Toshkentdan 40km, tog' havosi, Kumushkon, choyxonalar, mahalliy taomlar bilan mashhur.`;
+
+// ── TOGGLE ───────────────────────────────────────────────
+window.toggleVoice = function() {
+  if(voiceOn) stopVoice();
+  else startVoice();
+};
+
+function startVoice() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) {
+    showToast('⚠️ Chrome brauzerida ishlaydi. Iltimos Chrome ishlatng.');
+    return;
+  }
+  voiceOn = true;
+  setVoiceUI(true, 'Tinglayapman...');
+
+  recognition = new SR();
+  recognition.lang = 'uz-UZ';
+  recognition.interimResults = false;
+  recognition.continuous = false;
+
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript.trim();
+    setVoiceUI(true, '🎤 ' + text);
+    processWithGemini(text);
+  };
+
+  recognition.onerror = (e) => {
+    if(e.error === 'not-allowed') {
+      showToast('⚠️ Mikrofonga ruxsat bering!');
+      stopVoice(); return;
+    }
+    if(e.error === 'no-speech') restartListening();
+  };
+
+  recognition.onend = () => {
+    if(voiceOn && !isSpeaking) restartListening();
+  };
+
+  recognition.start();
+}
+
+function restartListening() {
+  if(!voiceOn || isSpeaking) return;
+  setTimeout(() => {
+    if(voiceOn && !isSpeaking && recognition) {
+      try { recognition.start(); setVoiceUI(true,'Tinglayapman...'); } catch(e) {}
+    }
+  }, 800);
+}
+
+function stopVoice() {
+  voiceOn = false; isSpeaking = false;
+  if(recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+  setVoiceUI(false, '');
+}
+
+// ── GEMINI API ───────────────────────────────────────────
+async function processWithGemini(userText) {
+  if(recognition) try { recognition.stop(); } catch(e) {}
+  isSpeaking = true;
+  setVoiceUI(true, '🤖 O\'ylayapman...');
+
+  voiceHistory.push({ role:'user', parts:[{ text: userText }] });
+  if(voiceHistory.length > 10) voiceHistory = voiceHistory.slice(-10);
+
+  try {
+    const body = {
+      system_instruction: { parts:[{ text: SYSTEM_PROMPT }] },
+      contents: voiceHistory,
+      generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+    };
+
+    const res  = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+
+    if(data.error) throw new Error(data.error.message);
+
+    const fullText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Kechirasiz, tushunmadim.';
+
+    // JSON action ni ajratib olamiz
+    const jsonMatch = fullText.match(/\{[^}]*"action"\s*:\s*"[^"]+"[^}]*\}/);
+    let speakText = fullText.replace(jsonMatch?.[0]||'','').trim();
+    let action = null;
+    if(jsonMatch) { try { action = JSON.parse(jsonMatch[0]); } catch(e) {} }
+
+    voiceHistory.push({ role:'model', parts:[{ text: fullText }] });
+
+    // Javobni ovozga aylantiramiz
+    setVoiceUI(true, '🔊 ' + speakText.slice(0,80) + (speakText.length>80?'...':''));
+    await speakTTS(speakText);
+
+    // Action bajaramiz
+    if(action) executeVoiceAction(action.action);
+
+  } catch(err) {
+    const errMsg = 'Internetni tekshiring yoki qayta urinib ko\'ring.';
+    setVoiceUI(true, '❌ ' + errMsg);
+    await speakTTS(errMsg);
+  } finally {
+    isSpeaking = false;
+    if(voiceOn) restartListening();
+  }
+}
+
+// ── TTS ──────────────────────────────────────────────────
+function speakTTS(text) {
+  return new Promise(resolve => {
+    if(!window.speechSynthesis) { resolve(); return; }
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const voices = window.speechSynthesis.getVoices();
+    utt.voice = voices.find(v=>v.lang.startsWith('uz')) ||
+                voices.find(v=>v.lang.startsWith('ru')) ||
+                voices.find(v=>v.default) || null;
+    utt.lang = 'uz-UZ'; utt.rate = 0.92; utt.pitch = 1.0;
+    utt.onend = resolve; utt.onerror = resolve;
+    setTimeout(() => window.speechSynthesis.speak(utt), 50);
+    setTimeout(resolve, 25000);
+  });
+}
+
+// ── ACTION ───────────────────────────────────────────────
+function executeVoiceAction(action) {
+  const map = {
+    openChoyxona:    () => typeof openChoyxona==='function' && openChoyxona(),
+    goEco:           () => typeof goEco==='function' && goEco(),
+    openVirtualTour: () => typeof openVirtualTour==='function' && openVirtualTour(),
+    callTaxi:        () => typeof callTaxi==='function' && callTaxi(),
+    openBozor:       () => typeof openBozor==='function' && openBozor(),
+    openPlan:        () => typeof openPlan==='function' && openPlan(),
+    myLoc:           () => typeof myLoc==='function' && myLoc(),
+    openNotifPanel:  () => typeof openNotifPanel==='function' && openNotifPanel(),
+  };
+  if(map[action]) setTimeout(map[action], 400);
+}
+
+// ── UI ───────────────────────────────────────────────────
+function setVoiceUI(on, statusText) {
+  const card    = document.getElementById('voice-card-btn');
+  const robot   = document.getElementById('vc-robot-ico');
+  const subText = document.getElementById('vc-sub-text');
+  const bar     = document.getElementById('voice-bar');
+  const txtEl   = document.getElementById('voice-text');
+  const hint    = document.getElementById('voice-hint');
+
+  if(card)    card.classList.toggle('on', on);
+  if(robot)   robot.textContent = on ? '🎙️' : '🤖';
+  if(subText) subText.textContent = on ? 'Quloq solmoqda...' : 'Yordam kerakmi?';
+  if(bar)     bar.classList.toggle('show', on);
+  if(txtEl && statusText !== undefined) txtEl.textContent = statusText;
+
+  if(hint) {
+    hint.classList.toggle('show', on);
+    if(on) hint.innerHTML = `
+      <div class="vhint-title">💬 Shunday deyishingiz mumkin:</div>
+      <div class="voice-commands">
+        <span class="voice-cmd">Choyxona ko'rsat</span>
+        <span class="voice-cmd">Taxi chaqir</span>
+        <span class="voice-cmd">Eko turizm haqida</span>
+        <span class="voice-cmd">Bugungi reja tuz</span>
+        <span class="voice-cmd">Bozor narxlari</span>
+        <span class="voice-cmd">Virtual sayohat</span>
+        <span class="voice-cmd">Parkent haqida ayt</span>
+      </div>`;
+  }
+}
+
+if(window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+</script>
+
 </body>
 </html>
