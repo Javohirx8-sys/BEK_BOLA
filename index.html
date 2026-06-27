@@ -3225,8 +3225,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <!-- ── AI OVOZLI YORDAMCHI (Gemini) ── -->
 <script>
-const GEMINI_API_KEY = 'AIzaSyAQ.Ab8RN6Jhe8kZ3PAxOcpyZnSKdsPBtnatAUfqprsiRI-0hwYSRA';
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_API_KEY;
+// ── Groq API (bepul, tez, o'zbek tilini yaxshi tushunadi) ──
+// groq.com dan bepul key oling: gsk_...
+const GROQ_API_KEY = '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'; // <-- groq.com dan key oling
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 let voiceOn     = false;
 let recognition = null;
@@ -3329,26 +3331,41 @@ async function processWithGemini(userText) {
   isSpeaking = true;
   setVoiceUI(true, '🤖 O\'ylayapman...');
 
-  voiceHistory.push({ role:'user', parts:[{ text: userText }] });
+  voiceHistory.push({ role:'user', content: userText });
   if(voiceHistory.length > 10) voiceHistory = voiceHistory.slice(-10);
 
   try {
-    const body = {
-      system_instruction: { parts:[{ text: SYSTEM_PROMPT }] },
-      contents: voiceHistory,
-      generationConfig: { maxOutputTokens: 300, temperature: 0.7 }
+    // body Groq formatida pastda quriladi
+
+    const groqBody = {
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...voiceHistory.slice(-8).map(m => ({
+          role: m.role === 'model' ? 'assistant' : m.role,
+          content: m.parts ? m.parts[0].text : m.content
+        }))
+      ],
+      max_tokens: 300,
+      temperature: 0.7,
     };
 
-    const res  = await fetch(GEMINI_URL, {
+    const res = await fetch(GROQ_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_API_KEY,
+      },
+      body: JSON.stringify(groqBody)
     });
     const data = await res.json();
 
-    if(data.error) throw new Error(data.error.message);
+    if(data.error) {
+      console.error('Groq API error:', JSON.stringify(data.error));
+      throw new Error(data.error.message || 'API xato');
+    }
 
-    const fullText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Kechirasiz, tushunmadim.';
+    const fullText = data.choices?.[0]?.message?.content || 'Kechirasiz, tushunmadim.';
 
     // JSON action ni ajratib olamiz
     const jsonMatch = fullText.match(/\{[^}]*"action"\s*:\s*"[^"]+"[^}]*\}/);
@@ -3356,7 +3373,7 @@ async function processWithGemini(userText) {
     let action = null;
     if(jsonMatch) { try { action = JSON.parse(jsonMatch[0]); } catch(e) {} }
 
-    voiceHistory.push({ role:'model', parts:[{ text: fullText }] });
+    voiceHistory.push({ role:'assistant', content: fullText });
 
     // Javobni ovozga aylantiramiz
     setVoiceUI(true, '🔊 ' + speakText.slice(0,80) + (speakText.length>80?'...':''));
