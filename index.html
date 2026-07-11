@@ -776,22 +776,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
       <div class="svc-item" onclick="callTaxi()">
         <div class="svc-img si-taxi">🚕</div>
         <div class="svc-name" id="t-taxi">Taxi</div>
-        <div class="svc-desc" id="t-taxi-desc">Tez va qulay taksi xizmati</div>
+        <div class="svc-desc">1054 ga qo'ng'iroq</div>
       </div>
-      <div class="svc-item" onclick="goEco()">
+      <div class="svc-item" onclick="openEcoList()">
         <div class="svc-img si-eco">🌿</div>
-        <div class="svc-name" id="t-eco">Eko turizm</div>
-        <div class="svc-desc" id="t-eco-desc">Tabiat qo'ynida dam oling</div>
+        <div class="svc-name" id="t-eco">Eko Turizm</div>
+        <div class="svc-desc">Kumushkon · Tabiat</div>
       </div>
       <div class="svc-item" onclick="openChoyxona()">
         <div class="svc-img si-choy">🍵</div>
         <div class="svc-name">Choyxonalar</div>
-        <div class="svc-desc">Eng yaxshi choyxonalar</div>
+        <div class="svc-desc">Bron qilish</div>
       </div>
       <div class="svc-item" onclick="myLoc()">
         <div class="svc-img si-loc">📍</div>
         <div class="svc-name" id="t-loc">Joylashuvim</div>
-        <div class="svc-desc">Joriy joyingizni aniqlang</div>
+        <div class="svc-desc">Xaritada ko'rish</div>
       </div>
     </div>
   </div>
@@ -816,32 +816,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
-  <!-- QO'SHIMCHA XIZMATLAR -->
-  <div class="section" style="margin-bottom:12px;">
-    <div class="section-hdr">
-      <div class="section-title">Qo'shimcha xizmatlar</div>
+  <!-- ADMIN PANELDAN BOSHQARILADIGAN JOYLAR (Eko turizm, tarixiy joylar va h.k.) -->
+  <div class="section" style="margin-bottom:16px;" id="places-section">
+    <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;padding:0 2px">📍 Sayohat joylari</div>
+    <div id="admin-services-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <!-- Admin paneldan yuklanadi -->
+      <div style="text-align:center;color:var(--muted);font-size:12px;padding:20px;grid-column:span 3">Yuklanmoqda...</div>
     </div>
-    <div class="extra-grid">
-      <div class="extra-item" onclick="near('gas+station')">
-        <div class="ei-ico si-fuel">⛽</div>
-        <div class="ei-name" id="t-fuel">Yoqilg'i</div>
-      </div>
-      <div class="extra-item" onclick="near('restaurant')">
-        <div class="ei-ico si-food">🍽️</div>
-        <div class="ei-name" id="t-food">Restoranlar</div>
-      </div>
-      <div class="extra-item" onclick="near('hospital')">
-        <div class="ei-ico si-hosp">🏥</div>
-        <div class="ei-name" id="t-hospital">Shifoxona</div>
-      </div>
-      <div class="extra-item" onclick="near('pharmacy')">
-        <div class="ei-ico si-pharm">💊</div>
-        <div class="ei-name" id="t-pharmacy">Dorixona</div>
-      </div>
-      <div class="extra-item" onclick="myLoc()">
-        <div class="ei-ico si-loc">🗺️</div>
-        <div class="ei-name">Joylashuv</div>
-      </div>
+  </div>
+
+  <!-- TEZKOR AMALLAR: SOS / Tez yordam / Bozor -->
+  <div class="section" style="margin-bottom:16px;">
+    <div class="extra-grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="extra-item" onclick="openModal('SOS')">
         <div class="ei-ico" style="background:#fee2e2;border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🆘</div>
         <div class="ei-name" style="color:#dc2626;font-weight:800" id="t-sos-label">SOS</div>
@@ -856,8 +842,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
       </div>
     </div>
   </div>
-
-
 
   <!-- SOS/AMB hidden cards for stop-bar tracking -->
   <div id="sos-btn" style="display:none"></div>
@@ -1022,21 +1006,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 
 
   <!-- footer olib tashlandi -->
-
-
-  <!-- CONFIRM MODAL -->
-  <div class="overlay" id="overlay" onclick="closeModal(event)">
-    <div class="modal">
-      <div class="modal-icon" id="modal-icon">🆘</div>
-      <div class="modal-title" id="modal-title"></div>
-      <div class="modal-desc"  id="modal-desc"></div>
-      <div class="modal-btns">
-        <button class="modal-btn cancel" id="modal-cancel" onclick="closeModal()"></button>
-        <button class="modal-btn csos"   id="modal-confirm" onclick="confirmAction()"></button>
-      </div>
-    </div>
-  </div>
-
 
   
   <!-- KUNLIK REJA SHEET -->
@@ -2593,6 +2562,35 @@ document.addEventListener('click', function(e) {
 }, true);
 </script>
 
+<!-- LANG OVERLAY -->
+<div class="lang-overlay" id="lang-overlay" onclick="closeLang(event)">
+  <div class="lang-panel">
+    <div class="lang-panel-title">Tilni tanlang</div>
+    <div class="lang-grid">
+      <div class="lang-option active" data-code="uz" onclick="selectLang('uz')"><span class="lang-opt-flag">🇺🇿</span><div><div class="lang-opt-name">Oʻbek</div></div></div>
+      <div class="lang-option" data-code="ru" onclick="selectLang('ru')"><span class="lang-opt-flag">🇷🇺</span><div><div class="lang-opt-name">Русский</div></div></div>
+      <div class="lang-option" data-code="en" onclick="selectLang('en')"><span class="lang-opt-flag">🇬🇧</span><div><div class="lang-opt-name">English</div></div></div>
+    </div>
+  </div>
+</div>
+<!-- SOS MODAL -->
+<div class="overlay" id="confirm-overlay" onclick="closeModal()">
+  <div class="modal">
+    <div class="modal-icon" id="modal-icon">🆘</div>
+    <div class="modal-title" id="modal-title">Favqulodda yordam</div>
+    <div class="modal-desc" id="modal-desc">Joylashuvingiz yuborib turiladi.</div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal()">Bekor qilish</button>
+      <button class="modal-btn csos" id="modal-ok-btn">Ha, yuborish</button>
+    </div>
+  </div>
+</div>
+<!-- STOP BAR -->
+<div class="stop-bar" id="stop-bar">
+  <div><div class="stop-bar-title">🆘 SOS jonli uzatilmoqda</div><div class="stop-bar-sub">Har 10 soniyada yangilanadi</div></div>
+  <button class="stop-btn" onclick="stopSOS()">Toʻxtatish</button>
+</div>
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 </div><!-- /app-shell -->
 <!-- ── BOZOR VA FOYDALANUVCHI JS ── -->
@@ -2927,7 +2925,33 @@ document.addEventListener('DOMContentLoaded', () => {
       if(typeof updateStatus === 'function') updateStatus();
     });
 
-    // Bildirishnomalar initNotifRealtime() da boshqariladi
+    // Admin yuborgan bildirishnomalar — to'g'ri ishlashi uchun
+    let lastSeenNotifTime = Date.now(); // Sahifa ochilgan vaqt
+    const notifList = []; // Barcha kelgan bildirishnomalar
+
+    fbDb.ref('notifications').limitToLast(10).on('value', snap => {
+      const data = snap.val();
+      if(!data) return;
+
+      const items = Object.values(data).sort((a,b) => (b.time||0) - (a.time||0));
+      notifList.length = 0;
+      notifList.push(...items);
+
+      // Faqat yangi (sahifa ochilgandan keyin yuborilgan) larni toast qil
+      const newOnes = items.filter(n => n.time && n.time > lastSeenNotifTime);
+      newOnes.forEach(n => {
+        showToast('🔔 ' + (n.title||'') + (n.body ? ': ' + n.body : ''));
+      });
+
+      // O'qilmagan soni hisoblash (oxirgi 24 soat ichidagi)
+      const since24h = Date.now() - 86400000;
+      const unread = items.filter(n => n.time && n.time > since24h).length;
+      updateNotifBadge(unread);
+
+      // Panel ochiq bo'lsa qayta render
+      const panel = document.getElementById('notif-panel');
+      if(panel && panel.style.display !== 'none') renderNotifPanel(notifList);
+    });
 
     // Xizmatlar (Taxi, Eko, Shifoxona) ma\u02bblumotlari
     fbDb.ref('services/taxi').on('value', snap => {
@@ -3059,438 +3083,257 @@ function renderNotifPanel(items) {
 </script>
 
 
-<!-- ── SOT, OB-HAVO, BILDIRISHNOMA REAL-TIME ── -->
+<!-- CORE -->
 <script>
-// ─── SOAT (har soniyada) ─────────────────────────────────
-function updateClock() {
-  const now = new Date();
-  const clockEl  = document.getElementById('clock');
-  const dateEl   = document.getElementById('tb-date');
-  if(clockEl) {
-    const h = String(now.getHours()).padStart(2,'0');
-    const m = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    clockEl.textContent = h + ':' + m + ':' + s;
+// CORE FUNCTIONS - turist24.uz
+const LANGS=[{code:"uz",flag:"\u{1F1FA}\u{1F1FF}",name:"O\u02bbbek"},{code:"ru",flag:"\u{1F1F7}\u{1F1FA}",name:"\u0420\u0443\u0441\u0441\u043a\u0438\u0439"},{code:"en",flag:"\u{1F1EC}\u{1F1E7}",name:"English"}];
+const T={
+  uz:{tagline:"Parkent Tuman Hokimligi",taxi:"Taxi",loc:"Joylashuvim",eco:"Eko Turizm",fuel:"Yoqilg\u02bci",food:"Restoranlar",hospital:"Shifoxona",pharmacy:"Dorixona",sosLabel:"Favqulodda",live:"JONLI",amb:"Tez Yordam",ambLabel:"Shoshilinch",statusOnline:"Tizim faol \u00b7 Xizmat ko\u02bbrsatishga tayyor",statusOffline:"Internet yo\u02bboq",statusNoGps:"GPS o\u02bbchirilgan \u00b7 Joylashuv yo\u02bboq",langTitle:"Tilni tanlang"},
+  ru:{tagline:"\u041f\u0430\u0440\u043a\u0435\u043d\u0442\u0441\u043a\u0438\u0439 \u0440\u0430\u0439\u043e\u043d",taxi:"\u0422\u0430\u043a\u0441\u0438",loc:"\u041c\u043e\u0451 \u043c\u0435\u0441\u0442\u043e",eco:"\u042d\u043a\u043e\u0442\u0443\u0440\u0438\u0437\u043c",fuel:"\u0422\u043e\u043f\u043b\u0438\u0432\u043e",food:"\u0420\u0435\u0441\u0442\u043e\u0440\u0430\u043d\u044b",hospital:"\u0411\u043e\u043b\u044c\u043d\u0438\u0446\u0430",pharmacy:"\u0410\u043f\u0442\u0435\u043a\u0430",sosLabel:"\u042d\u043a\u0441\u0442\u0440\u0435\u043d\u043d\u043e",live:"\u041f\u0420\u042f\u041c\u041e\u0419",amb:"\u0421\u043a\u043e\u0440\u0430\u044f",ambLabel:"\u0421\u0440\u043e\u0447\u043d\u043e",statusOnline:"\u0421\u0438\u0441\u0442\u0435\u043c\u0430 \u0430\u043a\u0442\u0438\u0432\u043d\u0430",statusOffline:"\u041d\u0435\u0442 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442\u0430",statusNoGps:"GPS \u043e\u0442\u043a\u043b\u044e\u0447\u0451\u043d",langTitle:"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u044f\u0437\u044b\u043a"},
+  en:{tagline:"Parkent District",taxi:"Taxi",loc:"My Location",eco:"Eco Tourism",fuel:"Fuel",food:"Restaurants",hospital:"Hospital",pharmacy:"Pharmacy",sosLabel:"Emergency",live:"LIVE",amb:"Ambulance",ambLabel:"Urgent",statusOnline:"System active",statusOffline:"No internet",statusNoGps:"GPS off",langTitle:"Choose language"}
+};
+let currentLang=localStorage.getItem("t24_lang")||"uz";
+function setText(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function applyLang(code){
+  if(!T[code])return;
+  currentLang=code;localStorage.setItem("t24_lang",code);
+  const l=LANGS.find(x=>x.code===code),t=T[code];
+  if(l){setText("cur-flag",l.flag);setText("cur-code",code.toUpperCase());}
+  setText("t-tagline",t.tagline);setText("t-taxi",t.taxi);setText("t-loc",t.loc);
+  setText("t-eco",t.eco);setText("t-fuel",t.fuel);setText("t-food",t.food);
+  setText("t-hospital",t.hospital);setText("t-pharmacy",t.pharmacy);
+  setText("t-sos-label",t.sosLabel);setText("t-live",t.live);
+  setText("t-amb",t.amb);setText("t-amb-label",t.ambLabel);
+  document.body.dir=code==="ar"?"rtl":"ltr";
+  document.querySelectorAll(".lang-option").forEach(el=>el.classList.toggle("active",el.dataset.code===code));
+  if(typeof updateStatus==="function")updateStatus();
+}
+window.openLang=function(){const o=document.getElementById("lang-overlay");if(o){o.classList.add("open");document.body.style.overflow="hidden";}};
+window.closeLang=function(e){const o=document.getElementById("lang-overlay");if(!e||e.target===o){if(o)o.classList.remove("open");document.body.style.overflow="";}};
+window.selectLang=function(code){applyLang(code);closeLang();};
+
+let isOnline=navigator.onLine,hasGps=false,adminStatusOverride=null;
+window.addEventListener("online",()=>{isOnline=true;updateStatus();});
+window.addEventListener("offline",()=>{isOnline=false;updateStatus();});
+
+function updateStatus(){
+  const strip=document.getElementById("status-strip"),txt=document.getElementById("t-status"),gps=document.getElementById("status-gps"),t=T[currentLang]||T.uz;
+  if(adminStatusOverride&&isOnline){if(strip)strip.className="status-strip "+(adminStatusOverride.color||"online");if(txt)txt.textContent=adminStatusOverride.text;return;}
+  if(!isOnline){if(strip)strip.className="status-strip offline";if(txt)txt.textContent=t.statusOffline;if(gps){gps.textContent="\u{1F4F5}";gps.style.opacity=".5";}}
+  else if(!hasGps){if(strip)strip.className="status-strip no-gps";if(txt)txt.textContent=t.statusNoGps;if(gps){gps.textContent="\u{1F4CD}";gps.style.opacity=".35";}}
+  else{if(strip)strip.className="status-strip online";if(txt)txt.textContent=t.statusOnline;if(gps){gps.textContent="\u{1F4CD}";gps.style.opacity=".8";}}
+}
+function checkGps(){
+  if(!navigator.geolocation){hasGps=false;updateStatus();return;}
+  navigator.geolocation.getCurrentPosition(p=>{hasGps=true;updateStatus();if(typeof updateLocationFirebase==="function"&&typeof currentUser!=="undefined")updateLocationFirebase(currentUser,p.coords.latitude,p.coords.longitude);},()=>{hasGps=false;updateStatus();},{timeout:5000});
+}
+
+window.showToast=function(msg,dur){const t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),dur||3000);};
+
+// Virtual sayohat va ovozli yordamchi (Ziyod) hali bu faylga ulanmagan — vaqtincha xabar
+window.openVirtualTour=function(){showToast("🌐 Virtual sayohat tez orada qo\u02bbshiladi");};
+window.toggleVoice=function(){showToast("🎙️ Ovozli yordamchi (Ziyod) hali ulanmagan");};
+
+let TAXI_PHONE="1054",ECO_LAT=41.277723,ECO_LNG=69.709866;
+
+// XIZMATLAR - admin paneldan boshqariladi
+const SERVICES={
+  taxi:{name:"Taxi 1054",desc:"Tez va qulay",phone:"1054",icon:"\u{1F695}"},
+  eco:{name:"Eko Turizm",desc:"Kumushkon",lat:41.277723,lng:69.709866,icon:"\u{1F33F}",images:[],mapUrl:""},
+  choyxona:{name:"Choyxonalar",desc:"6 ta choyxona",icon:"\u{1F375}"},
+  sos:{name:"SOS",desc:"Favqulodda",phone:"112",icon:"\u{1F198}"},
+  amb:{name:"Tez Yordam",desc:"Shoshilinch",phone:"103",icon:"\u{1F691}"}
+};
+
+window.callTaxi=function(){window.location.href="tel:"+(SERVICES.taxi.phone||"1054");};
+
+window.openEcoList=function(){
+  const sec=document.getElementById('places-section');
+  if(sec){sec.scrollIntoView({behavior:'smooth',block:'start'});}
+  else goEco();
+};
+
+window.goEco=function(){
+  const lat=SERVICES.eco.lat||ECO_LAT,lng=SERVICES.eco.lng||ECO_LNG;
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      p=>window.open("https://www.google.com/maps/dir/"+p.coords.latitude+","+p.coords.longitude+"/"+lat+","+lng,"_blank"),
+      ()=>window.open("https://www.google.com/maps?q="+lat+","+lng,"_blank")
+    );
+  } else window.open("https://www.google.com/maps?q="+lat+","+lng,"_blank");
+};
+
+window.near=function(type){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      p=>window.open("https://www.google.com/maps/search/"+type+"/@"+p.coords.latitude+","+p.coords.longitude+",14z","_blank"),
+      ()=>window.open("https://www.google.com/maps/search/"+type+"/@"+ECO_LAT+","+ECO_LNG+",13z","_blank")
+    );
+  } else window.open("https://www.google.com/maps/search/"+type+"/@"+ECO_LAT+","+ECO_LNG+",13z","_blank");
+};
+
+window.myLoc=function(){
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(
+      p=>window.open("https://www.google.com/maps?q="+p.coords.latitude+","+p.coords.longitude,"_blank"),
+      ()=>showToast("GPS aniqlanmadi")
+    );
   }
-  if(dateEl) {
-    const days   = ['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
-    const months = ['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentyabr','Oktyabr','Noyabr','Dekabr'];
-    dateEl.textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()];
+};
+
+// SOS
+let sosActive=false,sosInterval=null;
+window.openModal=function(type){
+  const overlay=document.getElementById("confirm-overlay");
+  if(!overlay)return;
+  const icon=document.getElementById("modal-icon"),title=document.getElementById("modal-title"),desc=document.getElementById("modal-desc"),okBtn=document.getElementById("modal-ok-btn");
+  if(type==="SOS"){
+    if(icon)icon.textContent="\u{1F198}";
+    if(title)title.textContent="SOS \u2014 Favqulodda yordam";
+    if(desc)desc.textContent="Joylashuvingiz har 10 soniyada yuborib turiladi.";
+    if(okBtn){okBtn.textContent="Ha, yuborish";okBtn.className="modal-btn csos";okBtn.onclick=startSOS;}
+  } else {
+    if(icon)icon.textContent="\u{1F691}";
+    if(title)title.textContent="Tez Yordam chaqirish";
+    if(desc)desc.textContent="103 raqamiga qo\u02bbng\u02bbiroq qilinadi.";
+    if(okBtn){okBtn.textContent="Qo\u02bbng\u02bbiroq";okBtn.className="modal-btn camb";okBtn.onclick=()=>{closeModal();window.location.href="tel:103";}}
   }
+  overlay.classList.add("open");document.body.style.overflow="hidden";
+};
+window.closeModal=function(){const o=document.getElementById("confirm-overlay");if(o){o.classList.remove("open");document.body.style.overflow="";}};
+
+function startSOS(){
+  closeModal();sosActive=true;
+  const badge=document.getElementById("sos-live-badge");if(badge)badge.classList.add("show");
+  showToast("\u{1F198} SOS signal yuborilmoqda!");
+  function sendLoc(){navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{if(typeof sendSosToFirebase==="function"&&typeof currentUser!=="undefined")sendSosToFirebase(currentUser,p.coords.latitude,p.coords.longitude);});}
+  sendLoc();sosInterval=setInterval(sendLoc,10000);
+  const sb=document.getElementById("stop-bar");if(sb)sb.classList.add("show");
 }
-updateClock();
-setInterval(updateClock, 1000);
+window.stopSOS=function(){
+  sosActive=false;clearInterval(sosInterval);
+  const badge=document.getElementById("sos-live-badge");if(badge)badge.classList.remove("show");
+  const sb=document.getElementById("stop-bar");if(sb)sb.classList.remove("show");
+  if(typeof fbDb!=="undefined"&&fbDb&&typeof currentUser!=="undefined")fbDb.ref("murojaatlar/"+currentUser.id.replace(/-/g,"_")+"/active").set(false);
+  showToast("SOS to\u02bbxtatildi");
+};
 
-// ─── OB-HAVO (Open-Meteo, bepul, API key shart emas) ─────
-function fetchWeather() {
-  // Parkent koordinatalari
-  const lat = 41.2939, lon = 69.6799;
-  const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat +
-              '&longitude=' + lon +
-              '&current=temperature_2m,weathercode&timezone=Asia%2FTashkent';
-  fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      const temp = Math.round(data.current.temperature_2m);
-      const code = data.current.weathercode;
-      const tempEl = document.getElementById('w-temp');
-      const icoEl  = document.querySelector('.tb-weather-icon');
-      if(tempEl) tempEl.textContent = temp + '°C';
-      if(icoEl)  icoEl.textContent  = weatherIcon(code);
-    })
-    .catch(() => {
-      const tempEl = document.getElementById('w-temp');
-      if(tempEl) tempEl.textContent = '--°C';
-    });
-}
+window.scrollToTop=function(){const el=document.querySelector(".scroll-area");if(el)el.scrollTop=0;};
 
-function weatherIcon(code) {
-  if(code === 0)              return '☀️';
-  if(code <= 2)               return '⛅';
-  if(code === 3)              return '☁️';
-  if(code >= 45 && code<=48)  return '🌫️';
-  if(code >= 51 && code<=57)  return '🌦️';
-  if(code >= 61 && code<=67)  return '🌧️';
-  if(code >= 71 && code<=77)  return '❄️';
-  if(code >= 80 && code<=82)  return '🌦️';
-  if(code >= 95)              return '⛈️';
-  return '🌤️';
-}
-
-fetchWeather();
-setInterval(fetchWeather, 10 * 60 * 1000); // har 10 daqiqada
-
-// ─── BILDIRISHNOMA REAL-TIME (polling + Firebase) ────────
-let _notifItems = [];
-let _notifLastTime = Date.now();
-
-function initNotifRealtime() {
-  if(typeof fbDb === 'undefined' || !fbDb) return;
-
-  fbDb.ref('notifications').limitToLast(20).on('value', snap => {
-    const data = snap.val() || {};
-    const items = Object.entries(data)
-      .map(([key, val]) => ({ ...val, key }))
-      .sort((a,b) => (b.time||0) - (a.time||0));
-
-    _notifItems = items;
-
-    // Yangi xabarlarni toast bilan ko'rsat (sahifa ochilgandan keyin kelganlar)
-    const newOnes = items.filter(n => n.time && n.time > _notifLastTime);
-    newOnes.forEach(n => {
-      showToast('🔔 ' + (n.title||'') + (n.body ? ': ' + n.body : ''));
-    });
-    if(newOnes.length) _notifLastTime = Date.now();
-
-    // O'qilmagan soni (oxirgi 24 soat)
-    const since = Date.now() - 86400000;
-    const unread = items.filter(n => n.time && n.time > since).length;
-    updateNotifBadge(unread);
-
-    // Panel ochiq bo'lsa qayta render
-    const overlay = document.getElementById('notif-overlay');
-    if(overlay && overlay.style.display !== 'none') {
-      renderNotifPanel(_notifItems);
-    }
+// Firebase dan xizmatlarni o'qish
+function loadServicesFromFirebase(){
+  if(typeof fbDb==="undefined"||!fbDb)return;
+  fbDb.ref("services").on("value",snap=>{
+    const d=snap.val();if(!d)return;
+    if(d.taxi){SERVICES.taxi={...SERVICES.taxi,...d.taxi};TAXI_PHONE=d.taxi.phone||"1054";}
+    if(d.eco){SERVICES.eco={...SERVICES.eco,...d.eco};if(d.eco.lat)ECO_LAT=parseFloat(d.eco.lat);if(d.eco.lng)ECO_LNG=parseFloat(d.eco.lng);}
+    if(d.config&&d.config.status){adminStatusOverride=d.config.status;updateStatus();}
   });
 }
 
-// Badge yangilash
-function updateNotifBadge(count) {
-  const badge = document.getElementById('notif-badge');
-  if(!badge) return;
-  if(count > 0) {
-    badge.style.display = 'flex';
-    badge.textContent = count > 9 ? '9+' : String(count);
-  } else {
-    badge.style.display = 'none';
-  }
-}
+document.addEventListener("DOMContentLoaded",()=>{
+  applyLang(currentLang);
+  updateStatus();
+  checkGps();
+  setTimeout(()=>{checkGps();loadServicesFromFirebase();},2000);
+});
 
-// Panel ochish
-window.openNotifPanel = function() {
-  const overlay = document.getElementById('notif-overlay');
-  const panel   = document.getElementById('notif-panel');
-  if(!overlay || !panel) return;
-  overlay.style.display = 'flex';
-  setTimeout(() => panel.style.transform = 'translateY(0)', 10);
-  renderNotifPanel(_notifItems);
-  updateNotifBadge(0); // O'qildi
-};
+</script>
 
-// Panel yopish
-window.closeNotifPanel = function() {
-  const overlay = document.getElementById('notif-overlay');
-  const panel   = document.getElementById('notif-panel');
-  if(!panel) return;
-  panel.style.transform = 'translateY(100%)';
-  setTimeout(() => { if(overlay) overlay.style.display = 'none'; }, 320);
-};
-
-// Panel render
-function renderNotifPanel(items) {
-  const list     = document.getElementById('notif-list');
-  const countTxt = document.getElementById('notif-count-txt');
-  if(!list) return;
-  if(countTxt) countTxt.textContent = items.length + ' ta bildirishnoma';
-  if(!items.length) {
-    list.innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--muted);">
-      <div style="font-size:36px;margin-bottom:8px;">🔔</div>
-      <div style="font-size:13px;">Hali bildirishnoma yoʻoq</div></div>`;
+<!-- SERVICES RENDER -->
+<script>
+function renderServicesGrid(items) {
+  const grid = document.getElementById('admin-services-grid');
+  if(!grid) return;
+  if(!items || !items.length) {
+    grid.innerHTML = '<div style="grid-column:span 3;text-align:center;color:var(--muted);padding:20px;font-size:12px">Xizmatlar yuklanmoqda...</div>';
     return;
   }
-  function ago(ts) {
-    const d = Math.floor((Date.now()-ts)/1000);
-    if(d < 60)    return 'Hozirgina';
-    if(d < 3600)  return Math.floor(d/60) + ' daqiqa oldin';
-    if(d < 86400) return Math.floor(d/3600) + ' soat oldin';
-    return Math.floor(d/86400) + ' kun oldin';
-  }
-  list.innerHTML = items.map(n => `
-    <div class="notif-item">
-      <div class="notif-item-ico">📢</div>
-      <div style="flex:1;min-width:0">
-        <div class="notif-item-title">${n.title || 'Bildirishnoma'}</div>
-        <div class="notif-item-body">${n.body || ''}</div>
-        <div class="notif-item-time">${n.time ? ago(n.time) : ''}</div>
-      </div>
+  grid.innerHTML = items.map(s => `
+    <div class="svc-item" onclick="openServiceDetail('${s.key}')">
+      <div class="svc-img" style="background:var(--green-l);font-size:28px;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;margin:0 auto 8px">${s.icon||'📍'}</div>
+      <div class="svc-name">${s.name||''}</div>
+      <div class="svc-desc" style="font-size:10px;color:var(--muted);text-align:center;line-height:1.3">${s.desc||''}</div>
     </div>`).join('');
 }
 
-// Firebase tayyor bo'lganda ishga tushiramiz
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(initNotifRealtime, 2500);
-});
-</script>
+// Xizmat tafsiloti modal
+window.openServiceDetail = function(key) {
+  if(typeof fbDb === 'undefined' || !fbDb) return;
+  fbDb.ref('services/items/' + key).once('value').then(snap => {
+    const s = snap.val();
+    if(!s) return;
 
-<!-- ── AI OVOZLI YORDAMCHI (Gemini) ── -->
-<script>
-// ── Groq API (bepul, tez, o'zbek tilini yaxshi tushunadi) ──
-// groq.com dan bepul key oling: gsk_...
-const GROQ_API_KEY = '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'; // <-- groq.com dan key oling
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);z-index:600;display:flex;align-items:flex-end;';
+    
+    const imgHtml = s.images && s.images.length
+      ? `<div style="display:flex;gap:8px;overflow-x:auto;padding:0 0 4px;scrollbar-width:none">
+          ${s.images.map(img => `<img src="${img}" style="width:100px;height:80px;object-fit:cover;border-radius:10px;flex-shrink:0">`).join('')}
+        </div>`
+      : '';
+    
+    const phoneBtn = s.phone
+      ? `<button onclick="window.location.href='tel:${s.phone}'" style="flex:1;padding:13px;border-radius:13px;background:var(--green);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">📞 Qo'ng'iroq</button>`
+      : '';
+    
+    const mapBtn = s.lat && s.lng
+      ? `<button onclick="openServiceMap(${s.lat},${s.lng})" style="flex:1;padding:13px;border-radius:13px;background:var(--blue-l);border:1px solid var(--blue);color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">🗺️ Yo'nalish</button>`
+      : '';
 
-let voiceOn     = false;
-let recognition = null;
-let isSpeaking  = false;
-let voiceHistory = [];
-
-const SYSTEM_PROMPT = `Sen turist24.uz — Parkent tuman turizm platformasining AI yordamchisi va do'stona suhbatdoshisan.
-Foydalanuvchi bilan O'ZBEK TILIDA erkin gaplash. Har qanday mavzuda suhbatlash mumkin.
-
-SHAXSIYAT:
-- Isming: Ziyod (Parkent tumani virtual yordamchisi)
-- Do'stona, quvnoq, yordam berishga tayyor
-- O'zbek madaniyati, Parkent, turizm haqida bilimli
-- Foydalanuvchini "siz" deb murojaat qil
-
-SAYT FUNKSIYALARI (agar so'ralsa javob oxirida JSON yoz):
-- Choyxona / choy / dam olish → {"action":"openChoyxona"}
-- Taxi / mashina / transport → {"action":"callTaxi"}
-- Eko turizm / tog' / Kumushkon / tabiat → {"action":"goEco"}
-- Virtual sayohat / 360 / panorama → {"action":"openVirtualTour"}
-- Reja / jadval / kunlik / sayohat rejalash → {"action":"openPlan"}
-- Bozor / narx / mahsulot → {"action":"openBozor"}
-- Joylashuv / qayerda / GPS → {"action":"myLoc"}
-- Bildirishnoma / xabar → {"action":"openNotifPanel"}
-
-PARKENT HAQIDA BILIMLAR:
-- Toshkentdan 40km sharqda, Chotqol tog' tizmasi yonida
-- Kumushkon — mashhur eko-turizm hududi, tog' havosi, buloqlar
-- Mahalliy taomlar: tandirda kabob, palov, manti, sut mahsulotlari
-- 6 ta choyxona: Bahor Fasl, Chinor Soyasi, Zargaron, Do'stlik, Buloq Boshi, Kumushkon
-- Aholisi ~115 ming, 1926 yilda tashkil etilgan
-
-JAVOB USLUBI:
-- Qisqa va aniq (2-4 jumla), lekin tabiiy suhbat olib bor
-- Savol bersa — qiziquvchan bo'l, so'rab bil
-- Hazil-mutoyiba qilsa — sen ham qo'shil
-- Agar foydalanuvchi biror xizmat so'rasa — JSON buyruq qo'sh
-- Aks holda faqat matn javob ber (JSON shart emas)`;
-
-// ── TOGGLE ───────────────────────────────────────────────
-window.toggleVoice = function() {
-  if(voiceOn) stopVoice();
-  else startVoice();
+    overlay.innerHTML = `
+      <div style="background:var(--white);border-radius:24px 24px 0 0;width:100%;max-height:85dvh;overflow-y:auto;padding:20px 18px 36px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:28px">${s.icon||'📍'}</div>
+            <div>
+              <div style="font-size:16px;font-weight:800;color:var(--text)">${s.name||''}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">${s.desc||''}</div>
+            </div>
+          </div>
+          <button onclick="this.closest('[style*=fixed]').remove()" style="background:var(--s2);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:14px;color:var(--muted)">✕</button>
+        </div>
+        ${imgHtml ? '<div style="margin-bottom:14px">' + imgHtml + '</div>' : ''}
+        ${s.lat && s.lng ? `
+        <div style="margin-bottom:14px">
+          <iframe src="https://maps.google.com/maps?q=${s.lat},${s.lng}&z=16&output=embed" 
+            width="100%" height="180" style="border:0;border-radius:12px" allowfullscreen loading="lazy"></iframe>
+        </div>` : ''}
+        <div style="display:flex;gap:10px">
+          ${mapBtn}
+          ${phoneBtn}
+        </div>
+      </div>`;
+    
+    overlay.onclick = e => { if(e.target === overlay) overlay.remove(); };
+    document.body.appendChild(overlay);
+  });
 };
 
-function startVoice() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR) {
-    showToast('⚠️ Chrome brauzerida ishlaydi. Iltimos Chrome ishlatng.');
-    return;
-  }
-  voiceOn = true;
-  setVoiceUI(true, 'Tinglayapman...');
+window.openServiceMap = function(lat, lng) {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => window.open('https://www.google.com/maps/dir/'+p.coords.latitude+','+p.coords.longitude+'/'+lat+','+lng, '_blank'),
+      ()  => window.open('https://www.google.com/maps?q='+lat+','+lng, '_blank')
+    );
+  } else window.open('https://www.google.com/maps?q='+lat+','+lng, '_blank');
+};
 
-  recognition = new SR();
-  recognition.lang = 'uz-UZ';
-  recognition.interimResults = false;
-  recognition.continuous = false;
-
-  recognition.onresult = (e) => {
-    const text = e.results[0][0].transcript.trim();
-    setVoiceUI(true, '🎤 ' + text);
-    processWithGemini(text);
-  };
-
-  recognition.onerror = (e) => {
-    if(e.error === 'not-allowed') {
-      showToast('⚠️ Mikrofonga ruxsat bering!');
-      stopVoice(); return;
-    }
-    if(e.error === 'no-speech') restartListening();
-  };
-
-  recognition.onend = () => {
-    if(voiceOn && !isSpeaking) restartListening();
-  };
-
-  recognition.start();
-}
-
-function restartListening() {
-  if(!voiceOn || isSpeaking) return;
-  setTimeout(() => {
-    if(voiceOn && !isSpeaking && recognition) {
-      try { recognition.start(); setVoiceUI(true,'Tinglayapman...'); } catch(e) {}
-    }
-  }, 800);
-}
-
-function stopVoice() {
-  voiceOn = false; isSpeaking = false;
-  if(recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  setVoiceUI(false, '');
-}
-
-// ── GEMINI API ───────────────────────────────────────────
-async function processWithGemini(userText) {
-  if(recognition) try { recognition.stop(); } catch(e) {}
-  isSpeaking = true;
-  setVoiceUI(true, '🤖 O\'ylayapman...');
-
-  voiceHistory.push({ role:'user', content: userText });
-  if(voiceHistory.length > 10) voiceHistory = voiceHistory.slice(-10);
-
-  try {
-    // body Groq formatida pastda quriladi
-
-    const groqBody = {
-      model: 'llama-3.3-70b-versatile',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...voiceHistory.slice(-8).map(m => ({
-          role: m.role === 'model' ? 'assistant' : m.role,
-          content: m.parts ? m.parts[0].text : m.content
-        }))
-      ],
-      max_tokens: 300,
-      temperature: 0.7,
-    };
-
-    const res = await fetch(GROQ_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + GROQ_API_KEY,
-      },
-      body: JSON.stringify(groqBody)
-    });
-    const data = await res.json();
-
-    if(data.error) {
-      console.error('Groq API error:', JSON.stringify(data.error));
-      throw new Error(data.error.message || 'API xato');
-    }
-
-    const fullText = data.choices?.[0]?.message?.content || 'Kechirasiz, tushunmadim.';
-
-    // JSON action ni ajratib olamiz
-    const jsonMatch = fullText.match(/\{[^}]*"action"\s*:\s*"[^"]+"[^}]*\}/);
-    let speakText = fullText.replace(jsonMatch?.[0]||'','').trim();
-    let action = null;
-    if(jsonMatch) { try { action = JSON.parse(jsonMatch[0]); } catch(e) {} }
-
-    voiceHistory.push({ role:'assistant', content: fullText });
-
-    // Javobni ovozga aylantiramiz
-    setVoiceUI(true, '🔊 ' + speakText.slice(0,80) + (speakText.length>80?'...':''));
-    addChatMessage('user', userText);
-    addChatMessage('ai', speakText);
-    await speakTTS(speakText);
-
-    // Action bajaramiz
-    if(action) executeVoiceAction(action.action);
-
-  } catch(err) {
-    const errMsg = 'Internetni tekshiring yoki qayta urinib ko\'ring.';
-    setVoiceUI(true, '❌ ' + errMsg);
-    await speakTTS(errMsg);
-  } finally {
-    isSpeaking = false;
-    if(voiceOn) restartListening();
-  }
-}
-
-// ── TTS ──────────────────────────────────────────────────
-function speakTTS(text) {
-  return new Promise(resolve => {
-    if(!window.speechSynthesis) { resolve(); return; }
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-    utt.voice = voices.find(v=>v.lang.startsWith('uz')) ||
-                voices.find(v=>v.lang.startsWith('ru')) ||
-                voices.find(v=>v.default) || null;
-    utt.lang = 'uz-UZ'; utt.rate = 0.92; utt.pitch = 1.0;
-    utt.onend = resolve; utt.onerror = resolve;
-    setTimeout(() => window.speechSynthesis.speak(utt), 50);
-    setTimeout(resolve, 25000);
+// Firebase dan xizmatlarni o'qish
+function loadServicesForUsers() {
+  if(typeof fbDb === 'undefined' || !fbDb) return;
+  fbDb.ref('services/items').on('value', snap => {
+    const data = snap.val() || {};
+    const items = Object.entries(data)
+      .map(([key,val]) => ({key,...val}))
+      .sort((a,b) => (a.order||0)-(b.order||0));
+    renderServicesGrid(items);
   });
 }
 
-// ── ACTION ───────────────────────────────────────────────
-function executeVoiceAction(action) {
-  const map = {
-    openChoyxona:    () => typeof openChoyxona==='function' && openChoyxona(),
-    goEco:           () => typeof goEco==='function' && goEco(),
-    openVirtualTour: () => typeof openVirtualTour==='function' && openVirtualTour(),
-    callTaxi:        () => typeof callTaxi==='function' && callTaxi(),
-    openBozor:       () => typeof openBozor==='function' && openBozor(),
-    openPlan:        () => typeof openPlan==='function' && openPlan(),
-    myLoc:           () => typeof myLoc==='function' && myLoc(),
-    openNotifPanel:  () => typeof openNotifPanel==='function' && openNotifPanel(),
-  };
-  if(map[action]) setTimeout(map[action], 400);
-}
-
-// ── UI ───────────────────────────────────────────────────
-function setVoiceUI(on, statusText) {
-  const card    = document.getElementById('voice-card-btn');
-  const robot   = document.getElementById('vc-robot-ico');
-  const subText = document.getElementById('vc-sub-text');
-  const bar     = document.getElementById('voice-bar');
-  const txtEl   = document.getElementById('voice-text');
-  const hint    = document.getElementById('voice-hint');
-
-  if(card)    card.classList.toggle('on', on);
-  if(robot)   robot.textContent = on ? '🎙️' : '🤖';
-  if(subText) subText.textContent = on ? 'Quloq solmoqda...' : 'Yordam kerakmi?';
-  if(bar)     bar.classList.toggle('show', on);
-  if(txtEl && statusText !== undefined) txtEl.textContent = statusText;
-
-  if(hint) {
-    hint.classList.toggle('show', on);
-    if(on && hint && !hint.querySelector('.chat-history')) {
-      hint.innerHTML = `
-        <div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">
-          💬 ZIYOD bilan suhbat
-        </div>
-        <div class="chat-history" id="chat-history" style="
-          max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;
-          margin-bottom:8px;scrollbar-width:thin;
-        "></div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="voice-suggestions">
-          <span class="voice-cmd" onclick="sendVoiceText(this.textContent)">Parkent haqida ayt</span>
-          <span class="voice-cmd" onclick="sendVoiceText(this.textContent)">Choyxona tavsiya qil</span>
-          <span class="voice-cmd" onclick="sendVoiceText(this.textContent)">Bugun nima qilsam?</span>
-          <span class="voice-cmd" onclick="sendVoiceText(this.textContent)">Taxi chaqir</span>
-        </div>`;
-    }
-  }
-}
-
-// Tugmadan matn yuborish
-window.sendVoiceText = function(text) {
-  if(!voiceOn) startVoice();
-  setTimeout(() => processWithGemini(text), 300);
-};
-
-// Chat history ga xabar qo'shish
-function addChatMessage(role, text) {
-  const hist = document.getElementById('chat-history');
-  if(!hist) return;
-  const isUser = role === 'user';
-  const div = document.createElement('div');
-  div.style.cssText = 'display:flex;align-items:flex-start;gap:6px;' + (isUser ? 'flex-direction:row-reverse;' : '');
-  const ico = document.createElement('div');
-  ico.style.cssText = 'font-size:16px;flex-shrink:0';
-  ico.textContent = isUser ? '👤' : '🤖';
-  const bubble = document.createElement('div');
-  bubble.style.cssText = 'background:' + (isUser ? 'var(--green-l);border:1px solid rgba(34,197,94,.2)' : 'var(--s2);border:1px solid var(--border)') +
-    ';color:var(--text);border-radius:10px;padding:7px 10px;font-size:12px;line-height:1.4;max-width:85%';
-  bubble.textContent = text;
-  div.appendChild(ico);
-  div.appendChild(bubble);
-  hist.appendChild(div);
-  hist.scrollTop = hist.scrollHeight;
-}
-
-if(window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-}
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(loadServicesForUsers, 2500);
+});
 </script>
 
 </body>
