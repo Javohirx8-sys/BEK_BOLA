@@ -136,6 +136,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 .voice-text{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .voice-hint{display:none;margin:6px 16px 0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
 .voice-hint.show{display:block;}
+#ziyod-mic-btn.on{background:var(--red);animation:ziyodPulse 1s infinite;}
+@keyframes ziyodPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
 .vhint-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
 .voice-commands{display:flex;flex-wrap:wrap;gap:5px;}
 .voice-cmd{background:var(--s2);border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600;color:var(--text2);}
@@ -674,7 +676,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="tb-weather">
-    <div class="tb-weather-icon">⛅</div>
+    <div class="tb-weather-icon" id="w-icon">⛅</div>
     <div>
       <div class="tb-temp" id="w-temp">--°C</div>
       <div class="tb-city">Parkent</div>
@@ -829,11 +831,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
   <div class="section" style="margin-bottom:16px;">
     <div class="extra-grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="extra-item" onclick="openModal('SOS')">
-        <div class="ei-ico" style="background:#fee2e2;border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🆘</div>
+        <div class="ei-ico" style="background:var(--red-l);border-radius:var(--r-sm);width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🆘</div>
         <div class="ei-name" style="color:#dc2626;font-weight:800" id="t-sos-label">SOS</div>
       </div>
       <div class="extra-item" onclick="openModal('TEZ_YORDAM')">
-        <div class="ei-ico" style="background:#dbeafe;border-radius:12px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🚑</div>
+        <div class="ei-ico" style="background:var(--blue-l);border-radius:var(--r-sm);width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:22px;">🚑</div>
         <div class="ei-name" style="color:#2563eb;font-weight:800" id="t-amb">Tez yordam</div>
       </div>
       <div class="extra-item" onclick="openBozor()">
@@ -926,6 +928,51 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
+  <!-- ── ZIYOD AI YORDAMCHI ── -->
+  <div class="choy-overlay" id="ziyod-overlay" onclick="closeZiyodOutside(event)">
+    <div class="choy-panel" style="max-height:88dvh;">
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon">🤖</div>
+          <div>
+            <div class="choy-hdr-title">Ziyod</div>
+            <div class="choy-hdr-sub" id="ziyod-status-txt">turist24.uz ovozli yordamchisi</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeZiyod()">✕</button>
+      </div>
+
+      <div id="ziyod-messages" style="flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px;"></div>
+
+      <div style="padding:10px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--white)">
+        <button id="ziyod-mic-btn" onclick="toggleVoice()" style="width:44px;height:44px;flex-shrink:0;border-radius:50%;background:var(--green);border:none;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;">🎙️</button>
+        <input id="ziyod-text-input" type="text" placeholder="Yozing yoki mikrofonni bosing..."
+          style="flex:1;border:1px solid var(--border);border-radius:20px;padding:10px 14px;font-family:inherit;font-size:13px;background:var(--s2);color:var(--text)"
+          onkeydown="if(event.key==='Enter')sendZiyodText()">
+        <button onclick="sendZiyodText()" style="width:40px;height:40px;flex-shrink:0;border-radius:50%;background:var(--s2);border:1px solid var(--border);cursor:pointer;font-size:16px;">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EKO TURIZM MODAL ── -->
+  <div class="choy-overlay" id="eco-overlay" onclick="closeEcoOutside(event)">
+    <div class="choy-panel">
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon">🌿</div>
+          <div>
+            <div class="choy-hdr-title">Eko Turizm joylari</div>
+            <div class="choy-hdr-sub" id="eco-hdr-sub">Tabiat va sayohat maskanlari</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeEcoList()">✕</button>
+      </div>
+      <div id="eco-list" style="display:flex;flex-direction:column;gap:10px;padding:14px 18px 24px;overflow-y:auto;flex:1;">
+        <div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Yuklanmoqda...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── CHOYXONA MODAL ── -->
   <div class="choy-overlay" id="choy-overlay" onclick="closeChoyOutside(event)">
     <div class="choy-panel">
@@ -954,12 +1001,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
       <div id="choy-detail" style="display:none;flex:1;overflow-y:auto;padding-bottom:20px;">
 
         <div style="padding:14px 18px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);">
-          <button onclick="backToList()" style="background:var(--surface2);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;">←</button>
+          <button onclick="backToList()" style="background:var(--s2);border:none;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;">←</button>
           <div>
             <div style="font-size:15px;font-weight:800;color:var(--text)" id="det-name">Choyxona</div>
             <div style="font-size:11px;color:var(--text-muted)" id="det-meta">⭐ 4.8 · 0.3 km</div>
           </div>
         </div>
+
+        <!-- Rasm galereyasi -->
+        <div id="det-gallery" style="display:flex;gap:8px;overflow-x:auto;padding:12px 18px 0;"></div>
 
         <!-- Google Maps embed -->
         <div class="choy-gmap">
@@ -989,6 +1039,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 
         <!-- Bron muvaffaqiyat xabari -->
         <div class="bron-success" id="bron-success">✅ Joy muvaffaqiyatli band qilindi! Tasdiqlash SMS yuborildi.</div>
+
+        <!-- Sharh va reyting -->
+        <div style="margin-top:16px;padding:0 18px;">
+          <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px" id="det-rating-title">Sharhlar</div>
+          <div id="det-reviews-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+
+          <div style="background:var(--s2);border-radius:14px;padding:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;">Fikringizni bildiring</div>
+            <div id="det-star-picker" style="display:flex;gap:4px;font-size:22px;margin-bottom:8px;cursor:pointer;"></div>
+            <textarea id="det-review-text" rows="2" placeholder="Fikringiz..." style="width:100%;border:1px solid var(--border);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:12px;resize:none;background:var(--white);color:var(--text)"></textarea>
+            <button onclick="submitChoyReview()" style="margin-top:8px;width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:9px;font-weight:800;font-size:12px;cursor:pointer;">Yuborish</button>
+          </div>
+        </div>
 
         <!-- Bron paneli -->
         <div class="choy-bron-bar">
@@ -1981,7 +2044,7 @@ window.openFavorites = function() {
 
 <!-- ── CHOYXONA JS ── -->
 <script>
-const CHOYXONALAR = [
+const CHOYXONALAR_FALLBACK = [
   {
     id:1,
     name:"Bahor Fasl Choyxonasi",
@@ -2056,6 +2119,56 @@ const CHOYXONALAR = [
   },
 ];
 
+let CHOYXONALAR = CHOYXONALAR_FALLBACK.map(c => ({...c, id:String(c.id)}));
+let choyRatingCache = {};   // {choyId: {avg, count}}
+let choyReviewsCache = {};  // {choyId: [{name,stars,comment,createdAt}]}
+
+function loadChoyxonalarFromFirebase(){
+  if(typeof fbDb==='undefined'||!fbDb)return;
+  fbDb.ref('choyxonalar/list').on('value',snap=>{
+    const data=snap.val();
+    if(data && Object.keys(data).length){
+      CHOYXONALAR = Object.entries(data).map(([key,val])=>({
+        id:key,
+        name:val.name||'',
+        ico:val.ico||'🍵',
+        cat:val.cat||'oila',
+        tags:val.tags||[],
+        lat:val.lat, lng:val.lng,
+        desc:val.desc||'',
+        totalSeats:val.totalSeats||10,
+        takenSeats:[],
+        layout:val.layout||'L',
+        images:val.images||[]
+      }));
+    }
+    if(document.getElementById('choy-overlay')&&document.getElementById('choy-overlay').classList.contains('open')&&document.getElementById('choy-list').style.display!=='none'){
+      renderChoy(currentCat);
+    }
+  });
+  fbDb.ref('choyxonalar/reviews').on('value',snap=>{
+    const data=snap.val()||{};
+    choyReviewsCache={};
+    choyRatingCache={};
+    Object.entries(data).forEach(([choyId,revs])=>{
+      const list=Object.entries(revs||{}).map(([rid,r])=>({rid,...r}));
+      choyReviewsCache[choyId]=list;
+      if(list.length){
+        const avg=list.reduce((s,r)=>s+Number(r.stars||0),0)/list.length;
+        choyRatingCache[choyId]={avg:avg.toFixed(1),count:list.length};
+      }
+    });
+    const overlay=document.getElementById('choy-overlay');
+    if(overlay&&overlay.classList.contains('open')){
+      if(document.getElementById('choy-list').style.display!=='none') renderChoy(currentCat);
+      if(currentChoy) renderChoyReviews(currentChoy.id);
+    }
+  });
+}
+function getChoyRatingLabel(choyId){
+  const r=choyRatingCache[choyId];
+  return r ? r.avg : 'Yangi';
+}
 let currentCat = 'all';
 let selectedSeats = [];
 let currentChoy = null;
@@ -2326,7 +2439,14 @@ function showChoyDetail(choy) {
   if(!selectedDate) selectedDate = new Date().toISOString().slice(0,10);
 
   setText('det-name', choy.name);
-  setText('det-meta', '⭐ '+choy.rating+' · '+choy.dist);
+  setText('det-meta', '⭐ '+getChoyRatingLabel(choy.id));
+
+  const galEl = document.getElementById('det-gallery');
+  if(galEl){
+    galEl.innerHTML = (choy.images&&choy.images.length)
+      ? choy.images.map(img=>`<img src="${img}" style="width:100px;height:80px;object-fit:cover;border-radius:12px;flex-shrink:0">`).join('')
+      : '';
+  }
 
   const mapSrc = 'https://maps.google.com/maps?q='+choy.lat+','+choy.lng+'&z=17&output=embed';
   const mapEl = document.getElementById('det-map');
@@ -2341,7 +2461,56 @@ function showChoyDetail(choy) {
   if(layout) layout.innerHTML = buildLayoutSVG(choy, taken);
   renderSeats(choy, taken);
   updateBronBtn();
+  renderStarPicker();
+  renderChoyReviews(choy.id);
 }
+
+// ── SHARH VA REYTING ────────────────────────────────────
+let selectedReviewStars = 5;
+function renderStarPicker(){
+  const el = document.getElementById('det-star-picker');
+  if(!el) return;
+  el.innerHTML = [1,2,3,4,5].map(n=>
+    `<span onclick="setReviewStars(${n})" style="color:${n<=selectedReviewStars?'#f59e0b':'var(--border)'}">★</span>`
+  ).join('');
+}
+window.setReviewStars = function(n){ selectedReviewStars = n; renderStarPicker(); };
+
+function renderChoyReviews(choyId){
+  const list = document.getElementById('det-reviews-list');
+  const titleEl = document.getElementById('det-rating-title');
+  if(!list) return;
+  const revs = (choyReviewsCache[choyId]||[]).slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  if(titleEl){
+    const r = choyRatingCache[choyId];
+    titleEl.textContent = r ? `Sharhlar — ⭐ ${r.avg} (${r.count} ta)` : 'Sharhlar — hali yo\u02bbq';
+  }
+  if(!revs.length){
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:12px">Birinchi bo\u02bblib fikr qoldiring!</div>';
+    return;
+  }
+  list.innerHTML = revs.map(r => `
+    <div style="background:var(--s2);border-radius:12px;padding:8px 10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:700;font-size:12px;color:var(--text)">${r.name||'Foydalanuvchi'}</span>
+        <span style="color:#f59e0b;font-size:12px;">${'★'.repeat(r.stars||0)}</span>
+      </div>
+      ${r.comment ? `<div style="font-size:12px;color:var(--text2);margin-top:3px;">${r.comment}</div>` : ''}
+    </div>`).join('');
+}
+
+window.submitChoyReview = function(){
+  if(!currentChoy){ return; }
+  const textEl = document.getElementById('det-review-text');
+  const comment = (textEl?.value||'').trim();
+  if(!comment){ showToast('✍️ Fikringizni yozing'); return; }
+  if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
+  const uname = (typeof getUserDisplayName==='function') ? getUserDisplayName() : 'Mehmon';
+  const review = { name: uname, stars: selectedReviewStars, comment, createdAt: Date.now() };
+  fbDb.ref('choyxonalar/reviews/'+currentChoy.id).push(review)
+    .then(()=>{ if(textEl) textEl.value=''; selectedReviewStars=5; renderStarPicker(); showToast('✅ Fikringiz uchun rahmat!'); })
+    .catch(()=>showToast('❌ Xatolik yuz berdi'));
+};
 
 window.backToList = function() {
   selectedSeats = []; currentChoy = null;
@@ -2435,21 +2604,28 @@ function renderChoy(cat) {
   if(!list) return;
   list.innerHTML = '';
   const filtered = cat==='all' ? CHOYXONALAR : CHOYXONALAR.filter(c=>c.cat===cat);
+  if(!filtered.length){
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Hozircha choyxona qo\u02bbshilmagan.</div>';
+    return;
+  }
   filtered.forEach(c => {
-    const free = c.totalSeats - c.takenSeats.length;
+    const free = c.totalSeats - (c.takenSeats?c.takenSeats.length:0);
     const d = document.createElement('div');
     d.className = 'choy-card';
     d.onclick = () => showChoyDetail(c);
     const catLbl = c.cat==='oila' ? '👨‍👩‍👧 Oila' : '👫 Ulfatlar';
-    const tags = c.tags.slice(0,2).map((t,i)=>`<span class="choy-tag ${i===0?'o':'g'}">${t}</span>`).join('');
+    const tags = (c.tags||[]).slice(0,2).map((t,i)=>`<span class="choy-tag ${i===0?'o':'g'}">${t}</span>`).join('');
+    const rating = getChoyRatingLabel(c.id);
+    const thumb = (c.images&&c.images[0])
+      ? `<img src="${c.images[0]}" style="width:44px;height:44px;border-radius:12px;object-fit:cover;flex-shrink:0">`
+      : `<div class="choy-card-ico">${c.ico}</div>`;
     d.innerHTML = `
       <div class="choy-card-top">
-        <div class="choy-card-ico">${c.ico}</div>
+        ${thumb}
         <div class="choy-card-body">
           <div class="choy-card-name">${c.name}</div>
           <div class="choy-card-meta">
-            <span class="choy-rating">⭐ ${c.rating}</span>
-            <span class="choy-dist">${c.dist}</span>
+            <span class="choy-rating">⭐ ${rating}</span>
             <span class="choy-cat-badge">${catLbl}</span>
           </div>
           <div class="choy-card-tags">${tags}</div>
@@ -3107,6 +3283,7 @@ function applyLang(code){
   document.body.dir=code==="ar"?"rtl":"ltr";
   document.querySelectorAll(".lang-option").forEach(el=>el.classList.toggle("active",el.dataset.code===code));
   if(typeof updateStatus==="function")updateStatus();
+  if(typeof updateClock==="function")updateClock();
 }
 window.openLang=function(){const o=document.getElementById("lang-overlay");if(o){o.classList.add("open");document.body.style.overflow="hidden";}};
 window.closeLang=function(e){const o=document.getElementById("lang-overlay");if(!e||e.target===o){if(o)o.classList.remove("open");document.body.style.overflow="";}};
@@ -3132,7 +3309,233 @@ window.showToast=function(msg,dur){const t=document.getElementById("toast");if(!
 
 // Virtual sayohat va ovozli yordamchi (Ziyod) hali bu faylga ulanmagan — vaqtincha xabar
 window.openVirtualTour=function(){showToast("🌐 Virtual sayohat tez orada qo\u02bbshiladi");};
-window.toggleVoice=function(){showToast("🎙️ Ovozli yordamchi (Ziyod) hali ulanmagan");};
+
+// ═══════════════════════════════════════════════════════
+// ZIYOD — AI OVOZLI YORDAMCHI (Web Speech API + Groq/server.js)
+// ═══════════════════════════════════════════════════════
+
+// server.js manzili. Cloudflare Tunnel ishlatsangiz, shu yerga
+// tunnel manzilingizni yozing, masalan:
+// "https://sizning-nom.trycloudflare.com/chat"
+let ZIYOD_API_URL = localStorage.getItem('ziyodApiUrl') || "http://localhost:3000/chat";
+
+window.setZiyodServer = function(url){
+  ZIYOD_API_URL = url;
+  localStorage.setItem('ziyodApiUrl', url);
+  showToast('✅ Ziyod server manzili saqlandi');
+};
+
+const ZIYOD_SYSTEM_PROMPT = `Sening isming Ziyod. Sen turist24.uz platformasining sun\u02bbiy intellektli ovozli yordamchisisan. turist24.uz — O\u02bbzbekiston, Parkent tumani uchun mo\u02bbljallangan turizm platformasi.
+
+Sen yangi foydalanuvchi bilan gaplashganingda, avval o\u02bbzingni qisqa tanishtir va turist24.uz nima ish qilishini tushuntir.
+
+turist24.uz orqali foydalanuvchi quyidagilarni qila oladi, sen shularda yordam berasan:
+1. 🚕 Taxi chaqirish — "Taxi" tugmasi bosilsa, to\u02bbg\u02bbridan-to\u02bbg\u02bbri 1054 raqamiga qo\u02bbng\u02bbiroq qiladi.
+2. 🌿 Eko Turizm — Parkent atrofidagi tabiat va sayohat maskanlarini ko\u02bbrish, rasmlarini ko\u02bbrish, xaritada manzilini va yo\u02bbnalishini (marshrutini) topish.
+3. 🍵 Choyxonalar — choyxonalarni ko\u02bbrish, joy (xontaxta) bron qilish, sanani tanlash, choyxona haqida boshqa mehmonlarning sharh va yulduzcha reytinglarini o\u02bbqish, o\u02bbzi ham fikr qoldirish.
+4. 🆘 SOS — favqulodda yordam kerak bo\u02bblganda bosiladi, foydalanuvchi joylashuvi yuboriladi.
+5. 🚑 Tez yordam — tibbiy shoshilinch yordam chaqirish uchun.
+6. 🛒 Bozor — Parkent bozoridagi oziq-ovqat narxlarini ko\u02bbrish.
+7. 🤖 AI Reja (Kunlik Reja) — foydalanuvchi ma\u02bblumot kiritsa (necha kishi, qachon uyg\u02bbonadi, oilaviy yoki do\u02bbstlar bilanmi), unga butun kunlik sayohat rejasini, ovqat ro\u02bbyxatini va choyxona tavsiyasini tuzib beradi.
+8. 📍 Joylashuvim — foydalanuvchi o\u02bbz joylashuvini xaritada ko\u02bbra oladi.
+9. Til — sayt o\u02bbzbek, rus va ingliz tillarida ishlaydi.
+
+Javoblaring QISQA (2-4 gap), samimiy, do\u02bbstona va o\u02bbzbek tilida bo\u02bblsin (agar foydalanuvchi boshqa tilda yozsa, o\u02bbsha tilda javob ber). Agar mavzu turist24.uz xizmatlariga aloqador bo\u02bblmasa ham, muloyimlik bilan yordam berishga harakat qil, lekin imkon qadar foydalanuvchini yuqoridagi xizmatlardan foydalanishga yo\u02bbnaltir.`;
+
+let ziyodRecognition = null;
+let ziyodListening = false;
+let ziyodHistory = [];
+let ziyodIntroduced = false;
+
+window.toggleVoice = function(){
+  const overlay = document.getElementById('ziyod-overlay');
+  if(!overlay || !overlay.classList.contains('open')){
+    openZiyod();
+    return;
+  }
+  if(ziyodListening){ stopZiyodListening(); }
+  else { startZiyodListening(); }
+};
+
+function openZiyod(){
+  const overlay = document.getElementById('ziyod-overlay');
+  if(!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if(!ziyodIntroduced){
+    ziyodIntroduced = true;
+    ziyodIntroduce();
+  }
+}
+window.closeZiyod = function(){
+  const overlay = document.getElementById('ziyod-overlay');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  stopZiyodListening();
+};
+window.closeZiyodOutside = function(e){
+  if(e.target === document.getElementById('ziyod-overlay')) closeZiyod();
+};
+
+function ziyodIntroduce(){
+  const introText = "Assalomu alaykum! Men Ziyod \u2014 turist24.uz ning ovozli yordamchisiman. Sizga Parkent tumani bo\u02bbylab sayohatda yordam beraman: taksi chaqiraman, eko turizm joylarini tavsiya qilaman, choyxona band qilishda yordam beraman, SOS va tez yordam chaqiraman, bozor narxlarini aytaman va kunlik sayohat rejangizni tuzib beraman. Nima bilan yordam bera olaman?";
+  appendZiyodMessage('assistant', introText);
+  speakZiyod(introText);
+  ziyodHistory.push({role:'assistant', content:introText});
+}
+
+function appendZiyodMessage(role, text){
+  const box = document.getElementById('ziyod-messages');
+  if(!box) return;
+  const isUser = role === 'user';
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `max-width:82%;padding:10px 13px;border-radius:${isUser?'16px 16px 4px 16px':'16px 16px 16px 4px'};font-size:13px;line-height:1.5;align-self:${isUser?'flex-end':'flex-start'};background:${isUser?'var(--green)':'var(--s2)'};color:${isUser?'#fff':'var(--text)'};`;
+  bubble.textContent = text;
+  box.appendChild(bubble);
+  box.scrollTop = box.scrollHeight;
+}
+
+function setZiyodStatus(txt){
+  const el = document.getElementById('ziyod-status-txt');
+  if(el) el.textContent = txt;
+}
+
+function startZiyodListening(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    showToast('⚠️ Brauzeringiz ovozni tanimaydi. Chrome ishlatib ko\u02bbring yoki yozib yuboring.');
+    return;
+  }
+  ziyodRecognition = new SR();
+  ziyodRecognition.lang = 'uz-UZ';
+  ziyodRecognition.continuous = false;
+  ziyodRecognition.interimResults = true;
+
+  ziyodRecognition.onstart = () => {
+    ziyodListening = true;
+    document.getElementById('ziyod-mic-btn')?.classList.add('on');
+    document.getElementById('voice-card-btn')?.classList.add('on');
+    setZiyodStatus('🎙️ Tinglamoqda...');
+  };
+  ziyodRecognition.onresult = (e) => {
+    let transcript = '';
+    for(let i=e.resultIndex;i<e.results.length;i++) transcript += e.results[i][0].transcript;
+    setZiyodStatus(transcript || '🎙️ Tinglamoqda...');
+    if(e.results[e.results.length-1].isFinal && transcript.trim()){
+      sendZiyodQuery(transcript.trim());
+    }
+  };
+  ziyodRecognition.onerror = (e) => {
+    if(e.error === 'no-speech' || e.error === 'aborted') return;
+    showToast('⚠️ Ovoz aniqlanmadi, qayta urinib ko\u02bbring');
+  };
+  ziyodRecognition.onend = () => {
+    ziyodListening = false;
+    document.getElementById('ziyod-mic-btn')?.classList.remove('on');
+    document.getElementById('voice-card-btn')?.classList.remove('on');
+    setZiyodStatus('turist24.uz ovozli yordamchisi');
+  };
+  try{ ziyodRecognition.start(); }catch(e){}
+}
+function stopZiyodListening(){
+  if(ziyodRecognition){ try{ziyodRecognition.stop();}catch(e){} }
+  ziyodListening = false;
+  document.getElementById('ziyod-mic-btn')?.classList.remove('on');
+  document.getElementById('voice-card-btn')?.classList.remove('on');
+}
+
+window.sendZiyodText = function(){
+  const input = document.getElementById('ziyod-text-input');
+  const text = (input?.value||'').trim();
+  if(!text) return;
+  if(input) input.value = '';
+  sendZiyodQuery(text);
+};
+
+async function sendZiyodQuery(userText){
+  if(!userText) return;
+  appendZiyodMessage('user', userText);
+  setZiyodStatus('💭 O\u02bbylanmoqda...');
+  ziyodHistory.push({role:'user', content:userText});
+  try{
+    const res = await fetch(ZIYOD_API_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ system: ZIYOD_SYSTEM_PROMPT, messages: ziyodHistory.slice(-10) })
+    });
+    if(!res.ok) throw new Error('server xatosi');
+    const data = await res.json();
+    const reply = data?.choices?.[0]?.message?.content?.trim() || 'Kechirasiz, javob bera olmadim.';
+    ziyodHistory.push({role:'assistant', content:reply});
+    appendZiyodMessage('assistant', reply);
+    speakZiyod(reply);
+  }catch(err){
+    appendZiyodMessage('assistant', "Kechirasiz, hozir serverga ulana olmayapman. server.js ishga tushganini tekshiring.");
+    showToast('⚠️ Ziyod serveriga ulanib bo\u02bblmadi');
+  }finally{
+    setZiyodStatus('turist24.uz ovozli yordamchisi');
+  }
+}
+
+function speakZiyod(text){
+  if(!('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'uz-UZ';
+    utter.rate = 1;
+    utter.pitch = 1;
+    window.speechSynthesis.speak(utter);
+  }catch(e){}
+}
+
+// ── SOAT VA HARORAT ─────────────────────────────────────
+const WEATHER_ICON_MAP = {
+  0:"☀️",1:"🌤️",2:"⛅",3:"☁️",
+  45:"🌫️",48:"🌫️",
+  51:"🌦️",53:"🌦️",55:"🌦️",
+  61:"🌧️",63:"🌧️",65:"🌧️",
+  71:"🌨️",73:"🌨️",75:"🌨️",
+  80:"🌦️",81:"🌧️",82:"⛈️",
+  95:"⛈️",96:"⛈️",99:"⛈️"
+};
+function updateClock(){
+  const now = new Date();
+  const opts = { hour:"2-digit", minute:"2-digit", hour12:false, timeZone:"Asia/Tashkent" };
+  const timeStr = new Intl.DateTimeFormat("uz-UZ", opts).format(now);
+  setText("clock", timeStr);
+  const months = { uz:["Yan","Fev","Mar","Apr","May","Iyun","Iyul","Avg","Sen","Okt","Noy","Dek"],
+                    ru:["\u042f\u043d\u0432","\u0424\u0435\u0432","\u041c\u0430\u0440","\u0410\u043f\u0440","\u041c\u0430\u0439","\u0418\u044e\u043d","\u0418\u044e\u043b","\u0410\u0432\u0433","\u0421\u0435\u043d","\u041e\u043a\u0442","\u041d\u043e\u044f","\u0414\u0435\u043a"],
+                    en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] };
+  const dParts = new Intl.DateTimeFormat("en-US", { day:"numeric", month:"numeric", year:"numeric", timeZone:"Asia/Tashkent" }).formatToParts(now);
+  const d = {}; dParts.forEach(p=>d[p.type]=p.value);
+  const mArr = months[currentLang] || months.uz;
+  setText("tb-date", d.day + " " + mArr[parseInt(d.month,10)-1] + ", " + d.year);
+}
+let weatherFetchedAt = 0;
+function updateWeather(){
+  const now = Date.now();
+  if(now - weatherFetchedAt < 15*60*1000) return; // 15 daqiqada bir marta
+  weatherFetchedAt = now;
+  const lat = 41.2977, lng = 69.6989; // Parkent tumani
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current_weather=true`)
+    .then(r=>r.json())
+    .then(data=>{
+      const cw = data && data.current_weather;
+      if(!cw) return;
+      setText("w-temp", Math.round(cw.temperature) + "\u00b0C");
+      const icon = WEATHER_ICON_MAP[cw.weathercode];
+      const el = document.getElementById("w-icon");
+      if(el && icon) el.textContent = icon;
+    })
+    .catch(()=>{ /* internet yo'q bo'lsa avvalgi qiymat qoladi */ });
+}
+function startClockAndWeather(){
+  updateClock();
+  updateWeather();
+  setInterval(updateClock, 1000);
+  setInterval(updateWeather, 15*60*1000);
+}
 
 let TAXI_PHONE="1054",ECO_LAT=41.277723,ECO_LNG=69.709866;
 
@@ -3147,11 +3550,55 @@ const SERVICES={
 
 window.callTaxi=function(){window.location.href="tel:"+(SERVICES.taxi.phone||"1054");};
 
+// ── EKO TURIZM ICHKI SAHIFASI (admin qo'shgan joylar, type==='eco') ──
+let ecoItemsCache = [];
 window.openEcoList=function(){
-  const sec=document.getElementById('places-section');
-  if(sec){sec.scrollIntoView({behavior:'smooth',block:'start'});}
-  else goEco();
+  const o=document.getElementById('eco-overlay');
+  if(!o){goEco();return;}
+  o.classList.add('open');document.body.style.overflow='hidden';
+  renderEcoList(ecoItemsCache);
+  loadEcoItemsFromFirebase();
 };
+window.closeEcoList=function(){
+  const o=document.getElementById('eco-overlay');
+  if(o){o.classList.remove('open');document.body.style.overflow='';}
+};
+window.closeEcoOutside=function(e){
+  if(e.target===document.getElementById('eco-overlay'))closeEcoList();
+};
+function loadEcoItemsFromFirebase(){
+  if(typeof fbDb==='undefined'||!fbDb)return;
+  fbDb.ref('services/items').on('value',snap=>{
+    const data=snap.val()||{};
+    ecoItemsCache=Object.entries(data)
+      .map(([key,val])=>({key,...val}))
+      .filter(it=>it.type==='eco');
+    if(document.getElementById('eco-overlay').classList.contains('open')) renderEcoList(ecoItemsCache);
+  });
+}
+function renderEcoList(items){
+  const list=document.getElementById('eco-list');
+  if(!list)return;
+  if(!items||!items.length){
+    list.innerHTML='<div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Hozircha eko turizm joylari qo\u02bbshilmagan.</div>';
+    return;
+  }
+  list.innerHTML=items.map(it=>{
+    const thumb = (it.images&&it.images[0])
+      ? `<img src="${it.images[0]}" style="width:44px;height:44px;border-radius:12px;object-fit:cover;flex-shrink:0">`
+      : `<div class="choy-card-ico" style="background:var(--green-l)">${it.icon||'🌿'}</div>`;
+    return `
+    <div class="choy-card" onclick="openServiceDetail('${it.key}')">
+      <div class="choy-card-top">
+        ${thumb}
+        <div class="choy-card-body">
+          <div class="choy-card-name">${it.name||''}</div>
+          <div class="choy-card-meta" style="font-size:11px;color:var(--muted)">${it.desc||''}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 window.goEco=function(){
   const lat=SERVICES.eco.lat||ECO_LAT,lng=SERVICES.eco.lng||ECO_LNG;
@@ -3235,7 +3682,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   applyLang(currentLang);
   updateStatus();
   checkGps();
-  setTimeout(()=>{checkGps();loadServicesFromFirebase();},2000);
+  startClockAndWeather();
+  setTimeout(()=>{checkGps();loadServicesFromFirebase();loadChoyxonalarFromFirebase();},2000);
 });
 
 </script>
