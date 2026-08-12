@@ -712,11 +712,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
       <span id="t-tagline">Parkent Tuman Hokimligi</span>
     </div>
   </div>
-  <div class="voice-card" id="voice-card-btn" onclick="toggleVoice()">
+  <div class="voice-card" id="voice-card-btn" onclick="ziyodComingSoon()" style="opacity:.6">
     <div class="vc-robot" id="vc-robot-ico">🤖</div>
     <div class="vc-text">
       <div class="vc-title">Ovozli yordamchi</div>
-      <div class="vc-sub" id="vc-sub-text">Yordam kerakmi?</div>
+      <div class="vc-sub" id="vc-sub-text">🔜 Tez kunlarda</div>
     </div>
   </div>
 </div>
@@ -827,6 +827,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
     </div>
   </div>
 
+  <!-- HAMKORLAR (tasdiqlangan xizmat ko'rsatuvchilar: choyxona, dacha, mehmonxona) -->
+  <div class="section" style="margin-bottom:16px;" id="biznes-section">
+    <div style="font-size:14px;font-weight:800;color:var(--text);margin-bottom:10px;padding:0 2px">🏪 Hamkorlarimiz</div>
+    <div id="biznes-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div style="text-align:center;color:var(--muted);font-size:12px;padding:20px;grid-column:span 3">Yuklanmoqda...</div>
+    </div>
+  </div>
+
   <!-- TEZKOR AMALLAR: SOS / Tez yordam / Bozor -->
   <div class="section" style="margin-bottom:16px;">
     <div class="extra-grid" style="grid-template-columns:repeat(3,1fr);">
@@ -925,6 +933,31 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 
       <!-- Mahsulotlar -->
       <div id="bozor-items" style="flex:1;overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- ── HAMKOR (biznes) TAFSILOT MODAL ── -->
+  <div class="choy-overlay" id="biznes-overlay" onclick="closeBiznesDetailOutside(event)">
+    <div class="choy-panel">
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon" id="biznes-detail-icon">🏪</div>
+          <div>
+            <div class="choy-hdr-title" id="biznes-detail-name">—</div>
+            <div class="choy-hdr-sub" id="biznes-detail-type">—</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeBiznesDetailModal()">✕</button>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:14px 18px 24px;">
+        <div id="biznes-detail-gallery" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;"></div>
+        <div id="biznes-detail-desc" style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;"></div>
+        <div id="biznes-detail-news" style="margin-bottom:14px;"></div>
+        <div style="display:flex;gap:8px;">
+          <a id="biznes-detail-call" href="#" style="flex:1;text-align:center;background:var(--green);color:#fff;border-radius:12px;padding:11px;font-weight:800;font-size:13px;text-decoration:none;">📞 Qo'ng'iroq</a>
+          <button id="biznes-detail-route" onclick="routeToBiznes()" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:11px;font-weight:800;font-size:13px;color:var(--text);cursor:pointer;">🧭 Yo'nalish</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -3309,6 +3342,7 @@ window.showToast=function(msg,dur){const t=document.getElementById("toast");if(!
 
 // Virtual sayohat va ovozli yordamchi (Ziyod) hali bu faylga ulanmagan — vaqtincha xabar
 window.openVirtualTour=function(){showToast("🌐 Virtual sayohat tez orada qo\u02bbshiladi");};
+window.ziyodComingSoon=function(){showToast("🤖 Ovozli yordamchi Ziyod tez kunlarda ishga tushadi!");};
 
 // ═══════════════════════════════════════════════════════
 // ZIYOD — AI OVOZLI YORDAMCHI (Web Speech API + Groq/server.js)
@@ -3317,6 +3351,94 @@ window.openVirtualTour=function(){showToast("🌐 Virtual sayohat tez orada qo\u
 // server.js manzili. Cloudflare Tunnel ishlatsangiz, shu yerga
 // tunnel manzilingizni yozing, masalan:
 // "https://sizning-nom.trycloudflare.com/chat"
+// ═══════════════════════════════════════════════════════
+// HAMKORLAR (tasdiqlangan xizmat ko'rsatuvchilar)
+// ═══════════════════════════════════════════════════════
+let biznesCache = {};
+let currentBiznesKey = null;
+const BIZNES_TYPE_LABELS = {choyxona:'🍵 Choyxona', dacha:'🏡 Dacha', mehmonxona:'🏨 Mehmonxona', restoran:'🍽️ Restoran', boshqa:'📍 Boshqa'};
+const BIZNES_TYPE_ICONS = {choyxona:'🍵', dacha:'🏡', mehmonxona:'🏨', restoran:'🍽️', boshqa:'📍'};
+
+function loadBiznesForUsers(){
+  if(typeof fbDb==='undefined'||!fbDb) return;
+  fbDb.ref('businesses').on('value', snap => {
+    const data = snap.val() || {};
+    biznesCache = {};
+    Object.entries(data).forEach(([uid,b]) => { if(b.status === 'approved') biznesCache[uid] = b; });
+    renderBiznesGrid();
+  });
+}
+
+function renderBiznesGrid(){
+  const grid = document.getElementById('biznes-grid');
+  if(!grid) return;
+  const entries = Object.entries(biznesCache);
+  if(!entries.length){
+    grid.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:20px;grid-column:span 3">Hozircha hamkorlarimiz qo\u02bbshilmagan.</div>';
+    return;
+  }
+  grid.innerHTML = entries.map(([uid,b]) => {
+    const thumb = (b.images && b.images[0])
+      ? `<img src="${b.images[0]}" style="width:100%;height:70px;object-fit:cover;border-radius:12px 12px 0 0">`
+      : `<div style="width:100%;height:70px;display:flex;align-items:center;justify-content:center;font-size:26px;background:var(--s2);border-radius:12px 12px 0 0">${BIZNES_TYPE_ICONS[b.type]||'🏪'}</div>`;
+    return `
+      <div onclick="openBiznesDetail('${uid}')" style="background:var(--white);border-radius:12px;overflow:hidden;box-shadow:var(--sh);cursor:pointer;">
+        ${thumb}
+        <div style="padding:8px;">
+          <div style="font-size:11px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.name||''}</div>
+          <div style="font-size:9px;color:var(--muted);margin-top:2px;">${BIZNES_TYPE_LABELS[b.type]||''}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+window.openBiznesDetail = function(uid){
+  const b = biznesCache[uid];
+  if(!b) return;
+  currentBiznesKey = uid;
+  setText('biznes-detail-icon', BIZNES_TYPE_ICONS[b.type]||'🏪');
+  setText('biznes-detail-name', b.name||'');
+  setText('biznes-detail-type', BIZNES_TYPE_LABELS[b.type]||'');
+  setText('biznes-detail-desc', b.desc||'');
+
+  const gal = document.getElementById('biznes-detail-gallery');
+  if(gal){
+    gal.innerHTML = (b.images&&b.images.length)
+      ? b.images.map(u=>`<img src="${u}" style="width:110px;height:85px;object-fit:cover;border-radius:12px;flex-shrink:0">`).join('')
+      : '';
+  }
+
+  const callBtn = document.getElementById('biznes-detail-call');
+  if(callBtn) callBtn.href = b.phone ? ('tel:'+b.phone.replace(/[^0-9+]/g,'')) : '#';
+
+  const newsBox = document.getElementById('biznes-detail-news');
+  if(newsBox){
+    const news = b.news ? Object.values(b.news).sort((x,y)=>(y.createdAt||0)-(x.createdAt||0)) : [];
+    newsBox.innerHTML = news.length ? (
+      '<div style="font-size:12px;font-weight:800;margin-bottom:6px;">📰 Yangiliklar</div>' +
+      news.map(n=>`<div style="background:var(--s2);border-radius:10px;padding:9px 11px;margin-bottom:6px;">
+        <div style="font-size:12px;font-weight:700;">${n.title||''}</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px;">${n.text||''}</div>
+      </div>`).join('')
+    ) : '';
+  }
+
+  const overlay = document.getElementById('biznes-overlay');
+  if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+};
+window.closeBiznesDetailModal = function(){
+  const overlay = document.getElementById('biznes-overlay');
+  if(overlay){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
+};
+window.closeBiznesDetailOutside = function(e){
+  if(e.target === document.getElementById('biznes-overlay')) closeBiznesDetailModal();
+};
+window.routeToBiznes = function(){
+  const b = biznesCache[currentBiznesKey];
+  if(!b || !b.lat || !b.lng){ showToast('⚠️ Lokatsiya kiritilmagan'); return; }
+  window.open('https://www.google.com/maps/dir/?api=1&destination='+b.lat+','+b.lng, '_blank');
+};
+
 let ZIYOD_API_URL = localStorage.getItem('ziyodApiUrl') || "https://mirror-hardcover-filling-intelligent.trycloudflare.com/chat";
 
 window.setZiyodServer = function(url){
@@ -3501,8 +3623,35 @@ async function sendZiyodQuery(userText){
   }
 }
 
-// ── OVOZ TANLASH (ko'p qurilmalarda uz-UZ ovoz topilmaydi, shuning
-//    uchun eng yaqin tilni avtomatik tanlaymiz) ─────────────────
+function ziyodBaseUrl(){
+  return ZIYOD_API_URL.replace(/\/chat\/?$/, '');
+}
+
+let ziyodCurrentAudio = null;
+async function speakZiyod(text){
+  // 1) Avval Piper (server.js orqali, sifatli ovoz) bilan urinib ko'ramiz
+  try{
+    const res = await fetch(ziyodBaseUrl() + '/tts', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ text })
+    });
+    if(res.ok){
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      if(ziyodCurrentAudio){ ziyodCurrentAudio.pause(); }
+      ziyodCurrentAudio = new Audio(url);
+      ziyodCurrentAudio.play().catch(()=>{});
+      ziyodCurrentAudio.onended = () => URL.revokeObjectURL(url);
+      return;
+    }
+  }catch(e){ /* Piper mavjud emas — pastdagi brauzer ovoziga o'tamiz */ }
+
+  // 2) Piper ishlamasa — brauzerning o'z ovoziga qaytamiz (kafolatlanmagan sifat)
+  speakZiyodBrowserFallback(text);
+}
+
+// ── BRAUZER OVOZI (zaxira, Piper ishlamasa ishlatiladi) ─────
 let ziyodVoicesCache = null;
 function getZiyodVoices(){
   if(!('speechSynthesis' in window)) return [];
@@ -3516,11 +3665,10 @@ if('speechSynthesis' in window){
 function pickZiyodVoice(){
   const voices = getZiyodVoices();
   if(!voices.length) return null;
-  // Ustuvorlik: o'zbek → turk → rus → hech narsa (standart ovoz)
   const byPrefix = p => voices.find(v => v.lang && v.lang.toLowerCase().startsWith(p));
   return byPrefix('uz') || byPrefix('tr') || byPrefix('ru') || null;
 }
-function speakZiyod(text){
+function speakZiyodBrowserFallback(text){
   if(!('speechSynthesis' in window)) return;
   try{
     window.speechSynthesis.cancel();
@@ -3530,9 +3678,6 @@ function speakZiyod(text){
       utter.voice = voice;
       utter.lang = voice.lang;
     } else {
-      // Mos ovoz topilmadi — o'zbek matnini standart ovozda o'qitishga urinamiz.
-      // Agar sifat past bo'lsa, Windows'da Turk yoki Rus tili ovozini
-      // qo'shish tavsiya etiladi (Sozlamalar → Til va mintaqa → Nutq).
       utter.lang = 'tr-TR';
     }
     utter.rate = 0.95;
@@ -3735,7 +3880,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   updateStatus();
   checkGps();
   startClockAndWeather();
-  setTimeout(()=>{checkGps();loadServicesFromFirebase();loadChoyxonalarFromFirebase();},2000);
+  setTimeout(()=>{checkGps();loadServicesFromFirebase();loadChoyxonalarFromFirebase();loadBiznesForUsers();},2000);
 });
 
 </script>
