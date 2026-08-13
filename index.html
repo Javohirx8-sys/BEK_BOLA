@@ -136,6 +136,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 .voice-text{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .voice-hint{display:none;margin:6px 16px 0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
 .voice-hint.show{display:block;}
+.booking-slot{padding:9px 4px;border-radius:9px;border:1px solid var(--border);background:var(--white);font-size:12px;font-weight:700;color:var(--text);text-align:center;cursor:pointer;}
+.booking-slot.taken{background:var(--red-l);color:var(--red);border-color:var(--red-l);cursor:not-allowed;opacity:.7;}
+.booking-slot.selected{background:var(--green);color:#fff;border-color:var(--green);}
 #ziyod-mic-btn.on{background:var(--red);animation:ziyodPulse 1s infinite;}
 @keyframes ziyodPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
 .vhint-title{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
@@ -953,6 +956,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         <div id="biznes-detail-gallery" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;"></div>
         <div id="biznes-detail-desc" style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;"></div>
         <div id="biznes-detail-news" style="margin-bottom:14px;"></div>
+
+        <!-- Bron qilish -->
+        <div style="background:var(--s2);border-radius:14px;padding:14px;margin-bottom:14px;">
+          <div style="font-size:13px;font-weight:800;margin-bottom:10px;">📅 Bron qilish</div>
+          <div style="display:flex;gap:8px;margin-bottom:10px;">
+            <input type="date" id="booking-date" style="flex:1;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;background:var(--white);color:var(--text)" onchange="renderBookingSlots()">
+          </div>
+          <div id="booking-slots" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>
+          <input type="text" id="booking-name" placeholder="Ismingiz" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;background:var(--white);color:var(--text);margin-bottom:10px;">
+          <button onclick="confirmBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;">✅ Bandlashni tasdiqlash</button>
+        </div>
+
         <div style="display:flex;gap:8px;">
           <a id="biznes-detail-call" href="#" style="flex:1;text-align:center;background:var(--green);color:#fff;border-radius:12px;padding:11px;font-weight:800;font-size:13px;text-decoration:none;">📞 Qo'ng'iroq</a>
           <button id="biznes-detail-route" onclick="routeToBiznes()" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:11px;font-weight:800;font-size:13px;color:var(--text);cursor:pointer;">🧭 Yo'nalish</button>
@@ -3423,6 +3438,18 @@ window.openBiznesDetail = function(uid){
     ) : '';
   }
 
+  // Bron qilish formasini boshlang'ich holatga keltirish
+  const dateInput = document.getElementById('booking-date');
+  if(dateInput){
+    const today = new Date().toISOString().slice(0,10);
+    dateInput.min = today;
+    dateInput.value = today;
+  }
+  const nameInput = document.getElementById('booking-name');
+  if(nameInput){ const u = getUser(); nameInput.value = u.name || ''; }
+  selectedBookingTime = null;
+  renderBookingSlots();
+
   const overlay = document.getElementById('biznes-overlay');
   if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
 };
@@ -3437,6 +3464,67 @@ window.routeToBiznes = function(){
   const b = biznesCache[currentBiznesKey];
   if(!b || !b.lat || !b.lng){ showToast('⚠️ Lokatsiya kiritilmagan'); return; }
   window.open('https://www.google.com/maps/dir/?api=1&destination='+b.lat+','+b.lng, '_blank');
+};
+
+// ── BRON QILISH ──
+const BOOKING_SLOTS = ['09:00','11:00','13:00','15:00','17:00','19:00'];
+let selectedBookingTime = null;
+
+window.renderBookingSlots = function(){
+  const box = document.getElementById('booking-slots');
+  const dateInput = document.getElementById('booking-date');
+  if(!box || !dateInput || !currentBiznesKey) return;
+  const date = dateInput.value;
+  selectedBookingTime = null;
+  box.innerHTML = BOOKING_SLOTS.map(t => `<div class="booking-slot" id="slot-${t}" onclick="pickBookingSlot('${t}')">${t}</div>`).join('');
+
+  if(typeof fbDb==='undefined'||!fbDb) return;
+  fbDb.ref('businesses/'+currentBiznesKey+'/bookings').once('value').then(snap => {
+    const data = snap.val() || {};
+    const takenTimes = Object.values(data).filter(b => b.date === date).map(b => b.time);
+    takenTimes.forEach(t => {
+      const el = document.getElementById('slot-'+t);
+      if(el) el.classList.add('taken');
+    });
+  });
+};
+window.pickBookingSlot = function(time){
+  const el = document.getElementById('slot-'+time);
+  if(!el || el.classList.contains('taken')) return;
+  document.querySelectorAll('.booking-slot').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedBookingTime = time;
+};
+window.confirmBooking = function(){
+  const date = document.getElementById('booking-date')?.value;
+  const name = document.getElementById('booking-name')?.value.trim();
+  if(!date){ showToast('⚠️ Sanani tanlang'); return; }
+  if(!selectedBookingTime){ showToast('⚠️ Vaqtni tanlang'); return; }
+  if(!name){ showToast('⚠️ Ismingizni kiriting'); return; }
+  if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
+
+  const user = getUser();
+  user.name = name;
+  saveUser(user);
+
+  const bizKey = currentBiznesKey;
+  // Bir vaqtning o'zida ikki kishi band qilib qo'ymasligi uchun oxirgi marta tekshiramiz
+  fbDb.ref('businesses/'+bizKey+'/bookings').once('value').then(snap => {
+    const data = snap.val() || {};
+    const taken = Object.values(data).some(b => b.date === date && b.time === selectedBookingTime);
+    if(taken){
+      showToast('⚠️ Bu vaqt band qilib bo\u02bblindi, boshqasini tanlang');
+      renderBookingSlots();
+      return;
+    }
+    fbDb.ref('businesses/'+bizKey+'/bookings').push({
+      date, time: selectedBookingTime, userId: user.id, userName: name, createdAt: Date.now()
+    }).then(() => {
+      showToast('✅ Band qilindi! ' + date + ' kuni soat ' + selectedBookingTime);
+      addToHistory({type:'booking', bizName: biznesCache[bizKey]?.name||'', date, time: selectedBookingTime});
+      renderBookingSlots();
+    }).catch(e => showToast('❌ Xato: ' + e.message));
+  });
 };
 
 let ZIYOD_API_URL = localStorage.getItem('ziyodApiUrl') || "https://mirror-hardcover-filling-intelligent.trycloudflare.com/chat";
