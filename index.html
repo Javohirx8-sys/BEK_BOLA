@@ -136,6 +136,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 .voice-text{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .voice-hint{display:none;margin:6px 16px 0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;}
 .voice-hint.show{display:block;}
+.bk-input{width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;background:var(--white);color:var(--text);margin-bottom:10px;}
+.bk-stepper{display:flex;align-items:center;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px 12px;margin-bottom:10px;}
+.bk-stepper button{width:28px;height:28px;border-radius:50%;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:800;cursor:pointer;flex-shrink:0;}
+.bk-stepper-val{flex:1;text-align:center;font-size:13px;font-weight:800;}
+.bk-product-row{display:flex;align-items:center;justify-content:space-between;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px 10px;margin-bottom:6px;}
+.bk-product-name{font-size:12.5px;font-weight:700;flex:1;}
+.bk-product-price{font-size:11px;color:var(--muted);margin-right:8px;}
+.bk-qty-ctrl{display:flex;align-items:center;gap:8px;}
+.bk-qty-ctrl button{width:22px;height:22px;border-radius:50%;border:1px solid var(--border);background:var(--s2);font-size:12px;font-weight:800;cursor:pointer;}
+.bk-qty-val{font-size:12px;font-weight:800;min-width:14px;text-align:center;}
+.bk-total-line{display:flex;justify-content:space-between;font-size:13px;font-weight:800;padding:10px 0;border-top:1px dashed var(--border);margin-top:6px;}
 .booking-slot{padding:9px 4px;border-radius:9px;border:1px solid var(--border);background:var(--white);font-size:12px;font-weight:700;color:var(--text);text-align:center;cursor:pointer;}
 .booking-slot.taken{background:var(--red-l);color:var(--red);border-color:var(--red-l);cursor:not-allowed;opacity:.7;}
 .booking-slot.selected{background:var(--green);color:#fff;border-color:var(--green);}
@@ -777,7 +788,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
 
   <!-- SVC GRID 4 col -->
   <div class="section" style="margin-bottom:16px;">
-    <div class="svc-grid">
+    <div class="svc-grid" style="grid-template-columns:repeat(3,1fr);">
       <div class="svc-item" onclick="callTaxi()">
         <div class="svc-img si-taxi">🚕</div>
         <div class="svc-name" id="t-taxi">Taxi</div>
@@ -792,6 +803,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         <div class="svc-img si-choy">🍵</div>
         <div class="svc-name">Choyxonalar</div>
         <div class="svc-desc">Bron qilish</div>
+      </div>
+      <div class="svc-item" onclick="openDachaList()">
+        <div class="svc-img si-loc">🏡</div>
+        <div class="svc-name">Dachalar</div>
+        <div class="svc-desc">Kunlik ijara</div>
       </div>
       <div class="svc-item" onclick="myLoc()">
         <div class="svc-img si-loc">📍</div>
@@ -957,15 +973,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         <div id="biznes-detail-desc" style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:14px;"></div>
         <div id="biznes-detail-news" style="margin-bottom:14px;"></div>
 
-        <!-- Bron qilish -->
-        <div style="background:var(--s2);border-radius:14px;padding:14px;margin-bottom:14px;">
-          <div style="font-size:13px;font-weight:800;margin-bottom:10px;">📅 Bron qilish</div>
-          <div style="display:flex;gap:8px;margin-bottom:10px;">
-            <input type="date" id="booking-date" style="flex:1;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;background:var(--white);color:var(--text)" onchange="renderBookingSlots()">
-          </div>
-          <div id="booking-slots" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;"></div>
-          <input type="text" id="booking-name" placeholder="Ismingiz" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-family:inherit;font-size:13px;background:var(--white);color:var(--text);margin-bottom:10px;">
-          <button onclick="confirmBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;">✅ Bandlashni tasdiqlash</button>
+        <!-- Bron qilish (turga qarab shakllanadi) -->
+        <div style="background:var(--s2);border-radius:14px;padding:14px;margin-bottom:14px;" id="booking-box">
+          <div style="font-size:13px;font-weight:800;margin-bottom:10px;" id="booking-box-title">📅 Bron qilish</div>
+          <div id="booking-form-content"></div>
         </div>
 
         <div style="display:flex;gap:8px;">
@@ -1016,6 +1027,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
         <button class="choy-close" onclick="closeEcoList()">✕</button>
       </div>
       <div id="eco-list" style="display:flex;flex-direction:column;gap:10px;padding:14px 18px 24px;overflow-y:auto;flex:1;">
+        <div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Yuklanmoqda...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DACHALAR MODAL ── -->
+  <div class="choy-overlay" id="dacha-overlay" onclick="closeDachaOutside(event)">
+    <div class="choy-panel">
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon">🏡</div>
+          <div>
+            <div class="choy-hdr-title">Dachalar</div>
+            <div class="choy-hdr-sub">Kunlik ijaraga olish</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeDachaList()">✕</button>
+      </div>
+      <div id="dacha-list" style="display:flex;flex-direction:column;gap:10px;padding:14px 18px 24px;overflow-y:auto;flex:1;">
         <div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Yuklanmoqda...</div>
       </div>
     </div>
@@ -2479,6 +2509,11 @@ function showChoyList() {
 }
 
 function showChoyDetail(choy) {
+  if(choy.isHamkor){
+    closeChoy();
+    openBiznesDetail(choy.hamkorUid);
+    return;
+  }
   document.getElementById('choy-list').style.display = 'none';
   document.getElementById('choy-detail').style.display = 'block';
   const t = document.querySelector('.choy-tabs'); if(t) t.style.display='none';
@@ -2667,6 +2702,16 @@ function renderChoy(cat) {
     const thumb = (c.images&&c.images[0])
       ? `<img src="${c.images[0]}" style="width:44px;height:44px;border-radius:12px;object-fit:cover;flex-shrink:0">`
       : `<div class="choy-card-ico">${c.ico}</div>`;
+    const rightCol = c.isHamkor
+      ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:52px">
+          <span style="font-size:10px;color:var(--green);font-weight:700;">🏪 Hamkor</span>
+          <span style="font-size:16px;color:var(--text-muted)">→</span>
+        </div>`
+      : `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:52px">
+          <span style="font-size:12px;font-weight:800;color:#52b788">${free} bo'sh</span>
+          <span style="font-size:10px;color:var(--text-muted)">${c.totalSeats} joy</span>
+          <span style="font-size:16px;color:var(--text-muted)">→</span>
+        </div>`;
     d.innerHTML = `
       <div class="choy-card-top">
         ${thumb}
@@ -2678,11 +2723,7 @@ function renderChoy(cat) {
           </div>
           <div class="choy-card-tags">${tags}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:52px">
-          <span style="font-size:12px;font-weight:800;color:#52b788">${free} bo'sh</span>
-          <span style="font-size:10px;color:var(--text-muted)">${c.totalSeats} joy</span>
-          <span style="font-size:16px;color:var(--text-muted)">→</span>
-        </div>
+        ${rightCol}
       </div>`;
     list.appendChild(d);
   });
@@ -3151,31 +3192,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Admin yuborgan bildirishnomalar — to'g'ri ishlashi uchun
     let lastSeenNotifTime = Date.now(); // Sahifa ochilgan vaqt
-    const notifList = []; // Barcha kelgan bildirishnomalar
+    const notifList = []; // Barcha kelgan bildirishnomalar (umumiy + shaxsiy)
+    let broadcastNotifs = [];
+    let personalNotifs = [];
 
-    fbDb.ref('notifications').limitToLast(10).on('value', snap => {
-      const data = snap.val();
-      if(!data) return;
-
-      const items = Object.values(data).sort((a,b) => (b.time||0) - (a.time||0));
+    function mergeAndRenderNotifs(){
+      const items = [...broadcastNotifs, ...personalNotifs].sort((a,b) => (b.time||0) - (a.time||0));
       notifList.length = 0;
       notifList.push(...items);
 
-      // Faqat yangi (sahifa ochilgandan keyin yuborilgan) larni toast qil
       const newOnes = items.filter(n => n.time && n.time > lastSeenNotifTime);
       newOnes.forEach(n => {
-        showToast('🔔 ' + (n.title||'') + (n.body ? ': ' + n.body : ''));
+        showToast((n.personal?'✅ ':'🔔 ') + (n.title||'') + (n.body ? ': ' + n.body : ''));
       });
 
-      // O'qilmagan soni hisoblash (oxirgi 24 soat ichidagi)
       const since24h = Date.now() - 86400000;
       const unread = items.filter(n => n.time && n.time > since24h).length;
       updateNotifBadge(unread);
 
-      // Panel ochiq bo'lsa qayta render
       const panel = document.getElementById('notif-panel');
       if(panel && panel.style.display !== 'none') renderNotifPanel(notifList);
+    }
+
+    fbDb.ref('notifications').limitToLast(10).on('value', snap => {
+      const data = snap.val();
+      broadcastNotifs = data ? Object.values(data) : [];
+      mergeAndRenderNotifs();
     });
+
+    // Shaxsiy bildirishnomalar (masalan: "buyurtmangiz qabul qilindi")
+    const _notifUser = getUser();
+    if(_notifUser && _notifUser.id){
+      fbDb.ref('userNotifications/'+_notifUser.id).limitToLast(20).on('value', snap => {
+        const data = snap.val();
+        personalNotifs = data ? Object.values(data).map(n => ({...n, time: n.createdAt, personal: true})) : [];
+        mergeAndRenderNotifs();
+      });
+    }
 
     // Xizmatlar (Taxi, Eko, Shifoxona) ma\u02bblumotlari
     fbDb.ref('services/taxi').on('value', snap => {
@@ -3296,7 +3349,7 @@ function renderNotifPanel(items) {
 
   list.innerHTML = items.map(n => `
     <div class="notif-item">
-      <div class="notif-item-ico">📢</div>
+      <div class="notif-item-ico">${n.personal ? '✅' : '📢'}</div>
       <div style="flex:1;min-width:0">
         <div class="notif-item-title">${n.title || 'Bildirishnoma'}</div>
         <div class="notif-item-body">${n.body || ''}</div>
@@ -3381,7 +3434,68 @@ function loadBiznesForUsers(){
     biznesCache = {};
     Object.entries(data).forEach(([uid,b]) => { if(b.status === 'approved') biznesCache[uid] = b; });
     renderBiznesGrid();
+    if(typeof CHOYXONALAR !== 'undefined') mergeHamkorChoyxonasIntoList();
+    if(document.getElementById('dacha-overlay')?.classList.contains('open')) renderDachaList();
   });
+}
+
+// ── DACHALAR (turi === 'dacha' bo'lgan tasdiqlangan hamkorlar) ──
+window.openDachaList = function(){
+  const o = document.getElementById('dacha-overlay');
+  if(!o) return;
+  o.classList.add('open'); document.body.style.overflow = 'hidden';
+  renderDachaList();
+};
+window.closeDachaList = function(){
+  const o = document.getElementById('dacha-overlay');
+  if(o){ o.classList.remove('open'); document.body.style.overflow = ''; }
+};
+window.closeDachaOutside = function(e){
+  if(e.target === document.getElementById('dacha-overlay')) closeDachaList();
+};
+function renderDachaList(){
+  const list = document.getElementById('dacha-list');
+  if(!list) return;
+  const entries = Object.entries(biznesCache).filter(([,b]) => b.type === 'dacha');
+  if(!entries.length){
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:12px;padding:30px 0">Hozircha dachalar qo\u02bbshilmagan.</div>';
+    return;
+  }
+  list.innerHTML = entries.map(([uid,b]) => {
+    const thumb = (b.images&&b.images[0])
+      ? `<img src="${b.images[0]}" style="width:44px;height:44px;border-radius:12px;object-fit:cover;flex-shrink:0">`
+      : `<div class="choy-card-ico">🏡</div>`;
+    const priceTxt = b.dailyPrice ? Number(b.dailyPrice).toLocaleString()+" so'm/kun" : '';
+    return `
+    <div class="choy-card" onclick="closeDachaList();openBiznesDetail('${uid}')">
+      <div class="choy-card-top">
+        ${thumb}
+        <div class="choy-card-body">
+          <div class="choy-card-name">${b.name||''}</div>
+          <div class="choy-card-meta" style="font-size:11px;color:var(--muted)">${b.desc||''}</div>
+          ${priceTxt?`<div style="font-size:11px;color:var(--green);font-weight:700;margin-top:2px;">${priceTxt}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Hamkor-choyxonalarni mavjud Choyxonalar ro'yxatiga qo'shish ──
+function mergeHamkorChoyxonasIntoList(){
+  const hamkorChoy = Object.entries(biznesCache).filter(([,b]) => b.type === 'choyxona');
+  hamkorChoy.forEach(([uid,b]) => {
+    if(CHOYXONALAR.some(c => c.id === 'hamkor_'+uid)) return; // ikki marta qo'shmaslik
+    CHOYXONALAR.push({
+      id: 'hamkor_'+uid, hamkorUid: uid, isHamkor: true,
+      name: b.name, ico: '🍵', cat: 'oila', tags: [],
+      lat: b.lat, lng: b.lng, desc: b.desc,
+      totalSeats: 0, takenSeats: [], layout: null,
+      images: b.images || []
+    });
+  });
+  if(document.getElementById('choy-overlay')?.classList.contains('open') && document.getElementById('choy-list')?.style.display !== 'none'){
+    renderChoy(currentCat);
+  }
 }
 
 function renderBiznesGrid(){
@@ -3438,17 +3552,8 @@ window.openBiznesDetail = function(uid){
     ) : '';
   }
 
-  // Bron qilish formasini boshlang'ich holatga keltirish
-  const dateInput = document.getElementById('booking-date');
-  if(dateInput){
-    const today = new Date().toISOString().slice(0,10);
-    dateInput.min = today;
-    dateInput.value = today;
-  }
-  const nameInput = document.getElementById('booking-name');
-  if(nameInput){ const u = getUser(); nameInput.value = u.name || ''; }
-  selectedBookingTime = null;
-  renderBookingSlots();
+  // Bron qilish formasini turga qarab hosil qilamiz
+  renderBookingForm();
 
   const overlay = document.getElementById('biznes-overlay');
   if(overlay){ overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
@@ -3466,65 +3571,135 @@ window.routeToBiznes = function(){
   window.open('https://www.google.com/maps/dir/?api=1&destination='+b.lat+','+b.lng, '_blank');
 };
 
-// ── BRON QILISH ──
-const BOOKING_SLOTS = ['09:00','11:00','13:00','15:00','17:00','19:00'];
-let selectedBookingTime = null;
+// ── BRON QILISH (turga qarab: dacha=kunlik, choyxona=soat+taom) ──
+let bkExtraHours = 0;
+let bkDays = 1;
+let bkOrderQty = {}; // {productId: qty}
 
-window.renderBookingSlots = function(){
-  const box = document.getElementById('booking-slots');
-  const dateInput = document.getElementById('booking-date');
-  if(!box || !dateInput || !currentBiznesKey) return;
-  const date = dateInput.value;
-  selectedBookingTime = null;
-  box.innerHTML = BOOKING_SLOTS.map(t => `<div class="booking-slot" id="slot-${t}" onclick="pickBookingSlot('${t}')">${t}</div>`).join('');
+function renderBookingForm(){
+  const biz = biznesCache[currentBiznesKey];
+  const content = document.getElementById('booking-form-content');
+  const titleEl = document.getElementById('booking-box-title');
+  if(!biz || !content) return;
+  const today = new Date().toISOString().slice(0,10);
+  const u = getUser();
 
-  if(typeof fbDb==='undefined'||!fbDb) return;
-  fbDb.ref('businesses/'+currentBiznesKey+'/bookings').once('value').then(snap => {
-    const data = snap.val() || {};
-    const takenTimes = Object.values(data).filter(b => b.date === date).map(b => b.time);
-    takenTimes.forEach(t => {
-      const el = document.getElementById('slot-'+t);
-      if(el) el.classList.add('taken');
-    });
+  if(biz.type === 'dacha'){
+    titleEl.textContent = '📅 Kunlik bron qilish';
+    bkDays = 1;
+    const priceTxt = biz.dailyPrice ? (Number(biz.dailyPrice).toLocaleString()+" so'm / kuniga") : '';
+    content.innerHTML = `
+      <input type="date" id="bk-date" class="bk-input" min="${today}" value="${today}">
+      <div class="bk-stepper">
+        <button onclick="bkChangeDays(-1)">−</button>
+        <div class="bk-stepper-val"><span id="bk-days-val">1</span> kun ${priceTxt?`<div style="font-size:10px;color:var(--muted);font-weight:400">${priceTxt}</div>`:''}</div>
+        <button onclick="bkChangeDays(1)">+</button>
+      </div>
+      <input type="text" id="bk-name" class="bk-input" placeholder="Ismingiz" value="${u.name||''}">
+      ${biz.dailyPrice?`<div class="bk-total-line"><span>Jami</span><span id="bk-total">${Number(biz.dailyPrice).toLocaleString()} so'm</span></div>`:''}
+      <button onclick="confirmDachaBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;margin-top:6px;">✅ Bandlashni tasdiqlash</button>
+    `;
+  } else if(biz.type === 'choyxona'){
+    titleEl.textContent = '📅 Bron qilish (birinchi 2 soat bepul)';
+    bkExtraHours = 0;
+    bkOrderQty = {};
+    const products = biz.products ? Object.entries(biz.products).map(([id,p])=>({id,...p})) : [];
+    content.innerHTML = `
+      <input type="date" id="bk-date" class="bk-input" min="${today}" value="${today}">
+      <div class="bk-stepper">
+        <button onclick="bkChangeHours(-1)">−</button>
+        <div class="bk-stepper-val">2 soat + <span id="bk-hours-val">0</span> qo'shimcha</div>
+        <button onclick="bkChangeHours(1)">+</button>
+      </div>
+      ${products.length ? `
+        <div style="font-size:12px;font-weight:800;margin:12px 0 8px;">🍽️ Nima buyurtma qilasiz?</div>
+        <div id="bk-products-list">${products.map(p => `
+          <div class="bk-product-row">
+            <div>
+              <div class="bk-product-name">${p.name}</div>
+              <div class="bk-product-price">${Number(p.price).toLocaleString()} so'm</div>
+            </div>
+            <div class="bk-qty-ctrl">
+              <button onclick="bkChangeQty('${p.id}',-1)">−</button>
+              <span class="bk-qty-val" id="bk-qty-${p.id}">0</span>
+              <button onclick="bkChangeQty('${p.id}',1)">+</button>
+            </div>
+          </div>`).join('')}</div>
+      ` : ''}
+      <input type="text" id="bk-name" class="bk-input" placeholder="Ismingiz" style="margin-top:10px" value="${u.name||''}">
+      <div class="bk-total-line"><span>Jami taxminiy</span><span id="bk-total">0 so'm</span></div>
+      <button onclick="confirmChoyxonaBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;margin-top:6px;">✅ Bandlashni tasdiqlash</button>
+    `;
+    updateChoyxonaTotal();
+  } else {
+    titleEl.textContent = '📅 Bog\u02bblanish';
+    content.innerHTML = `<div style="font-size:12px;color:var(--muted)">Bron qilish uchun to'g'ridan-to'g'ri qo'ng'iroq qiling.</div>`;
+  }
+}
+
+window.bkChangeDays = function(delta){
+  bkDays = Math.max(1, bkDays + delta);
+  setText('bk-days-val', bkDays);
+  const biz = biznesCache[currentBiznesKey];
+  if(biz && biz.dailyPrice){
+    setText('bk-total', (Number(biz.dailyPrice) * bkDays).toLocaleString() + " so'm");
+  }
+};
+window.bkChangeHours = function(delta){
+  bkExtraHours = Math.max(0, bkExtraHours + delta);
+  setText('bk-hours-val', bkExtraHours);
+  updateChoyxonaTotal();
+};
+window.bkChangeQty = function(productId, delta){
+  bkOrderQty[productId] = Math.max(0, (bkOrderQty[productId]||0) + delta);
+  setText('bk-qty-'+productId, bkOrderQty[productId]);
+  updateChoyxonaTotal();
+};
+function updateChoyxonaTotal(){
+  const biz = biznesCache[currentBiznesKey];
+  if(!biz) return;
+  let total = bkExtraHours * (biz.extraHourPrice||0);
+  const products = biz.products || {};
+  Object.entries(bkOrderQty).forEach(([id,qty]) => {
+    if(qty > 0 && products[id]) total += qty * Number(products[id].price);
   });
-};
-window.pickBookingSlot = function(time){
-  const el = document.getElementById('slot-'+time);
-  if(!el || el.classList.contains('taken')) return;
-  document.querySelectorAll('.booking-slot').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedBookingTime = time;
-};
-window.confirmBooking = function(){
-  const date = document.getElementById('booking-date')?.value;
-  const name = document.getElementById('booking-name')?.value.trim();
+  setText('bk-total', total.toLocaleString() + " so'm");
+}
+
+window.confirmDachaBooking = function(){
+  const date = document.getElementById('bk-date')?.value;
+  const name = document.getElementById('bk-name')?.value.trim();
   if(!date){ showToast('⚠️ Sanani tanlang'); return; }
-  if(!selectedBookingTime){ showToast('⚠️ Vaqtni tanlang'); return; }
   if(!name){ showToast('⚠️ Ismingizni kiriting'); return; }
   if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
+  const user = getUser(); user.name = name; saveUser(user);
+  const biz = biznesCache[currentBiznesKey];
+  fbDb.ref('businesses/'+currentBiznesKey+'/bookings').push({
+    bizType: 'dacha', date, days: bkDays, userId: user.id, userName: name,
+    status: 'pending', createdAt: Date.now()
+  }).then(() => {
+    showToast('✅ Band qilindi! ' + date + ' kundan ' + bkDays + ' kunga');
+    addToHistory({type:'booking', bizName: biz?.name||'', date, days: bkDays});
+  }).catch(e => showToast('❌ Xato: ' + e.message));
+};
 
-  const user = getUser();
-  user.name = name;
-  saveUser(user);
-
-  const bizKey = currentBiznesKey;
-  // Bir vaqtning o'zida ikki kishi band qilib qo'ymasligi uchun oxirgi marta tekshiramiz
-  fbDb.ref('businesses/'+bizKey+'/bookings').once('value').then(snap => {
-    const data = snap.val() || {};
-    const taken = Object.values(data).some(b => b.date === date && b.time === selectedBookingTime);
-    if(taken){
-      showToast('⚠️ Bu vaqt band qilib bo\u02bblindi, boshqasini tanlang');
-      renderBookingSlots();
-      return;
-    }
-    fbDb.ref('businesses/'+bizKey+'/bookings').push({
-      date, time: selectedBookingTime, userId: user.id, userName: name, createdAt: Date.now()
-    }).then(() => {
-      showToast('✅ Band qilindi! ' + date + ' kuni soat ' + selectedBookingTime);
-      addToHistory({type:'booking', bizName: biznesCache[bizKey]?.name||'', date, time: selectedBookingTime});
-      renderBookingSlots();
-    }).catch(e => showToast('❌ Xato: ' + e.message));
-  });
+window.confirmChoyxonaBooking = function(){
+  const date = document.getElementById('bk-date')?.value;
+  const name = document.getElementById('bk-name')?.value.trim();
+  if(!date){ showToast('⚠️ Sanani tanlang'); return; }
+  if(!name){ showToast('⚠️ Ismingizni kiriting'); return; }
+  if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
+  const user = getUser(); user.name = name; saveUser(user);
+  const biz = biznesCache[currentBiznesKey];
+  const products = biz.products || {};
+  const items = Object.entries(bkOrderQty).filter(([,q])=>q>0).map(([id,qty]) => ({name: products[id]?.name||'', qty}));
+  fbDb.ref('businesses/'+currentBiznesKey+'/bookings').push({
+    bizType: 'choyxona', date, extraHours: bkExtraHours, items, userId: user.id, userName: name,
+    status: 'pending', createdAt: Date.now()
+  }).then(() => {
+    showToast('✅ Band qilindi! ' + date);
+    addToHistory({type:'booking', bizName: biz?.name||'', date, extraHours: bkExtraHours});
+  }).catch(e => showToast('❌ Xato: ' + e.message));
 };
 
 let ZIYOD_API_URL = localStorage.getItem('ziyodApiUrl') || "https://mirror-hardcover-filling-intelligent.trycloudflare.com/chat";
