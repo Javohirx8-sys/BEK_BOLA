@@ -901,9 +901,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
     </div>
     <div class="bn-lbl">Bildirishnomalar</div>
   </div>
-  <div class="bn-item" onclick="openLang()">
-    <div class="bn-ico">⚙️</div>
-    <div class="bn-lbl">Sozlamalar</div>
+  <div class="bn-item" onclick="openProfile()">
+    <div class="bn-ico">👤</div>
+    <div class="bn-lbl">Mening profilim</div>
   </div>
 </div>
 
@@ -983,6 +983,54 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
           <a id="biznes-detail-call" href="#" style="flex:1;text-align:center;background:var(--green);color:#fff;border-radius:12px;padding:11px;font-weight:800;font-size:13px;text-decoration:none;">📞 Qo'ng'iroq</a>
           <button id="biznes-detail-route" onclick="routeToBiznes()" style="flex:1;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:11px;font-weight:800;font-size:13px;color:var(--text);cursor:pointer;">🧭 Yo'nalish</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MENING PROFILIM ── -->
+  <div class="choy-overlay" id="profile-overlay" onclick="closeProfileOutside(event)">
+    <div class="choy-panel">
+      <div class="choy-hdr">
+        <div class="choy-hdr-left">
+          <div class="choy-hdr-icon">👤</div>
+          <div>
+            <div class="choy-hdr-title">Mening profilim</div>
+            <div class="choy-hdr-sub">ID orqali istalgan qurilmadan kiring</div>
+          </div>
+        </div>
+        <button class="choy-close" onclick="closeProfile()">✕</button>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:16px 18px 24px;">
+
+        <div style="background:var(--s2);border-radius:14px;padding:14px;margin-bottom:16px;">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Sizning ID raqamingiz</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="profile-id-display" style="flex:1;font-family:'DM Mono',monospace;font-size:15px;font-weight:800;color:var(--green);word-break:break-all;">—</div>
+            <button onclick="copyUserId()" style="flex-shrink:0;background:var(--green);color:#fff;border:none;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;">📋 Nusxa</button>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;">⚠️ Bu ID'ni saqlab qo'ying! Boshqa qurilmadan kirganda shu ID orqali ma'lumotlaringizni tiklaysiz.</div>
+        </div>
+
+        <div class="wl-field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;">Ismingiz</label>
+          <input type="text" id="profile-name" placeholder="Ismingizni kiriting" style="width:100%;border:1px solid var(--border);border-radius:12px;padding:11px 13px;font-family:inherit;font-size:14px;background:var(--s2);color:var(--text)">
+        </div>
+        <div class="wl-field" style="margin-bottom:14px;">
+          <label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;">Telefon raqamingiz</label>
+          <input type="tel" id="profile-phone" placeholder="+998 90 123 45 67" style="width:100%;border:1px solid var(--border);border-radius:12px;padding:11px 13px;font-family:inherit;font-size:14px;background:var(--s2);color:var(--text)">
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;">Bron qilishda xizmat ko'rsatuvchi siz bilan bog'lanishi uchun kerak bo'ladi</div>
+        </div>
+        <button onclick="saveProfileInfo()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:12px;padding:12px;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:22px;">✅ Saqlash</button>
+
+        <div style="border-top:1px dashed var(--border);padding-top:16px;">
+          <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:8px;">🔄 Boshqa qurilmadan kirgan bo'lsangiz</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">Avvalgi ID raqamingizni kiriting — ismingiz, tarixingiz va sevimlilaringiz shu qurilmaga ko'chadi.</div>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="restore-id-input" placeholder="T24-XXXXXXX-XXXX" style="flex:1;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'DM Mono',monospace;font-size:12px;background:var(--s2);color:var(--text)">
+            <button onclick="restoreUserById()" style="flex-shrink:0;background:var(--s2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:0 14px;font-size:12px;font-weight:700;cursor:pointer;">Tiklash</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -2925,6 +2973,7 @@ function syncUserToFirebase(user) {
   const userData = {
     id:        user.id,
     name:      user.name || 'Noma\u02bblum',
+    phone:     user.phone || '',
     online:    true,
     lastSeen:  Date.now(),
     device:    navigator.userAgent.includes('iPhone') ? 'iPhone' : 
@@ -2934,6 +2983,75 @@ function syncUserToFirebase(user) {
   fbDb.ref('users/' + user.id.replace(/-/g,'_')).set(userData)
     .catch(e => console.log('Firebase sync:', e));
 }
+
+// ── MENING PROFILIM (ID ko'rish/nusxalash, ism/telefon, boshqa qurilmadan tiklash) ──
+window.openProfile = function(){
+  const overlay = document.getElementById('profile-overlay');
+  if(!overlay) return;
+  const u = getUser();
+  setText('profile-id-display', u.id);
+  const nameEl = document.getElementById('profile-name');
+  const phoneEl = document.getElementById('profile-phone');
+  if(nameEl) nameEl.value = u.name || '';
+  if(phoneEl) phoneEl.value = u.phone || '';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+window.closeProfile = function(){
+  const overlay = document.getElementById('profile-overlay');
+  if(overlay){ overlay.classList.remove('open'); document.body.style.overflow = ''; }
+};
+window.closeProfileOutside = function(e){
+  if(e.target === document.getElementById('profile-overlay')) closeProfile();
+};
+window.copyUserId = function(){
+  const u = getUser();
+  const done = () => showToast('✅ ID nusxalandi: ' + u.id);
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(u.id).then(done).catch(() => fallbackCopy(u.id, done));
+  } else {
+    fallbackCopy(u.id, done);
+  }
+};
+function fallbackCopy(text, cb){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ showToast('ID: ' + text); }
+  document.body.removeChild(ta);
+}
+window.saveProfileInfo = function(){
+  const name = document.getElementById('profile-name')?.value.trim();
+  const phone = document.getElementById('profile-phone')?.value.trim();
+  const u = getUser();
+  u.name = name || u.name;
+  u.phone = phone || u.phone;
+  saveUser(u);
+  syncUserToFirebase(u);
+  showToast('✅ Profil saqlandi');
+};
+window.restoreUserById = function(){
+  const input = document.getElementById('restore-id-input');
+  const enteredId = (input?.value || '').trim().toUpperCase();
+  if(!enteredId){ showToast('⚠️ ID raqamini kiriting'); return; }
+  if(!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
+  const key = enteredId.replace(/-/g,'_');
+  fbDb.ref('users/'+key).once('value').then(snap => {
+    const data = snap.val();
+    if(!data){ showToast('⚠️ Bunday ID topilmadi, to\u02bbg\u02bbri kiritganingizni tekshiring'); return; }
+    const restored = {
+      id: enteredId,
+      name: data.name && data.name !== 'Noma\u02bblum' ? data.name : '',
+      phone: data.phone || '',
+      createdAt: data.createdAt || new Date().toISOString(),
+      family: [], history: [], purchases: [], favorites: [], prefs: []
+    };
+    saveUser(restored);
+    syncUserToFirebase(restored);
+    showToast('✅ Profil tiklandi! Xush kelibsiz, ' + (restored.name || 'mehmon') + '!');
+    openProfile();
+  }).catch(() => showToast('❌ Xatolik yuz berdi'));
+};
 
 // Offline bo'lganda belgilash
 function setUserOffline(user) {
@@ -3596,6 +3714,7 @@ function renderBookingForm(){
         <button onclick="bkChangeDays(1)">+</button>
       </div>
       <input type="text" id="bk-name" class="bk-input" placeholder="Ismingiz" value="${u.name||''}">
+      <input type="tel" id="bk-phone" class="bk-input" placeholder="Telefon raqamingiz (majburiy)" value="${u.phone||''}">
       ${biz.dailyPrice?`<div class="bk-total-line"><span>Jami</span><span id="bk-total">${Number(biz.dailyPrice).toLocaleString()} so'm</span></div>`:''}
       <button onclick="confirmDachaBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;margin-top:6px;">✅ Bandlashni tasdiqlash</button>
     `;
@@ -3627,6 +3746,7 @@ function renderBookingForm(){
           </div>`).join('')}</div>
       ` : ''}
       <input type="text" id="bk-name" class="bk-input" placeholder="Ismingiz" style="margin-top:10px" value="${u.name||''}">
+      <input type="tel" id="bk-phone" class="bk-input" placeholder="Telefon raqamingiz (majburiy)" value="${u.phone||''}">
       <div class="bk-total-line"><span>Jami taxminiy</span><span id="bk-total">0 so'm</span></div>
       <button onclick="confirmChoyxonaBooking()" style="width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:13px;cursor:pointer;margin-top:6px;">✅ Bandlashni tasdiqlash</button>
     `;
@@ -3666,16 +3786,23 @@ function updateChoyxonaTotal(){
   setText('bk-total', total.toLocaleString() + " so'm");
 }
 
+function isValidPhone(phone){
+  const digits = (phone||'').replace(/\D/g,'');
+  return digits.length >= 9;
+}
+
 window.confirmDachaBooking = function(){
   const date = document.getElementById('bk-date')?.value;
   const name = document.getElementById('bk-name')?.value.trim();
+  const phone = document.getElementById('bk-phone')?.value.trim();
   if(!date){ showToast('⚠️ Sanani tanlang'); return; }
   if(!name){ showToast('⚠️ Ismingizni kiriting'); return; }
+  if(!isValidPhone(phone)){ showToast('⚠️ Telefon raqamingizni to\u02bbg\u02bbri kiriting'); return; }
   if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
-  const user = getUser(); user.name = name; saveUser(user);
+  const user = getUser(); user.name = name; user.phone = phone; saveUser(user); syncUserToFirebase(user);
   const biz = biznesCache[currentBiznesKey];
   fbDb.ref('businesses/'+currentBiznesKey+'/bookings').push({
-    bizType: 'dacha', date, days: bkDays, userId: user.id, userName: name,
+    bizType: 'dacha', date, days: bkDays, userId: user.id, userName: name, userPhone: phone,
     status: 'pending', createdAt: Date.now()
   }).then(() => {
     showToast('✅ Band qilindi! ' + date + ' kundan ' + bkDays + ' kunga');
@@ -3686,15 +3813,17 @@ window.confirmDachaBooking = function(){
 window.confirmChoyxonaBooking = function(){
   const date = document.getElementById('bk-date')?.value;
   const name = document.getElementById('bk-name')?.value.trim();
+  const phone = document.getElementById('bk-phone')?.value.trim();
   if(!date){ showToast('⚠️ Sanani tanlang'); return; }
   if(!name){ showToast('⚠️ Ismingizni kiriting'); return; }
+  if(!isValidPhone(phone)){ showToast('⚠️ Telefon raqamingizni to\u02bbg\u02bbri kiriting'); return; }
   if(typeof fbDb==='undefined'||!fbDb){ showToast('⚠️ Internet aloqasi yo\u02bbq'); return; }
-  const user = getUser(); user.name = name; saveUser(user);
+  const user = getUser(); user.name = name; user.phone = phone; saveUser(user); syncUserToFirebase(user);
   const biz = biznesCache[currentBiznesKey];
   const products = biz.products || {};
   const items = Object.entries(bkOrderQty).filter(([,q])=>q>0).map(([id,qty]) => ({name: products[id]?.name||'', qty}));
   fbDb.ref('businesses/'+currentBiznesKey+'/bookings').push({
-    bizType: 'choyxona', date, extraHours: bkExtraHours, items, userId: user.id, userName: name,
+    bizType: 'choyxona', date, extraHours: bkExtraHours, items, userId: user.id, userName: name, userPhone: phone,
     status: 'pending', createdAt: Date.now()
   }).then(() => {
     showToast('✅ Band qilindi! ' + date);
